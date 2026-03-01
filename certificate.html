@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Certificate — Agentic Systems & Design</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/print.css">
+  <style>
+    .certificate-container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 80px 20px 40px;
+    }
+
+    .certificate-header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .certificate-header h1 {
+      font-size: 2rem;
+      font-weight: 800;
+      margin-bottom: 12px;
+      color: var(--text-primary);
+    }
+
+    .certificate-header p {
+      color: var(--text-secondary);
+      font-size: 1rem;
+    }
+
+    .requirements-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 24px;
+    }
+
+    .requirements-card h2 {
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 16px;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .requirements-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .requirement-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.95rem;
+    }
+
+    .requirement-item:last-child {
+      border-bottom: none;
+    }
+
+    .requirement-icon {
+      font-size: 1.5rem;
+      flex-shrink: 0;
+    }
+
+    .requirement-text {
+      flex: 1;
+      color: var(--text-secondary);
+    }
+
+    .requirement-status {
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+
+    .requirement-status.complete {
+      color: var(--success);
+    }
+
+    .requirement-status.incomplete {
+      color: var(--text-muted);
+    }
+
+    .generate-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 24px;
+    }
+
+    .generate-card h2 {
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 16px;
+      color: var(--text-primary);
+    }
+
+    .input-group {
+      margin-bottom: 20px;
+    }
+
+    .input-group label {
+      display: block;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 8px;
+    }
+
+    .input-group input {
+      width: 100%;
+      padding: 12px 16px;
+      background: var(--bg-primary);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text-primary);
+      font-size: 1rem;
+      font-family: var(--font-sans);
+      transition: border-color var(--transition);
+    }
+
+    .input-group input:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+
+    .button-group {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      cursor: pointer;
+      font-family: var(--font-sans);
+      transition: all var(--transition);
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #0f172a;
+    }
+
+    .btn-primary:hover {
+      background: var(--accent-hover);
+    }
+
+    .btn-primary:disabled {
+      background: var(--bg-tertiary);
+      color: var(--text-muted);
+      cursor: not-allowed;
+    }
+
+    .btn-secondary {
+      background: var(--bg-tertiary);
+      color: var(--text-primary);
+      border: 1px solid var(--border);
+    }
+
+    .btn-secondary:hover {
+      background: var(--border);
+    }
+
+    .info-box {
+      background: rgba(56,189,248,0.1);
+      border: 1px solid rgba(56,189,248,0.2);
+      border-radius: 8px;
+      padding: 16px;
+      margin-top: 16px;
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+    }
+
+    .info-box strong {
+      color: var(--accent);
+    }
+
+    .certificate-preview {
+      display: none;
+      background: white;
+      color: #000;
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      padding: 60px;
+      margin-top: 30px;
+      position: relative;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    }
+
+    .certificate-preview.visible {
+      display: block;
+    }
+
+    .certificate-border {
+      border: 4px double #2c3e50;
+      padding: 40px;
+      position: relative;
+    }
+
+    .certificate-border::before {
+      content: '';
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      right: 10px;
+      bottom: 10px;
+      border: 1px solid #bdc3c7;
+      pointer-events: none;
+    }
+
+    .certificate-header-print {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .certificate-logo {
+      font-size: 3rem;
+      margin-bottom: 10px;
+    }
+
+    .certificate-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.5rem;
+      font-weight: 900;
+      color: #1a1a1a;
+      margin-bottom: 8px;
+      letter-spacing: 1px;
+    }
+
+    .certificate-subtitle {
+      font-size: 1.2rem;
+      color: #555;
+      font-weight: 600;
+      margin-bottom: 30px;
+    }
+
+    .certificate-body {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .certificate-presented {
+      font-size: 1rem;
+      color: #666;
+      margin-bottom: 20px;
+    }
+
+    .certificate-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 3rem;
+      font-weight: 700;
+      color: #0284c7;
+      margin-bottom: 20px;
+      border-bottom: 2px solid #0284c7;
+      display: inline-block;
+      padding-bottom: 8px;
+    }
+
+    .certificate-achievement {
+      font-size: 1rem;
+      color: #666;
+      line-height: 1.6;
+      max-width: 600px;
+      margin: 0 auto 30px;
+    }
+
+    .modules-completed {
+      margin: 30px 0;
+    }
+
+    .modules-completed h3 {
+      font-size: 1rem;
+      color: #444;
+      margin-bottom: 12px;
+      font-weight: 700;
+    }
+
+    .modules-list {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 8px;
+      text-align: left;
+      max-width: 500px;
+      margin: 0 auto;
+    }
+
+    .module-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.9rem;
+      color: #555;
+    }
+
+    .module-check {
+      color: #16a34a;
+      font-weight: 700;
+    }
+
+    .certificate-footer {
+      display: flex;
+      justify-content: space-around;
+      margin-top: 40px;
+      padding-top: 30px;
+      border-top: 1px solid #ddd;
+    }
+
+    .signature-block {
+      text-align: center;
+    }
+
+    .signature-line {
+      width: 200px;
+      height: 2px;
+      background: #333;
+      margin: 0 auto 8px;
+    }
+
+    .signature-title {
+      font-size: 0.85rem;
+      color: #666;
+      font-weight: 600;
+    }
+
+    .certificate-date {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 0.9rem;
+      color: #666;
+    }
+
+    .print-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    @media print {
+      body {
+        background: white !important;
+      }
+      .navbar, .certificate-container > *:not(.certificate-preview),
+      .print-buttons, .info-box {
+        display: none !important;
+      }
+      .certificate-preview {
+        display: block !important;
+        margin: 0 !important;
+        padding: 40px !important;
+        border: none !important;
+        box-shadow: none !important;
+      }
+      .certificate-border {
+        page-break-inside: avoid;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .certificate-container {
+        padding: 70px 12px 40px;
+      }
+      .certificate-preview {
+        padding: 30px 20px;
+      }
+      .certificate-border {
+        padding: 20px;
+      }
+      .certificate-title {
+        font-size: 1.8rem;
+      }
+      .certificate-name {
+        font-size: 2rem;
+      }
+      .certificate-footer {
+        flex-direction: column;
+        gap: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="logo">
+      <span>🤖</span>
+      <a href="index.html">Agentic Systems & Design</a>
+    </div>
+    <div class="nav-controls">
+      <div class="feature-nav">
+        <a href="dashboard.html">Dashboard</a>
+        <a href="glossary.html">Glossary</a>
+        <a href="flashcards.html">Flashcards</a>
+        <a href="challenges.html">Challenges</a>
+        <a href="certificate.html" style="color:var(--accent);border-color:var(--accent);">Certificate</a>
+      </div>
+      <button class="theme-toggle" title="Toggle theme">☀️</button>
+    </div>
+  </nav>
+
+  <div class="certificate-container">
+    <div class="certificate-header">
+      <h1>🎓 Certificate of Completion</h1>
+      <p>Celebrate your achievement in Agentic Systems & Design</p>
+    </div>
+
+    <div class="requirements-card">
+      <h2>📋 Requirements</h2>
+      <ul class="requirements-list" id="requirementsList">
+        <li class="requirement-item">
+          <div class="requirement-icon">📚</div>
+          <div class="requirement-text">Complete all 72 topics across 5 modules</div>
+          <div class="requirement-status incomplete" id="requirementStatus">0/72</div>
+        </li>
+      </ul>
+    </div>
+
+    <div class="generate-card">
+      <h2>✨ Generate Your Certificate</h2>
+      <div class="input-group">
+        <label for="studentName">Your Full Name</label>
+        <input type="text" id="studentName" placeholder="Enter your full name" autocomplete="name">
+      </div>
+      <div class="button-group">
+        <button class="btn btn-primary" id="generateBtn" disabled>Generate Certificate</button>
+        <button class="btn btn-secondary" id="previewBtn">Preview Certificate</button>
+      </div>
+      <div class="info-box">
+        <strong>💡 Tip:</strong> After generating your certificate, use <kbd>Ctrl+P</kbd> (Windows/Linux) or <kbd>Cmd+P</kbd> (Mac) to save it as a PDF.
+      </div>
+    </div>
+
+    <div class="certificate-preview" id="certificatePreview">
+      <div class="certificate-border">
+        <div class="certificate-header-print">
+          <div class="certificate-logo">🤖</div>
+          <div class="certificate-title">Certificate of Completion</div>
+          <div class="certificate-subtitle">Agentic Systems & Design</div>
+        </div>
+
+        <div class="certificate-body">
+          <div class="certificate-presented">This certificate is proudly presented to</div>
+          <div class="certificate-name" id="certificateName">Your Name</div>
+          <div class="certificate-achievement">
+            For successfully completing the comprehensive program in Agentic Systems & Design,
+            demonstrating mastery of AI fundamentals, machine learning, generative AI, and production-ready agent architectures.
+          </div>
+
+          <div class="modules-completed">
+            <h3>Completed Modules</h3>
+            <div class="modules-list">
+              <div class="module-item">
+                <span class="module-check">✓</span>
+                <span>Module 1: Foundations (Python, Git, APIs, Data Structures)</span>
+              </div>
+              <div class="module-item">
+                <span class="module-check">✓</span>
+                <span>Module 2: Fundamentals of ML (Regression, Classification, Clustering, PCA)</span>
+              </div>
+              <div class="module-item">
+                <span class="module-check">✓</span>
+                <span>Module 3: GenAI & Agents (LLMs, RAG, Embeddings, Agent Patterns)</span>
+              </div>
+              <div class="module-item">
+                <span class="module-check">✓</span>
+                <span>Module 4: Agentic Systems & Design (Orchestration, Evaluation, Deployment)</span>
+              </div>
+              <div class="module-item">
+                <span class="module-check">✓</span>
+                <span>Module 5: Platforms & Capstone (OpenAI, Claude, AWS, Production Projects)</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="certificate-footer">
+          <div class="signature-block">
+            <div class="signature-line"></div>
+            <div class="signature-title">Program Director</div>
+          </div>
+          <div class="signature-block">
+            <div class="signature-line"></div>
+            <div class="signature-title">Date of Completion</div>
+          </div>
+        </div>
+
+        <div class="certificate-date" id="certificateDate">Completed on January 1, 2026</div>
+      </div>
+
+      <div class="print-buttons">
+        <button class="btn btn-primary" onclick="window.print()">📄 Save as PDF</button>
+        <button class="btn btn-secondary" id="saveImageBtn" onclick="saveAsImage()">🖼 Save as Image</button>
+        <button class="btn btn-secondary" onclick="document.getElementById('certificatePreview').classList.remove('visible')">Close Preview</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  <script src="js/nav.js"></script>
+  <script src="js/features.js"></script>
+  <script>
+    function saveAsImage() {
+      const cert = document.querySelector('.certificate-border');
+      const btn = document.getElementById('saveImageBtn');
+      btn.textContent = 'Generating...';
+      btn.disabled = true;
+      html2canvas(cert, { scale: 2, backgroundColor: '#ffffff', useCORS: true }).then(canvas => {
+        const link = document.createElement('a');
+        link.download = 'certificate-agentic-systems.png';
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+        btn.textContent = '🖼 Save as Image';
+        btn.disabled = false;
+      }).catch(() => {
+        btn.textContent = '🖼 Save as Image';
+        btn.disabled = false;
+        alert('Image generation failed. Please use Save as PDF instead.');
+      });
+    }
+  </script>
+  <script>
+    (function() {
+      const TOTAL_TOPICS = 72;
+
+      function loadProgress() {
+        const progress = JSON.parse(localStorage.getItem('masai_quiz_progress') || '{}');
+        let completed = 0;
+        Object.keys(progress).forEach(key => {
+          if (progress[key]?.passed) {
+            completed++;
+          }
+        });
+        return { completed, isComplete: completed >= TOTAL_TOPICS };
+      }
+
+      function updateRequirements() {
+        const { completed, isComplete } = loadProgress();
+        const statusEl = document.getElementById('requirementStatus');
+        statusEl.textContent = completed + '/' + TOTAL_TOPICS;
+
+        if (isComplete) {
+          statusEl.classList.remove('incomplete');
+          statusEl.classList.add('complete');
+          statusEl.textContent = '✓ Complete';
+        }
+
+        const generateBtn = document.getElementById('generateBtn');
+        const nameInput = document.getElementById('studentName');
+
+        function updateGenerateButton() {
+          const hasName = nameInput.value.trim().length > 0;
+          generateBtn.disabled = !(isComplete && hasName);
+        }
+
+        nameInput.addEventListener('input', updateGenerateButton);
+        updateGenerateButton();
+      }
+
+      function generateCertificate(isPreview) {
+        const nameInput = document.getElementById('studentName');
+        const name = isPreview ? 'Your Name' : nameInput.value.trim();
+
+        if (!name) {
+          alert('Please enter your full name');
+          return;
+        }
+
+        const certificateName = document.getElementById('certificateName');
+        certificateName.textContent = name;
+
+        const dateEl = document.getElementById('certificateDate');
+        const today = new Date();
+        const options = { year: 'numeric', month: 'long', day: 'numeric' };
+        const formattedDate = today.toLocaleDateString('en-US', options);
+        dateEl.textContent = 'Completed on ' + formattedDate;
+
+        const preview = document.getElementById('certificatePreview');
+        preview.classList.add('visible');
+        preview.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+
+      function init() {
+        updateRequirements();
+
+        const generateBtn = document.getElementById('generateBtn');
+        generateBtn.addEventListener('click', () => generateCertificate(false));
+
+        const previewBtn = document.getElementById('previewBtn');
+        previewBtn.addEventListener('click', () => generateCertificate(true));
+
+        const nameInput = document.getElementById('studentName');
+        nameInput.addEventListener('keypress', (e) => {
+          if (e.key === 'Enter' && !generateBtn.disabled) {
+            generateCertificate(false);
+          }
+        });
+      }
+
+      init();
+    })();
+  </script>
+</body>
+</html>

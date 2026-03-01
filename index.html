@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Agentic Systems & Design — Study Guide</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/print.css">
+  <style>
+    /* Landing-specific extras */
+    .landing-body { max-width: 1200px; margin: 0 auto; padding-top: 56px; }
+
+    .stats-row {
+      display: flex; justify-content: center; gap: 40px; margin: 12px 0 20px;
+      flex-wrap: wrap;
+    }
+    .stat-item { text-align: center; }
+    .stat-num { font-size: 2rem; font-weight: 800; color: var(--accent); }
+    .stat-label { font-size: 0.85rem; color: var(--text-muted); }
+
+    .section-title {
+      font-size: 1.4rem; font-weight: 700; text-align: center;
+      margin: 24px 0 16px; color: var(--text-primary);
+    }
+
+    .resources-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 16px; max-width: 900px; margin: 0 auto 24px; padding: 0 20px;
+    }
+    .resource-card {
+      background: var(--bg-secondary); border: 1px solid var(--border);
+      border-radius: 8px; padding: 16px 20px;
+      transition: border-color var(--transition);
+    }
+    .resource-card:hover { border-color: var(--accent); }
+    .resource-card h4 { font-size: 0.95rem; margin-bottom: 6px; }
+    .resource-card p { font-size: 0.85rem; color: var(--text-muted); }
+
+    .how-to-use {
+      max-width: 700px; margin: 0 auto 30px; padding: 0 20px;
+      text-align: center; color: var(--text-secondary); font-size: 0.95rem;
+    }
+    .how-to-use h3 { font-size: 1.2rem; margin-bottom: 16px; color: var(--text-primary); }
+    .how-to-use ol { text-align: left; max-width: 500px; margin: 0 auto; }
+    .how-to-use li { margin-bottom: 8px; }
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="logo">
+      <span>🤖</span>
+      <span>Agentic Systems & Design</span>
+    </div>
+    <div class="nav-controls">
+      <button class="theme-toggle" title="Toggle theme">☀️</button>
+    </div>
+  </nav>
+  <nav class="feature-nav">
+    <a href="dashboard.html">📊 Dashboard</a>
+    <a href="glossary.html">📖 Glossary</a>
+    <a href="flashcards.html">🃏 Flashcards</a>
+    <a href="challenges.html">💻 Challenges</a>
+    <a href="knowledge-graph.html">🕸️ Graph</a>
+    <a href="certificate.html">🏆 Certificate</a>
+  </nav>
+
+  <div class="landing-body">
+    <!-- Hero -->
+    <section class="landing-hero">
+      <h1>Agentic Systems & Design</h1>
+      <p class="subtitle">
+        A comprehensive, hands-on study guide from Python basics to building production-ready AI agents.
+        Learn by doing — with live code editors, visual animations, and interactive quizzes.
+      </p>
+    </section>
+
+    <!-- Stats -->
+    <div class="stats-row">
+      <div class="stat-item">
+        <div class="stat-num">5</div>
+        <div class="stat-label">Modules</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">72</div>
+        <div class="stat-label">Topics</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">95+</div>
+        <div class="stat-label">Code Exercises</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">210+</div>
+        <div class="stat-label">Quiz Questions</div>
+      </div>
+    </div>
+
+    <!-- Roadmap -->
+    <div class="roadmap-visual">
+      <div class="roadmap-step">
+        <div class="roadmap-dot m1">1</div>
+        <div class="roadmap-label">Foundations<br><small>Python, Git, APIs</small></div>
+      </div>
+      <div class="roadmap-arrow">→</div>
+      <div class="roadmap-step">
+        <div class="roadmap-dot m2">2</div>
+        <div class="roadmap-label">ML Fundamentals<br><small>Regression to PCA</small></div>
+      </div>
+      <div class="roadmap-arrow">→</div>
+      <div class="roadmap-step">
+        <div class="roadmap-dot m3">3</div>
+        <div class="roadmap-label">GenAI & Agents<br><small>LLMs, RAG, Tools</small></div>
+      </div>
+      <div class="roadmap-arrow">→</div>
+      <div class="roadmap-step">
+        <div class="roadmap-dot m4">4</div>
+        <div class="roadmap-label">Agentic Design<br><small>Production Systems</small></div>
+      </div>
+      <div class="roadmap-arrow">→</div>
+      <div class="roadmap-step">
+        <div class="roadmap-dot m5">5</div>
+        <div class="roadmap-label">Platforms & Capstones<br><small>OpenAI, Claude, Bedrock</small></div>
+      </div>
+    </div>
+
+    <!-- Module Cards -->
+    <h2 class="section-title">Modules</h2>
+    <div class="modules-grid">
+      <!-- Module 1 -->
+      <a href="module1.html" style="text-decoration:none;color:inherit;">
+        <div class="module-card m1" data-module-id="m1" data-topic-count="13">
+          <div class="module-num">Module 1</div>
+          <h2>Foundations</h2>
+          <p>AI landscape, Python programming from scratch, Git version control, data structures, NumPy, Pandas, SQL, and APIs.</p>
+          <div class="topic-count">13 topics · ~15 hours</div>
+          <div class="progress-bar"><div class="fill"></div></div>
+          <div class="progress-text">0/13 complete</div>
+        </div>
+      </a>
+
+      <!-- Module 2 -->
+      <a href="module2.html" style="text-decoration:none;color:inherit;">
+        <div class="module-card m2" data-module-id="m2" data-topic-count="16">
+          <div class="module-num">Module 2</div>
+          <h2>Fundamentals of ML</h2>
+          <p>Problem framing, data preparation, regression, classification, decision trees, random forests, evaluation metrics, clustering, and PCA.</p>
+          <div class="topic-count">16 topics · ~20 hours</div>
+          <div class="progress-bar"><div class="fill"></div></div>
+          <div class="progress-text">0/16 complete</div>
+        </div>
+      </a>
+
+      <!-- Module 3 -->
+      <a href="module3.html" style="text-decoration:none;color:inherit;">
+        <div class="module-card m3" data-module-id="m3" data-topic-count="14">
+          <div class="module-num">Module 3</div>
+          <h2>GenAI & Agents</h2>
+          <p>LLM concepts, prompt engineering, local models, RAG, embeddings, multimodal pipelines, agent patterns, memory, and AI-assisted coding.</p>
+          <div class="topic-count">14 topics · ~18 hours</div>
+          <div class="progress-bar"><div class="fill"></div></div>
+          <div class="progress-text">0/14 complete</div>
+        </div>
+      </a>
+
+      <!-- Module 4 -->
+      <a href="module4.html" style="text-decoration:none;color:inherit;">
+        <div class="module-card m4" data-module-id="m4" data-topic-count="16">
+          <div class="module-num">Module 4</div>
+          <h2>Agentic Systems & Design</h2>
+          <p>LLM internals, advanced RAG, agent communication, orchestration, memory architecture, evaluation, deployment, and capstone project.</p>
+          <div class="topic-count">16 topics · ~22 hours</div>
+          <div class="progress-bar"><div class="fill"></div></div>
+          <div class="progress-text">0/16 complete</div>
+        </div>
+      </a>
+
+      <!-- Module 5 -->
+      <a href="module5.html" style="text-decoration:none;color:inherit;">
+        <div class="module-card m5" data-module-id="m5" data-topic-count="13">
+          <div class="module-num">Module 5</div>
+          <h2>Real-World Platforms & Capstones</h2>
+          <p>OpenAI Assistants, Claude tool use, AWS Bedrock, MCP, multi-agent frameworks, prompt management, testing, ethics, and 3 capstone projects.</p>
+          <div class="topic-count">13 topics · ~18 hours</div>
+          <div class="progress-bar"><div class="fill"></div></div>
+          <div class="progress-text">0/13 complete</div>
+        </div>
+      </a>
+    </div>
+
+    <!-- How to Use -->
+    <div class="how-to-use">
+      <h3>How to Use This Guide</h3>
+      <ol>
+        <li><strong>Go in order</strong> — each topic builds on the previous one</li>
+        <li><strong>Run the code</strong> — every example has a live editor; click Run to execute Python in your browser</li>
+        <li><strong>Try the challenges</strong> — modify code in the "Try It Yourself" sections</li>
+        <li><strong>Take the quizzes</strong> — pass each quiz to mark a topic complete</li>
+        <li><strong>Track your progress</strong> — completion is saved in your browser automatically</li>
+      </ol>
+    </div>
+
+    <!-- Key Resources -->
+    <h2 class="section-title">Key References</h2>
+    <div class="resources-grid">
+      <a href="https://docs.python.org/3/tutorial/" target="_blank" rel="noopener" class="resource-card">
+        <h4>Python Official Tutorial</h4>
+        <p>The definitive guide to Python's syntax and standard library</p>
+      </a>
+      <a href="https://scikit-learn.org/stable/user_guide.html" target="_blank" rel="noopener" class="resource-card">
+        <h4>scikit-learn User Guide</h4>
+        <p>Comprehensive ML algorithms and examples</p>
+      </a>
+      <a href="https://huggingface.co/docs" target="_blank" rel="noopener" class="resource-card">
+        <h4>Hugging Face Documentation</h4>
+        <p>Transformers, datasets, and model hub</p>
+      </a>
+      <a href="https://python.langchain.com/docs/" target="_blank" rel="noopener" class="resource-card">
+        <h4>LangChain Documentation</h4>
+        <p>Building LLM-powered applications</p>
+      </a>
+      <a href="https://langchain-ai.github.io/langgraph/" target="_blank" rel="noopener" class="resource-card">
+        <h4>LangGraph Documentation</h4>
+        <p>Stateful, multi-actor agent orchestration</p>
+      </a>
+      <a href="https://fastapi.tiangolo.com/" target="_blank" rel="noopener" class="resource-card">
+        <h4>FastAPI Documentation</h4>
+        <p>Modern Python web APIs for deployment</p>
+      </a>
+    </div>
+
+    <!-- External Resources & Community -->
+    <h2 class="section-title">Practice & Explore</h2>
+    <div class="resources-grid">
+      <a href="docs/quick-reference.html" class="resource-card">
+        <h4>Quick Reference Cheat Sheet</h4>
+        <p>Key concepts, commands, and patterns at a glance — printable</p>
+      </a>
+      <a href="https://colab.research.google.com/" target="_blank" rel="noopener" class="resource-card">
+        <h4>Google Colab</h4>
+        <p>Free Jupyter notebooks with GPU access — try code beyond the browser sandbox</p>
+      </a>
+      <a href="https://github.com/anthropics/anthropic-cookbook" target="_blank" rel="noopener" class="resource-card">
+        <h4>Anthropic Cookbook</h4>
+        <p>Production recipes for Claude tool use, agents, and structured outputs</p>
+      </a>
+      <a href="https://cookbook.openai.com/" target="_blank" rel="noopener" class="resource-card">
+        <h4>OpenAI Cookbook</h4>
+        <p>Practical examples for embeddings, function calling, and assistants</p>
+      </a>
+      <a href="https://github.com/modelcontextprotocol" target="_blank" rel="noopener" class="resource-card">
+        <h4>MCP on GitHub</h4>
+        <p>Model Context Protocol specification, SDKs, and server examples</p>
+      </a>
+      <a href="https://www.kaggle.com/learn" target="_blank" rel="noopener" class="resource-card">
+        <h4>Kaggle Learn</h4>
+        <p>Free micro-courses on Python, ML, and data science with hands-on exercises</p>
+      </a>
+    </div>
+
+    <h2 class="section-title">Recommended Video Channels</h2>
+    <div class="resources-grid">
+      <a href="https://www.youtube.com/@3blue1brown" target="_blank" rel="noopener" class="resource-card">
+        <h4>3Blue1Brown</h4>
+        <p>Visual explanations of neural networks, linear algebra, and calculus</p>
+      </a>
+      <a href="https://www.youtube.com/@AndrejKarpathy" target="_blank" rel="noopener" class="resource-card">
+        <h4>Andrej Karpathy</h4>
+        <p>Deep dives into neural networks, GPT, tokenization from first principles</p>
+      </a>
+      <a href="https://www.youtube.com/@statquest" target="_blank" rel="noopener" class="resource-card">
+        <h4>StatQuest</h4>
+        <p>Clear, visual explanations of ML algorithms and statistics</p>
+      </a>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <p>Agentic Systems & Design — Study Guide</p>
+      <p style="margin-top:6px;">Progress is saved locally in your browser. No sign-up required.</p>
+    </footer>
+  </div>
+
+  <script src="js/nav.js"></script>
+  <script src="js/features.js"></script>
+</body>
+</html>

@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Progress Dashboard — Agentic Systems & Design</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/print.css">
+  <style>
+    .dashboard-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 80px 20px 40px;
+    }
+
+    .dashboard-header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .dashboard-header h1 {
+      font-size: 2.2rem;
+      font-weight: 800;
+      margin-bottom: 12px;
+      color: var(--text-primary);
+    }
+
+    .dashboard-header p {
+      color: var(--text-secondary);
+      font-size: 1rem;
+    }
+
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 24px;
+      margin-bottom: 24px;
+    }
+
+    @media (min-width: 768px) {
+      .dashboard-grid {
+        grid-template-columns: 2fr 1fr;
+      }
+    }
+
+    .dashboard-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+    }
+
+    .dashboard-card h2 {
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 20px;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .overall-progress {
+      text-align: center;
+      padding: 20px;
+    }
+
+    .circular-progress {
+      position: relative;
+      width: 200px;
+      height: 200px;
+      margin: 0 auto 20px;
+    }
+
+    .circular-progress svg {
+      transform: rotate(-90deg);
+    }
+
+    .circular-progress circle {
+      fill: none;
+      stroke-width: 10;
+    }
+
+    .circular-progress .bg-circle {
+      stroke: var(--bg-tertiary);
+    }
+
+    .circular-progress .progress-circle {
+      stroke: var(--accent);
+      stroke-linecap: round;
+      transition: stroke-dashoffset 1s ease;
+    }
+
+    .circular-progress .percentage {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: var(--accent);
+    }
+
+    .overall-stats {
+      display: flex;
+      justify-content: center;
+      gap: 32px;
+      margin-top: 20px;
+      flex-wrap: wrap;
+    }
+
+    .overall-stat {
+      text-align: center;
+    }
+
+    .overall-stat .num {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .overall-stat .label {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    .module-progress-item {
+      margin-bottom: 24px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .module-progress-item:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .module-progress-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .module-progress-title {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .module-badge {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.85rem;
+      flex-shrink: 0;
+    }
+
+    .module-badge.m1 { background: #38bdf8; color: #0f172a; }
+    .module-badge.m2 { background: #a78bfa; color: #0f172a; }
+    .module-badge.m3 { background: #fb923c; color: #0f172a; }
+    .module-badge.m4 { background: #4ade80; color: #0f172a; }
+    .module-badge.m5 { background: #fbbf24; color: #0f172a; }
+
+    .module-progress-stats {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      font-family: var(--font-mono);
+    }
+
+    .module-progress-bar {
+      height: 12px;
+      background: var(--bg-tertiary);
+      border-radius: 6px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .module-progress-bar .fill {
+      height: 100%;
+      border-radius: 6px;
+      transition: width 0.8s ease;
+    }
+
+    .module-progress-bar.m1 .fill { background: #38bdf8; }
+    .module-progress-bar.m2 .fill { background: #a78bfa; }
+    .module-progress-bar.m3 .fill { background: #fb923c; }
+    .module-progress-bar.m4 .fill { background: #4ade80; }
+    .module-progress-bar.m5 .fill { background: #fbbf24; }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .stat-box {
+      background: var(--bg-primary);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px;
+      text-align: center;
+    }
+
+    .stat-box .icon {
+      font-size: 2rem;
+      margin-bottom: 8px;
+    }
+
+    .stat-box .value {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 4px;
+    }
+
+    .stat-box .label {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .activity-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .activity-item {
+      display: flex;
+      gap: 12px;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.9rem;
+    }
+
+    .activity-item:last-child {
+      border-bottom: none;
+    }
+
+    .activity-icon {
+      font-size: 1.2rem;
+      flex-shrink: 0;
+    }
+
+    .activity-content {
+      flex: 1;
+    }
+
+    .activity-title {
+      color: var(--text-primary);
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+
+    .activity-meta {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .bookmarks-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .bookmark-item {
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .bookmark-item:last-child {
+      border-bottom: none;
+    }
+
+    .bookmark-item a {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--text-primary);
+      text-decoration: none;
+      font-size: 0.9rem;
+      transition: color var(--transition);
+    }
+
+    .bookmark-item a:hover {
+      color: var(--accent);
+    }
+
+    .bookmark-star {
+      color: var(--warning);
+    }
+
+    .bookmark-module {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-left: auto;
+    }
+
+    .time-estimate {
+      background: linear-gradient(135deg, rgba(56,189,248,0.1), rgba(167,139,250,0.1));
+      border: 1px solid rgba(56,189,248,0.2);
+      border-radius: 8px;
+      padding: 16px;
+      text-align: center;
+      margin-top: 24px;
+    }
+
+    .time-estimate .time {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--accent);
+      margin-bottom: 4px;
+    }
+
+    .time-estimate .label {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 30px 20px;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+
+    .empty-state-icon {
+      font-size: 3rem;
+      opacity: 0.3;
+      margin-bottom: 12px;
+    }
+
+    @media (max-width: 768px) {
+      .dashboard-container {
+        padding: 70px 12px 40px;
+      }
+
+      .dashboard-header h1 {
+        font-size: 1.6rem;
+      }
+
+      .circular-progress {
+        width: 160px;
+        height: 160px;
+      }
+
+      .circular-progress .percentage {
+        font-size: 2rem;
+      }
+
+      .overall-stats {
+        gap: 20px;
+      }
+
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="logo">
+      <span>🤖</span>
+      <a href="index.html">Agentic Systems & Design</a>
+    </div>
+    <div class="nav-controls">
+      <div class="feature-nav">
+        <a href="dashboard.html" style="color:var(--accent);border-color:var(--accent);">Dashboard</a>
+        <a href="glossary.html">Glossary</a>
+        <a href="flashcards.html">Flashcards</a>
+        <a href="challenges.html">Challenges</a>
+        <a href="certificate.html">Certificate</a>
+      </div>
+      <button class="theme-toggle" title="Toggle theme">☀️</button>
+    </div>
+  </nav>
+
+  <div class="dashboard-container">
+    <div class="dashboard-header">
+      <h1>📊 Your Progress Dashboard</h1>
+      <p>Track your journey through Agentic Systems & Design</p>
+    </div>
+
+    <div class="dashboard-grid">
+      <div class="dashboard-card">
+        <h2>🎯 Overall Progress</h2>
+        <div class="overall-progress">
+          <div class="circular-progress">
+            <svg width="200" height="200">
+              <circle class="bg-circle" cx="100" cy="100" r="90"></circle>
+              <circle class="progress-circle" cx="100" cy="100" r="90"
+                stroke-dasharray="565.48" stroke-dashoffset="565.48" id="progressCircle"></circle>
+            </svg>
+            <div class="percentage" id="overallPercentage">0%</div>
+          </div>
+          <div class="overall-stats">
+            <div class="overall-stat">
+              <div class="num" id="completedTopics">0</div>
+              <div class="label">Topics Completed</div>
+            </div>
+            <div class="overall-stat">
+              <div class="num" id="totalTopics">70</div>
+              <div class="label">Total Topics</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="dashboard-card">
+        <h2>🔥 Streak & XP</h2>
+        <div class="stats-grid">
+          <div class="stat-box">
+            <div class="icon">🔥</div>
+            <div class="value" id="streakDays">0</div>
+            <div class="label">Day Streak</div>
+          </div>
+          <div class="stat-box">
+            <div class="icon">⚡</div>
+            <div class="value" id="totalXP">0</div>
+            <div class="label">Total XP</div>
+          </div>
+        </div>
+        <div class="time-estimate">
+          <div class="time" id="timeSpent">0h</div>
+          <div class="label">Estimated Time Invested</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="dashboard-card" style="margin-bottom: 24px;">
+      <h2>📚 Module Progress</h2>
+      <div id="moduleProgressContainer"></div>
+    </div>
+
+    <div class="dashboard-grid">
+      <div class="dashboard-card">
+        <h2>📝 Recent Activity</h2>
+        <ul class="activity-list" id="activityList">
+          <li class="empty-state">
+            <div class="empty-state-icon">📭</div>
+            <div>No recent activity yet. Start learning to see your progress here!</div>
+          </li>
+        </ul>
+      </div>
+
+      <div class="dashboard-card">
+        <h2>⭐ Bookmarks</h2>
+        <ul class="bookmarks-list" id="bookmarksList">
+          <li class="empty-state">
+            <div class="empty-state-icon">🔖</div>
+            <div>No bookmarks yet. Click the star icon on any topic to save it here.</div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/nav.js"></script>
+  <script src="js/features.js"></script>
+  <script>
+    (function() {
+      const MODULES = [
+        { id: 'm1', name: 'Foundations', topics: 13, file: 'module1.html' },
+        { id: 'm2', name: 'Fundamentals of ML', topics: 16, file: 'module2.html' },
+        { id: 'm3', name: 'GenAI & Agents', topics: 14, file: 'module3.html' },
+        { id: 'm4', name: 'Agentic Systems & Design', topics: 16, file: 'module4.html' },
+        { id: 'm5', name: 'Platforms & Capstone', topics: 13, file: 'module5.html' }
+      ];
+      const TOTAL_TOPICS = 72;
+
+      function loadData() {
+        const progress = JSON.parse(localStorage.getItem('masai_quiz_progress') || '{}');
+        const streak = JSON.parse(localStorage.getItem('masai_streak') || '{"xp":0,"streak":0,"lastVisit":null,"history":[]}');
+        const bookmarks = JSON.parse(localStorage.getItem('masai_bookmarks') || '{}');
+        return { progress, streak, bookmarks };
+      }
+
+      function calculateProgress(progress) {
+        let totalCompleted = 0;
+        const moduleProgress = {};
+        MODULES.forEach(module => {
+          let completed = 0;
+          for (let i = 1; i <= module.topics; i++) {
+            if (progress[module.id + '-topic' + i]?.passed) {
+              completed++;
+              totalCompleted++;
+            }
+          }
+          moduleProgress[module.id] = { completed, total: module.topics };
+        });
+        return { totalCompleted, moduleProgress };
+      }
+
+      function renderOverallProgress(totalCompleted) {
+        const percentage = Math.round((totalCompleted / TOTAL_TOPICS) * 100);
+        document.getElementById('overallPercentage').textContent = percentage + '%';
+        document.getElementById('completedTopics').textContent = totalCompleted;
+        const circumference = 565.48;
+        const offset = circumference - (percentage / 100) * circumference;
+        setTimeout(() => { document.getElementById('progressCircle').style.strokeDashoffset = offset; }, 100);
+      }
+
+      function renderModuleProgress(moduleProgress) {
+        const container = document.getElementById('moduleProgressContainer');
+        container.textContent = '';
+        MODULES.forEach(module => {
+          const { completed, total } = moduleProgress[module.id];
+          const percentage = Math.round((completed / total) * 100);
+
+          const item = document.createElement('div');
+          item.className = 'module-progress-item';
+
+          const header = document.createElement('div');
+          header.className = 'module-progress-header';
+
+          const title = document.createElement('div');
+          title.className = 'module-progress-title';
+          const badge = document.createElement('div');
+          badge.className = 'module-badge ' + module.id;
+          badge.textContent = module.id.replace('m', '');
+          const name = document.createElement('span');
+          name.textContent = module.name;
+          title.appendChild(badge);
+          title.appendChild(name);
+
+          const stats = document.createElement('div');
+          stats.className = 'module-progress-stats';
+          stats.textContent = completed + '/' + total + ' (' + percentage + '%)';
+
+          header.appendChild(title);
+          header.appendChild(stats);
+
+          const bar = document.createElement('div');
+          bar.className = 'module-progress-bar ' + module.id;
+          const fill = document.createElement('div');
+          fill.className = 'fill';
+          fill.style.width = percentage + '%';
+          bar.appendChild(fill);
+
+          item.appendChild(header);
+          item.appendChild(bar);
+          container.appendChild(item);
+        });
+      }
+
+      function renderStreakAndXP(streak) {
+        document.getElementById('streakDays').textContent = streak.streak || 0;
+        document.getElementById('totalXP').textContent = streak.xp || 0;
+      }
+
+      function calculateTimeSpent(totalCompleted) {
+        const hours = Math.round(totalCompleted * 1.5);
+        document.getElementById('timeSpent').textContent = hours + 'h';
+      }
+
+      function renderRecentActivity(progress) {
+        const activityList = document.getElementById('activityList');
+        const activities = [];
+        Object.keys(progress).forEach(key => {
+          if (progress[key]?.passed) {
+            const match = key.match(/m(\d)-topic(\d+)/);
+            if (match) {
+              const module = MODULES.find(m => m.id === 'm' + match[1]);
+              activities.push({
+                module: module ? module.name : 'Module ' + match[1],
+                topic: 'Topic ' + match[2],
+                score: progress[key].score || 3,
+                timestamp: progress[key].timestamp || Date.now()
+              });
+            }
+          }
+        });
+        activities.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+        const recent = activities.slice(0, 8);
+        if (recent.length === 0) return;
+
+        activityList.textContent = '';
+        recent.forEach(activity => {
+          const item = document.createElement('li');
+          item.className = 'activity-item';
+          const icon = document.createElement('div');
+          icon.className = 'activity-icon';
+          icon.textContent = activity.score === 3 ? '✅' : '✓';
+          const content = document.createElement('div');
+          content.className = 'activity-content';
+          const title = document.createElement('div');
+          title.className = 'activity-title';
+          title.textContent = activity.topic + ' completed';
+          const meta = document.createElement('div');
+          meta.className = 'activity-meta';
+          meta.textContent = activity.module + ' · ' + getTimeAgo(activity.timestamp);
+          content.appendChild(title);
+          content.appendChild(meta);
+          item.appendChild(icon);
+          item.appendChild(content);
+          activityList.appendChild(item);
+        });
+      }
+
+      function getTimeAgo(timestamp) {
+        if (!timestamp) return 'Recently';
+        const diff = Date.now() - timestamp;
+        const days = Math.floor(diff / 86400000);
+        const hours = Math.floor(diff / 3600000);
+        const minutes = Math.floor(diff / 60000);
+        if (days > 0) return days + 'd ago';
+        if (hours > 0) return hours + 'h ago';
+        if (minutes > 0) return minutes + 'm ago';
+        return 'Just now';
+      }
+
+      function renderBookmarks(bookmarks) {
+        const bookmarksList = document.getElementById('bookmarksList');
+        const bookmarkArray = Object.entries(bookmarks).map(([id, data]) => ({ id, ...data }));
+        bookmarkArray.sort((a, b) => (b.date || 0) - (a.date || 0));
+        if (bookmarkArray.length === 0) return;
+
+        bookmarksList.textContent = '';
+        bookmarkArray.forEach(bookmark => {
+          const match = bookmark.id.match(/m(\d)/);
+          const module = match ? MODULES.find(m => m.id === 'm' + match[1]) : null;
+          const moduleName = module ? module.name : 'Module';
+
+          const item = document.createElement('li');
+          item.className = 'bookmark-item';
+          const link = document.createElement('a');
+          link.href = bookmark.url;
+          const star = document.createElement('span');
+          star.className = 'bookmark-star';
+          star.textContent = '★';
+          const title = document.createElement('span');
+          title.textContent = bookmark.title;
+          const modSpan = document.createElement('span');
+          modSpan.className = 'bookmark-module';
+          modSpan.textContent = moduleName;
+          link.appendChild(star);
+          link.appendChild(title);
+          link.appendChild(modSpan);
+          item.appendChild(link);
+          bookmarksList.appendChild(item);
+        });
+      }
+
+      function init() {
+        const { progress, streak, bookmarks } = loadData();
+        const { totalCompleted, moduleProgress } = calculateProgress(progress);
+        renderOverallProgress(totalCompleted);
+        renderModuleProgress(moduleProgress);
+        renderStreakAndXP(streak);
+        calculateTimeSpent(totalCompleted);
+        renderRecentActivity(progress);
+        renderBookmarks(bookmarks);
+      }
+
+      init();
+    })();
+  </script>
+</body>
+</html>

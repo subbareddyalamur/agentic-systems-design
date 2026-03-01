@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quick Reference — Agentic Systems & Design</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/print.css">
+  <style>
+    .ref-body { max-width: 900px; margin: 0 auto; padding: 80px 20px 40px; }
+    .ref-header { text-align: center; margin-bottom: 30px; }
+    .ref-header h1 { font-size: 1.8rem; margin-bottom: 8px; }
+    .ref-header p { color: var(--text-muted); }
+    .ref-section { margin-bottom: 30px; }
+    .ref-section h2 { font-size: 1.2rem; font-weight: 700; margin-bottom: 12px; color: var(--accent); border-bottom: 1px solid var(--border); padding-bottom: 8px; }
+    .ref-table { width: 100%; border-collapse: collapse; }
+    .ref-table th, .ref-table td { text-align: left; padding: 8px 12px; border-bottom: 1px solid var(--border); font-size: 0.9rem; }
+    .ref-table th { color: var(--text-muted); font-weight: 600; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.5px; }
+    .ref-table td:first-child { font-weight: 600; color: var(--text-primary); white-space: nowrap; }
+    .ref-table td:last-child { color: var(--text-secondary); }
+    code { background: var(--bg-code); padding: 2px 6px; border-radius: 4px; font-family: 'JetBrains Mono', monospace; font-size: 0.85em; }
+    .back-link { text-align: center; margin-top: 30px; }
+    .back-link a { color: var(--accent); text-decoration: none; font-weight: 600; }
+    @media print { .navbar { display: none !important; } .ref-body { padding-top: 20px; } }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="logo"><span>🤖</span><a href="../index.html" style="text-decoration:none;color:inherit;">Agentic Systems & Design</a></div>
+    <div class="nav-controls"><button class="theme-toggle" title="Toggle theme">☀️</button></div>
+  </nav>
+
+  <div class="ref-body">
+    <div class="ref-header">
+      <h1>Quick Reference Cheat Sheet</h1>
+      <p>Key concepts, commands, and patterns at a glance</p>
+    </div>
+
+    <div class="ref-section">
+      <h2>Python Essentials</h2>
+      <table class="ref-table">
+        <tr><th>Concept</th><th>Example</th></tr>
+        <tr><td>List comprehension</td><td><code>[x**2 for x in range(10) if x % 2 == 0]</code></td></tr>
+        <tr><td>Dict comprehension</td><td><code>{k: v for k, v in items.items() if v > 0}</code></td></tr>
+        <tr><td>F-string</td><td><code>f"Hello {name}, you are {age} years old"</code></td></tr>
+        <tr><td>Try/Except</td><td><code>try: ... except ValueError as e: ...</code></td></tr>
+        <tr><td>Lambda</td><td><code>sorted(items, key=lambda x: x['score'])</code></td></tr>
+        <tr><td>Virtual env</td><td><code>python -m venv .venv && source .venv/bin/activate</code></td></tr>
+      </table>
+    </div>
+
+    <div class="ref-section">
+      <h2>Git Commands</h2>
+      <table class="ref-table">
+        <tr><th>Command</th><th>Purpose</th></tr>
+        <tr><td><code>git init</code></td><td>Initialize a new repository</td></tr>
+        <tr><td><code>git add .</code></td><td>Stage all changes</td></tr>
+        <tr><td><code>git commit -m "msg"</code></td><td>Commit staged changes</td></tr>
+        <tr><td><code>git branch feature</code></td><td>Create a new branch</td></tr>
+        <tr><td><code>git checkout -b feature</code></td><td>Create and switch to branch</td></tr>
+        <tr><td><code>git merge feature</code></td><td>Merge branch into current</td></tr>
+        <tr><td><code>git log --oneline</code></td><td>View compact commit history</td></tr>
+      </table>
+    </div>
+
+    <div class="ref-section">
+      <h2>ML Quick Reference</h2>
+      <table class="ref-table">
+        <tr><th>Metric</th><th>Formula / Use</th></tr>
+        <tr><td>Precision</td><td>TP / (TP + FP) — "of positive predictions, how many were correct?"</td></tr>
+        <tr><td>Recall</td><td>TP / (TP + FN) — "of actual positives, how many did we find?"</td></tr>
+        <tr><td>F1 Score</td><td>2 * (Precision * Recall) / (Precision + Recall)</td></tr>
+        <tr><td>AUC-ROC</td><td>Area under ROC curve; 0.5 = random, 1.0 = perfect</td></tr>
+        <tr><td>MSE</td><td>Mean Squared Error — for regression</td></tr>
+        <tr><td>R²</td><td>1 - (SS_res / SS_tot) — variance explained by model</td></tr>
+      </table>
+    </div>
+
+    <div class="ref-section">
+      <h2>LLM & Agent Patterns</h2>
+      <table class="ref-table">
+        <tr><th>Pattern</th><th>Description</th></tr>
+        <tr><td>ReAct</td><td>Thought → Action → Observation loop for reasoning agents</td></tr>
+        <tr><td>RAG</td><td>Retrieve relevant docs, inject into prompt as context for grounded answers</td></tr>
+        <tr><td>Function calling</td><td>Model outputs structured JSON for tool invocation, code executes the tool</td></tr>
+        <tr><td>Circuit breaker</td><td>Stop calling a failing service after N failures; retry after timeout</td></tr>
+        <tr><td>Fallback chain</td><td>Try primary model → fallback model → cached response</td></tr>
+        <tr><td>Model routing</td><td>Simple queries → small model; complex → large model</td></tr>
+        <tr><td>Human-in-the-loop</td><td>Require human approval for high-stakes agent decisions</td></tr>
+      </table>
+    </div>
+
+    <div class="ref-section">
+      <h2>API Key Management</h2>
+      <table class="ref-table">
+        <tr><th>Rule</th><th>Details</th></tr>
+        <tr><td>Never hardcode keys</td><td>Use <code>.env</code> files + <code>python-dotenv</code> or <code>os.environ</code></td></tr>
+        <tr><td>.gitignore</td><td>Always include <code>.env</code>, <code>*.key</code>, <code>credentials.json</code></td></tr>
+        <tr><td>Production</td><td>Use secrets managers (AWS, GCP, Azure Key Vault)</td></tr>
+        <tr><td>Rotation</td><td>Rotate keys regularly; design for zero-downtime rotation</td></tr>
+        <tr><td>Scoping</td><td>Use project-specific keys with minimum permissions</td></tr>
+      </table>
+    </div>
+
+    <div class="ref-section">
+      <h2>RAGAS Evaluation Metrics</h2>
+      <table class="ref-table">
+        <tr><th>Metric</th><th>Measures</th></tr>
+        <tr><td>Faithfulness</td><td>Is the answer supported by the retrieved context?</td></tr>
+        <tr><td>Answer Relevancy</td><td>Does the answer address the user's query?</td></tr>
+        <tr><td>Context Precision</td><td>Are the retrieved chunks actually relevant?</td></tr>
+        <tr><td>Context Recall</td><td>Was all relevant information retrieved?</td></tr>
+      </table>
+    </div>
+
+    <div class="back-link">
+      <a href="../index.html">← Back to Study Guide</a>
+    </div>
+  </div>
+
+  <script src="../js/nav.js"></script>
+</body>
+</html>

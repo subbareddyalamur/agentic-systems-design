@@ -1,0 +1,2308 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Module 4: Agentic Systems & Design — Study Guide</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/print.css">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="logo">
+      <span>🤖</span>
+      <a href="index.html" style="text-decoration:none;color:inherit;">Agentic Systems & Design</a>
+    </div>
+    <div class="nav-controls">
+      <a href="index.html" style="color:var(--text-muted);text-decoration:none;margin-right:16px;">← All Modules</a>
+      <button class="theme-toggle" title="Toggle theme">☀️</button>
+    </div>
+  </nav>
+
+  <button class="sidebar-toggle">☰ Topics</button>
+
+  <div class="page-wrapper">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <h3>Module 4</h3>
+        <p>Agentic Systems & Design</p>
+        <div class="progress-bar"><div class="fill"></div></div>
+        <div class="sidebar-progress">0 / 16 topics completed</div>
+      </div>
+      <ul class="topic-list">
+        <li><a href="#m4-topic1"><span class="check">○</span> 1. LLM Internals</a></li>
+        <li><a href="#m4-topic2"><span class="check">○</span> 2. Version Control & Rate Limits</a></li>
+        <li><a href="#m4-topic3"><span class="check">○</span> 3. Retrieval & Grounding</a></li>
+        <li><a href="#m4-topic4"><span class="check">○</span> 4. Advanced RAG</a></li>
+        <li><a href="#m4-topic5"><span class="check">○</span> 5. Agent Communication</a></li>
+        <li><a href="#m4-topic6"><span class="check">○</span> 6. Output Validation</a></li>
+        <li><a href="#m4-topic7"><span class="check">○</span> 7. Memory Architecture</a></li>
+        <li><a href="#m4-topic8"><span class="check">○</span> 8. Advanced Orchestration</a></li>
+        <li><a href="#m4-topic9"><span class="check">○</span> 9. Resilience & Fallbacks</a></li>
+        <li><a href="#m4-topic10"><span class="check">○</span> 10. Tracing & Debugging</a></li>
+        <li><a href="#m4-topic11"><span class="check">○</span> 11. Evaluation & Testing</a></li>
+        <li><a href="#m4-topic12"><span class="check">○</span> 12. SLIs, SLOs & Monitoring</a></li>
+        <li><a href="#m4-topic13"><span class="check">○</span> 13. Deployment (FastAPI & Streamlit)</a></li>
+        <li><a href="#m4-topic14"><span class="check">○</span> 14. Ops: Caching & Concurrency</a></li>
+        <li><a href="#m4-topic15"><span class="check">○</span> 15. Maintenance & DR</a></li>
+        <li><a href="#m4-topic16"><span class="check">○</span> 16. Capstone Project</a></li>
+      </ul>
+    </aside>
+
+    <main class="main-content">
+
+<!-- Topic 1: LLM Internals -->
+<section class="topic-section" id="m4-topic1">
+  <h2>1. LLM Internals</h2>
+  <div class="why-box"><strong>Why this matters:</strong> To build production AI systems, you need to understand how LLMs actually work under the hood — tokenization, attention, sampling — so you can debug issues and optimize performance.</div>
+  <div class="content-text">
+    <h3>The Transformer Architecture</h3>
+    <p>All modern LLMs are based on the <strong>Transformer</strong> architecture (Vaswani et al., 2017). Key components:</p>
+    <div class="diagram-wrapper"><pre class="mermaid">
+flowchart TD
+  I[Input Text] --> T[Tokenizer]
+  T --> E[Token Embeddings + Positional Encoding]
+  E --> A1[Self-Attention Layer 1]
+  A1 --> F1[Feed-Forward Layer 1]
+  F1 --> A2[Self-Attention Layer 2]
+  A2 --> F2[Feed-Forward Layer 2]
+  F2 --> AN[... N layers ...]
+  AN --> O[Output Probabilities]
+  O --> S[Sampling / Decoding]
+  S --> R[Generated Token]
+  style I fill:#38bdf8,color:#000
+  style R fill:#4ade80,color:#000
+    </pre></div>
+    <h3>Tokenization</h3>
+    <p>LLMs don't see characters or words — they see <strong>tokens</strong>. A tokenizer splits text into subword units:</p>
+    <ul>
+      <li>"Hello world" → ["Hello", " world"] (2 tokens)</li>
+      <li>"unbelievable" → ["un", "believ", "able"] (3 tokens)</li>
+      <li>Common words = 1 token; rare words = multiple tokens</li>
+    </ul>
+    <p><strong>BPE (Byte Pair Encoding)</strong> is the most common algorithm. It starts with individual bytes and merges the most frequent pairs iteratively.</p>
+    <h3>Self-Attention</h3>
+    <p>The core mechanism that lets models understand context. Each token "attends" to every other token, learning which words are most relevant to each other:</p>
+    <ul>
+      <li>"The cat sat on the <strong>mat</strong>" — "mat" attends strongly to "sat" and "on"</li>
+      <li>Multi-head attention: multiple attention patterns run in parallel</li>
+      <li>Computational cost: O(n²) where n = sequence length — this is why context windows are limited</li>
+    </ul>
+    <h3>Sampling & Temperature</h3>
+    <p>After the model computes probabilities for the next token, a <strong>sampling strategy</strong> picks the actual token:</p>
+    <ul>
+      <li><strong>Temperature:</strong> Controls randomness. 0 = always pick highest probability (deterministic). 1 = sample from distribution. >1 = more random.</li>
+      <li><strong>Top-K:</strong> Only consider the K most likely tokens. K=1 = greedy, K=50 = moderate diversity.</li>
+      <li><strong>Top-P (nucleus):</strong> Consider tokens until cumulative probability reaches P. P=0.9 is common.</li>
+    </ul>
+    <div class="info-box"><strong>Production tip:</strong> Use temperature=0 for factual tasks (extraction, classification). Use temperature=0.7-1.0 for creative tasks (writing, brainstorming).</div>
+    <h3>Self-Attention Visualized</h3>
+    <div class="animation-wrapper" data-animation="self-attention">
+      <div class="animation-header"><span class="title">Token Attention Heatmap</span><div class="animation-controls"><button class="play-btn">▶ Play</button><button class="pause-btn">⏸ Pause</button><button class="step-btn">⏭ Step</button><button class="anim-reset-btn">↺ Reset</button></div></div>
+      <div class="animation-canvas"></div>
+    </div>
+  </div>
+  <div class="code-editor-wrapper">
+    <div class="code-editor-header"><span class="filename">Tokenization & Sampling</span><div class="actions"><button class="run-btn">▶ Run</button><button class="reset-btn">↺ Reset</button></div></div>
+    <textarea class="code-textarea" rows="28">
+import numpy as np
+
+# === Tokenization Demo ===
+# Simplified BPE-style tokenizer
+vocab = {"hello": 1, "world": 2, " ": 3, "un": 4, "believ": 5, 
+         "able": 6, "the": 7, "cat": 8, "sat": 9, "!": 10}
+
+def simple_tokenize(text):
+    tokens = []
+    i = 0
+    while i < len(text):
+        best_match = None
+        for length in range(min(6, len(text)-i), 0, -1):
+            chunk = text[i:i+length].lower()
+            if chunk in vocab:
+                best_match = chunk
+                break
+        if best_match:
+            tokens.append((best_match, vocab[best_match]))
+            i += len(best_match)
+        else:
+            tokens.append((text[i], "?"))
+            i += 1
+    return tokens
+
+print("=== Tokenization ===")
+for text in ["Hello world!", "unbelievable", "the cat sat"]:
+    tokens = simple_tokenize(text)
+    print(f'  "{text}" → {[t[0] for t in tokens]} ({len(tokens)} tokens)')
+
+# === Temperature Sampling ===
+print("\n=== Temperature Sampling ===")
+# Simulated next-token probabilities (logits)
+logits = np.array([2.0, 1.5, 0.5, 0.3, 0.1])  # 5 possible tokens
+token_names = ["the", "a", "cat", "dog", "fish"]
+
+def sample_with_temperature(logits, temperature, top_k=None):
+    if temperature == 0:
+        return np.argmax(logits)
+    scaled = logits / temperature
+    if top_k:
+        indices = np.argsort(scaled)[::-1][:top_k]
+        mask = np.full(len(scaled), -1e10)
+        mask[indices] = scaled[indices]
+        scaled = mask
+    probs = np.exp(scaled) / np.sum(np.exp(scaled))
+    return probs
+
+for temp in [0.1, 0.5, 1.0, 2.0]:
+    probs = sample_with_temperature(logits, temp)
+    print(f"\n  Temperature = {temp}:")
+    for name, prob in zip(token_names, probs):
+        bar = "█" * int(prob * 40)
+        print(f"    {name:5} {prob:.3f} {bar}")
+</textarea>
+    <div class="code-output"><div class="output-label">Output</div><div class="output-text" style="color:var(--text-muted)">Click "Run" to execute</div></div>
+  </div>
+  <div class="quiz-wrapper" data-topic-id="m4-topic1">
+    <h4>📝 Knowledge Check</h4>
+    <div class="quiz-question" data-correct="b" data-explanation="LLMs use tokenizers (usually BPE) to split text into subword tokens, not individual characters."><p>1. How do LLMs process text input?</p><div class="quiz-options"><div class="quiz-option" data-value="a"><span class="radio"></span> Character by character</div><div class="quiz-option" data-value="b"><span class="radio"></span> As subword tokens via a tokenizer</div><div class="quiz-option" data-value="c"><span class="radio"></span> Word by word with spaces as delimiters</div></div><div class="quiz-feedback"></div></div>
+    <div class="quiz-question" data-correct="a" data-explanation="Temperature=0 means always pick the most probable token (greedy/deterministic)."><p>2. What does temperature=0 do?</p><div class="quiz-options"><div class="quiz-option" data-value="a"><span class="radio"></span> Always picks the most probable token</div><div class="quiz-option" data-value="b"><span class="radio"></span> Picks random tokens</div><div class="quiz-option" data-value="c"><span class="radio"></span> Disables the model</div></div><div class="quiz-feedback"></div></div>
+    <div class="quiz-question" data-correct="c" data-explanation="Self-attention is O(n²) — each token attends to every other token, so doubling length quadruples cost."><p>3. Why is self-attention expensive for long sequences?</p><div class="quiz-options"><div class="quiz-option" data-value="a"><span class="radio"></span> It requires a GPU</div><div class="quiz-option" data-value="b"><span class="radio"></span> Tokens are too large</div><div class="quiz-option" data-value="c"><span class="radio"></span> Computational cost grows quadratically (O(n²))</div></div><div class="quiz-feedback"></div></div>
+    <button class="quiz-submit">Check Answers</button><div class="quiz-result"></div>
+  </div>
+  <div class="takeaways"><h4>Key Takeaways</h4><ul><li>LLMs use Transformer architecture with tokenization → attention → feed-forward layers</li><li>Tokenizers split text into subword tokens using BPE</li><li>Self-attention is O(n²) — limits context window length</li><li>Temperature controls randomness: 0 for factual, 0.7-1.0 for creative</li></ul></div>
+</section>
+
+<!-- Topic 2: Version Control & Rate Limits -->
+<section class="topic-section" id="m4-topic2">
+  <h2>2. Version Control & Rate Limits for LLM Apps</h2>
+  <div class="why-box"><strong>Why this matters:</strong> LLM APIs have rate limits, costs, and versioning quirks that don't exist in traditional software. Mismanaging these in production leads to outages, runaway costs, and broken deployments.</div>
+  <div class="content-text">
+    <h3>API Versioning</h3>
+    <p>LLM providers frequently update models. Production apps must handle this:</p>
+    <ul>
+      <li><strong>Pin model versions:</strong> Use <code>gpt-4-0613</code> not <code>gpt-4</code> (alias changes without notice)</li>
+      <li><strong>Track deprecation dates:</strong> Models get sunset — have a migration plan</li>
+      <li><strong>Test before upgrading:</strong> New model versions can behave differently</li>
+      <li><strong>A/B test models:</strong> Compare old vs. new model on real traffic</li>
+    </ul>
+    <h3>Rate Limits</h3>
+    <p>Every LLM API has rate limits (requests per minute, tokens per minute). Key strategies:</p>
+    <ul>
+      <li><strong>Exponential backoff:</strong> When rate-limited, wait 1s → 2s → 4s → 8s before retrying</li>
+      <li><strong>Request queuing:</strong> Queue requests and process at the allowed rate</li>
+      <li><strong>Token budgeting:</strong> Track token usage per request to stay within limits</li>
+      <li><strong>Tiered limits:</strong> Different API tiers have different limits — plan accordingly</li>
+    </ul>
+    <h3>Cost Management</h3>
+    <div class="diagram-wrapper"><pre class="mermaid">
+flowchart TD
+  U[User Request] --> C{Check Cache}
+  C -->|Hit| R[Return Cached]
+  C -->|Miss| T[Token Estimation]
+  T --> B{Within Budget?}
+  B -->|No| E[Reject / Queue]
+  B -->|Yes| A[Call LLM API]
+  A --> S[Store in Cache]
+  S --> R
+  style U fill:#38bdf8,color:#000
+  style R fill:#4ade80,color:#000
+  style E fill:#f87171,color:#000
+    </pre></div>
+    <ul>
+      <li><strong>Prompt caching:</strong> Cache identical or near-identical requests</li>
+      <li><strong>Shorter prompts:</strong> Every token costs money — trim unnecessary context</li>
+      <li><strong>Model routing:</strong> Use cheaper models (GPT-3.5, Haiku) for simple tasks, expensive models (GPT-4, Opus) for complex ones</li>
+      <li><strong>Usage dashboards:</strong> Track spend per feature, per user, per day</li>
+    </ul>
+    <h3>Token Budget Visualized</h3>
+    <div class="animation-wrapper" data-animation="token-budget">
+      <div class="animation-header"><span class="title">Token Budget Draining</span><div class="animation-controls"><button class="play-btn">▶ Play</button><button class="pause-btn">⏸ Pause</button><button class="step-btn">⏭ Step</button><button class="anim-reset-btn">↺ Reset</button></div></div>
+      <div class="animation-canvas"></div>
+    </div>
+  </div>
+  <div class="code-editor-wrapper">
+    <div class="code-editor-header"><span class="filename">Rate Limiting & Retry Logic</span><div class="actions"><button class="run-btn">▶ Run</button><button class="reset-btn">↺ Reset</button></div></div>
+    <textarea class="code-textarea" rows="26">
+import time
+import numpy as np
+
+# === Exponential Backoff ===
+def call_with_retry(func, max_retries=5, base_delay=1.0):
+    """Call a function with exponential backoff on failure"""
+    for attempt in range(max_retries):
+        try:
+            result = func()
+            return result
+        except Exception as e:
+            if attempt == max_retries - 1:
+                raise
+            delay = base_delay * (2 ** attempt) + np.random.uniform(0, 0.5)
+            print(f"  Attempt {attempt+1} failed: {e}")
+            print(f"  Retrying in {delay:.1f}s...")
+            # time.sleep(delay)  # Would sleep in real code
+    
+# === Token Budget Tracker ===
+class TokenBudget:
+    def __init__(self, daily_limit=100000):
+        self.daily_limit = daily_limit
+        self.used = 0
+        self.requests = []
+    
+    def can_afford(self, estimated_tokens):
+        return self.used + estimated_tokens <= self.daily_limit
+    
+    def record(self, tokens, cost_per_1k=0.01):
+        self.used += tokens
+        cost = (tokens / 1000) * cost_per_1k
+        self.requests.append({"tokens": tokens, "cost": cost})
+        return cost
+    
+    def report(self):
+        total_cost = sum(r["cost"] for r in self.requests)
+        return {
+            "requests": len(self.requests),
+            "tokens_used": self.used,
+            "tokens_remaining": self.daily_limit - self.used,
+            "total_cost": f"${total_cost:.4f}",
+            "utilization": f"{(self.used/self.daily_limit)*100:.1f}%"
+        }
+
+# Demo
+budget = TokenBudget(daily_limit=50000)
+requests = [
+    ("Simple classification", 500),
+    ("RAG query", 3000),
+    ("Long document summary", 8000),
+    ("Code generation", 2000),
+    ("Chat response", 1500),
+]
+
+print("=== Token Budget Tracking ===\n")
+for task, tokens in requests:
+    if budget.can_afford(tokens):
+        cost = budget.record(tokens)
+        print(f"  ✅ {task}: {tokens} tokens (${cost:.4f})")
+    else:
+        print(f"  ❌ {task}: {tokens} tokens — OVER BUDGET")
+
+print(f"\n=== Daily Report ===")
+for k, v in budget.report().items():
+    print(f"  {k}: {v}")
+</textarea>
+    <div class="code-output"><div class="output-label">Output</div><div class="output-text" style="color:var(--text-muted)">Click "Run" to execute</div></div>
+  </div>
+  <div class="quiz-wrapper" data-topic-id="m4-topic2">
+    <h4>📝 Knowledge Check</h4>
+    <div class="quiz-question" data-correct="b" data-explanation="Pinning to exact version (e.g., gpt-4-0613) prevents breaking changes when aliases are updated."><p>1. Why should you pin LLM model versions?</p><div class="quiz-options"><div class="quiz-option" data-value="a"><span class="radio"></span> Pinned versions are cheaper</div><div class="quiz-option" data-value="b"><span class="radio"></span> Aliases can change behavior without notice</div><div class="quiz-option" data-value="c"><span class="radio"></span> Only pinned versions are supported</div></div><div class="quiz-feedback"></div></div>
+    <div class="quiz-question" data-correct="a" data-explanation="Exponential backoff waits increasingly longer between retries (1s → 2s → 4s → 8s)."><p>2. What is exponential backoff?</p><div class="quiz-options"><div class="quiz-option" data-value="a"><span class="radio"></span> Waiting increasingly longer between retries</div><div class="quiz-option" data-value="b"><span class="radio"></span> Sending more requests when rate limited</div><div class="quiz-option" data-value="c"><span class="radio"></span> Reducing token count over time</div></div><div class="quiz-feedback"></div></div>
+    <div class="quiz-question" data-correct="c" data-explanation="Model routing sends simple tasks to cheap models and complex tasks to expensive ones."><p>3. What is model routing for cost optimization?</p><div class="quiz-options"><div class="quiz-option" data-value="a"><span class="radio"></span> Using only the cheapest model</div><div class="quiz-option" data-value="b"><span class="radio"></span> Routing all traffic to one provider</div><div class="quiz-option" data-value="c"><span class="radio"></span> Using cheap models for simple tasks, expensive for complex</div></div><div class="quiz-feedback"></div></div>
+    <button class="quiz-submit">Check Answers</button><div class="quiz-result"></div>
+  </div>
+  <div class="takeaways"><h4>Key Takeaways</h4><ul><li>Pin model versions to prevent surprise behavior changes</li><li>Implement exponential backoff with jitter for rate limits</li><li>Track token budgets per feature/user for cost control</li><li>Use model routing: cheap models for simple tasks, expensive for complex</li></ul></div>
+</section>
+
+<!-- Topic 3: Retrieval & Grounding -->
+<section class="topic-section" id="m4-topic3">
+  <h2>3. Retrieval & Grounding</h2>
+  <div class="why-box"><strong>Why this matters:</strong> Grounding means ensuring LLM outputs are based on verifiable facts, not hallucinations. Advanced retrieval strategies make the difference between a demo and a production system.</div>
+  <div class="content-text">
+    <h3>Beyond Basic RAG</h3>
+    <p>Basic RAG (embed → search → generate) works for demos, but production systems need more sophisticated retrieval:</p>
+    <h4>Hybrid Search</h4>
+    <p>Combine vector search (semantic) with keyword search (exact match) for best results:</p>
+    <ul>
+      <li><strong>Vector search:</strong> "How to fix authentication" finds "resolve login issues"</li>
+      <li><strong>Keyword search:</strong> Finds exact terms like error codes, product names</li>
+      <li><strong>Hybrid:</strong> Weighted combination of both — catches both semantic and exact matches</li>
+    </ul>
+    <h4>Re-ranking</h4>
+    <p>Initial retrieval is fast but rough. A re-ranker (cross-encoder model) scores each retrieved chunk more accurately:</p>
+    <div class="diagram-wrapper"><pre class="mermaid">
+flowchart LR
+  Q[Query] --> R1[Initial Retrieval<br/>Top 20 chunks]
+  R1 --> RR[Re-ranker Model]
+  RR --> R2[Re-ranked<br/>Top 5 chunks]
+  R2 --> LLM[Generate Answer]
+  style Q fill:#38bdf8,color:#000
+  style LLM fill:#4ade80,color:#000
+    </pre></div>
+    <h4>Query Transformation</h4>
+    <p>The user's query may not be optimal for retrieval. Transform it:</p>
+    <ul>
+      <li><strong>Query expansion:</strong> Add synonyms and related terms</li>
+      <li><strong>HyDE:</strong> Generate a hypothetical answer, then search for similar documents</li>
+      <li><strong>Multi-query:</strong> Rewrite the query from different angles, search each, combine results</li>
+      <li><strong>Step-back prompting:</strong> Ask a more general question first to get broader context</li>
+    </ul>
+    <h3>Grounding Techniques</h3>
+    <ul>
+      <li><strong>Citation extraction:</strong> Force the LLM to cite which documents support each claim</li>
+      <li><strong>Faithfulness checking:</strong> Verify the answer is supported by retrieved context</li>
+      <li><strong>Confidence scoring:</strong> Have the LLM rate its own confidence</li>
+      <li><strong>Source attribution:</strong> Link each answer back to its source document</li>
+    </ul>
+    <h3>Evaluation Metrics for RAG</h3>
+    <ul>
+      <li><strong>Context relevance:</strong> Are the retrieved chunks relevant to the query?</li>
+      <li><strong>Faithfulness:</strong> Is the answer supported by the retrieved context?</li>
+      <li><strong>Answer relevance:</strong> Does the answer actually address the question?</li>
+    </ul>
+  </div>
+  <div class="code-editor-wrapper">
+    <div class="code-editor-header"><span class="filename">Hybrid Search & Re-ranking</span><div class="actions"><button class="run-btn">▶ Run</button><button class="reset-btn">↺ Reset</button></div></div>
+    <textarea class="code-textarea" rows="30">
+import numpy as np
+
+documents = [
+    "Python is a programming language created in 1991",
+    "Error code AUTH_FAIL means authentication failed",
+    "Machine learning models learn patterns from data",
+    "The login endpoint returns AUTH_FAIL on bad credentials",
+    "Deep learning is a subset of machine learning",
+    "Fix authentication by resetting the API key",
+]
+
+# Simple embeddings (word overlap)
+def embed(text):
+    words = set(text.lower().split())
+    vocab = sorted(set(w for d in documents for w in d.lower().split()))
+    return np.array([1.0 if w in words else 0.0 for w in vocab])
+
+def cosine_sim(a, b):
+    d = np.linalg.norm(a) * np.linalg.norm(b)
+    return np.dot(a, b) / d if d > 0 else 0
+
+# === Hybrid Search ===
+query = "fix AUTH_FAIL error"
+
+# Vector search (semantic)
+query_emb = embed(query)
+vector_scores = [(cosine_sim(query_emb, embed(d)), i) for i, d in enumerate(documents)]
+vector_scores.sort(reverse=True)
+
+# Keyword search (exact match)
+query_terms = set(query.lower().split())
+keyword_scores = []
+for i, d in enumerate(documents):
+    doc_terms = set(d.lower().split())
+    overlap = len(query_terms & doc_terms)
+    keyword_scores.append((overlap, i))
+keyword_scores.sort(reverse=True)
+
+# Combine (hybrid)
+alpha = 0.6  # Weight for vector search
+hybrid_scores = {}
+for score, idx in vector_scores:
+    hybrid_scores[idx] = alpha * score
+for score, idx in keyword_scores:
+    hybrid_scores[idx] = hybrid_scores.get(idx, 0) + (1 - alpha) * (score / max(1, max(s for s, _ in keyword_scores)))
+
+ranked = sorted(hybrid_scores.items(), key=lambda x: -x[1])
+
+print(f"Query: \"{query}\"\n")
+print("=== Hybrid Search Results ===")
+for idx, score in ranked[:4]:
+    v_score = next(s for s, i in vector_scores if i == idx)
+    k_score = next(s for s, i in keyword_scores if i == idx)
+    print(f"  [{score:.3f}] (vec={v_score:.2f}, kw={k_score}) {documents[idx]}")
+
+# === Re-ranking (simulated) ===
+print("\n=== After Re-ranking ===")
+# Simulate cross-encoder giving better scores for truly relevant docs
+rerank_boost = {1: 0.3, 3: 0.25, 5: 0.2}  # Docs about AUTH_FAIL
+for idx, score in ranked[:4]:
+    new_score = score + rerank_boost.get(idx, -0.1)
+    print(f"  [{new_score:.3f}] {documents[idx]}")
+</textarea>
+    <div class="code-output"><div class="output-label">Output</div><div class="output-text" style="color:var(--text-muted)">Click "Run" to execute</div></div>
+  </div>
+  <div class="quiz-wrapper" data-topic-id="m4-topic3">
+    <h4>📝 Knowledge Check</h4>
+    <div class="quiz-question" data-correct="b" data-explanation="Hybrid search combines semantic (vector) and keyword (exact) search for better results."><p>1. What is hybrid search?</p><div class="quiz-options"><div class="quiz-option" data-value="a"><span class="radio"></span> Using two different LLMs</div><div class="quiz-option" data-value="b"><span class="radio"></span> Combining vector and keyword search</div><div class="quiz-option" data-value="c"><span class="radio"></span> Searching in multiple languages</div></div><div class="quiz-feedback"></div></div>
+    <div class="quiz-question" data-correct="c" data-explanation="A re-ranker uses a cross-encoder model to more accurately score retrieved chunks."><p>2. What does a re-ranker do?</p><div class="quiz-options"><div class="quiz-option" data-value="a"><span class="radio"></span> Generates the final answer</div><div class="quiz-option" data-value="b"><span class="radio"></span> Replaces the vector store</div><div class="quiz-option" data-value="c"><span class="radio"></span> More accurately scores retrieved chunks</div></div><div class="quiz-feedback"></div></div>
+    <div class="quiz-question" data-correct="a" data-explanation="Faithfulness measures whether the generated answer is supported by the retrieved context."><p>3. What does "faithfulness" measure in RAG?</p><div class="quiz-options"><div class="quiz-option" data-value="a"><span class="radio"></span> Whether the answer is supported by the context</div><div class="quiz-option" data-value="b"><span class="radio"></span> How fast the retrieval is</div><div class="quiz-option" data-value="c"><span class="radio"></span> The number of documents retrieved</div></div><div class="quiz-feedback"></div></div>
+    <button class="quiz-submit">Check Answers</button><div class="quiz-result"></div>
+  </div>
+  <div class="takeaways"><h4>Key Takeaways</h4><ul><li>Hybrid search (vector + keyword) outperforms either alone</li><li>Re-ranking improves retrieval precision with cross-encoder scoring</li><li>Query transformation (HyDE, multi-query) improves retrieval recall</li><li>Grounding = citations + faithfulness checking + source attribution</li></ul></div>
+</section>
+
+<!-- Topic 4: Advanced RAG -->
+<section class="topic-section" id="m4-topic4">
+  <h2>4. Advanced RAG Patterns</h2>
+  <div class="why-box"><strong>Why this matters:</strong> Basic RAG retrieves chunks and generates answers. Advanced RAG handles complex queries, multi-hop reasoning, tables, and dynamic knowledge — the patterns that separate production systems from prototypes.</div>
+  <div class="content-text">
+    <h3>Multi-Hop RAG</h3>
+    <p>Some questions require information from multiple documents combined through reasoning:</p>
+    <pre style="background:var(--bg-tertiary);padding:12px;border-radius:6px;font-size:0.85rem;overflow-x:auto;">Q: "What's the GDP per capita of the country where Python was created?"
+Step 1: Retrieve → "Python was created in the Netherlands"
+Step 2: Retrieve → "Netherlands GDP: $1.01T, Population: 17.5M"
+Step 3: Calculate → $1.01T / 17.5M ≈ $57,714</pre>
+    <h3>Agentic RAG</h3>
+    <p>Instead of a fixed retrieve→generate pipeline, an agent decides what to retrieve and when:</p>
+    <div class="diagram-wrapper"><pre class="mermaid">
+flowchart TD
+  Q[User Query] --> A{Agent: Need retrieval?}
+  A -->|Yes| R[Retrieve from knowledge base]
+  A -->|No| D[Answer directly]
+  R --> E{Enough context?}
+  E -->|No| RQ[Reformulate query]
+  RQ --> R
+  E -->|Yes| G[Generate answer with citations]
+  D --> O[Output]
+  G --> O
+  style Q fill:#38bdf8,color:#000
+  style O fill:#4ade80,color:#000
+    </pre></div>
+    <h3>Advanced Patterns</h3>
+    <h4>Parent-Child Retrieval</h4>
+    <p>Embed small chunks (for precision) but return the parent chunk (for context). A sentence matches the query, but you return the full paragraph.</p>
+    <h4>Contextual Compression</h4>
+    <p>After retrieval, use a smaller model to extract only the relevant sentences from each chunk, reducing noise in the context.</p>
+    <h4>Self-RAG</h4>
+    <p>The model decides whether to retrieve, generates an answer, then self-evaluates whether the answer is grounded. If not, it retrieves again.</p>
+    <h4>Knowledge Graphs + RAG</h4>
+    <p>Combine structured knowledge (entities, relationships) with unstructured text for more accurate multi-hop reasoning.</p>
+    <h3>Metadata Filtering</h3>
+    <p>Don't just search by content — filter by metadata first:</p>
+    <ul>
+      <li><strong>Date range:</strong> "Only search documents from last 30 days"</li>
+      <li><strong>Source type:</strong> "Only search technical documentation"</li>
+      <li><strong>Access level:</strong> "Only return documents the user can access"</li>
+      <li><strong>Language:</strong> "Only search English documents"</li>
+    </ul>
+  </div>
+  <div class="code-editor-wrapper">
+    <div class="code-editor-header"><span class="filename">Multi-Hop RAG</span><div class="actions"><button class="run-btn">▶ Run</button><button class="reset-btn">↺ Reset</button></div></div>
+    <textarea class="code-textarea" rows="28">
+import numpy as np
+
+# Knowledge base with metadata
+kb = [
+    {"text": "Python was created by Guido van Rossum in the Netherlands", "type": "fact", "topic": "python"},
+    {"text": "The Netherlands has a population of 17.5 million", "type": "stat", "topic": "netherlands"},
+    {"text": "The Netherlands GDP is approximately 1.01 trillion USD", "type": "stat", "topic": "netherlands"},
+    {"text": "Guido van Rossum later moved to work at Google, then Dropbox", "type": "fact", "topic": "python"},
+    {"text": "JavaScript was created by Brendan Eich at Netscape in 1995", "type": "fact", "topic": "javascript"},
+]
+
+def simple_search(query, kb, topic_filter=None, top_k=2):
+    query_words = set(query.lower().split())
+    results = []
+    for doc in kb:
+        if topic_filter and doc["topic"] != topic_filter:
+            continue
+        doc_words = set(doc["text"].lower().split())
+        score = len(query_words & doc_words) / max(len(query_words), 1)
+        results.append((score, doc))
+    results.sort(reverse=True)
+    return results[:top_k]
+
+# === Multi-Hop RAG ===
+question = "What's the GDP per capita of the country where Python was created?"
+print(f"Question: {question}\n")
+
+# Hop 1: Find where Python was created
+print("--- Hop 1: Where was Python created? ---")
+results1 = simple_search("Python created country", kb)
+for score, doc in results1:
+    print(f"  [{score:.2f}] {doc['text']}")
+country = "netherlands"  # Extracted from results
+
+# Hop 2: Find GDP and population for that country
+print(f"\n--- Hop 2: GDP and population of {country} ---")
+results2 = simple_search(f"{country} GDP population", kb, topic_filter=country)
+for score, doc in results2:
+    print(f"  [{score:.2f}] {doc['text']}")
+
+# Hop 3: Calculate
+print("\n--- Hop 3: Calculate ---")
+gdp = 1.01e12  # Extracted
+pop = 17.5e6   # Extracted
+gdp_per_capita = gdp / pop
+print(f"  GDP: ${gdp/1e12:.2f}T")
+print(f"  Population: {pop/1e6:.1f}M")
+print(f"  GDP per capita: ${gdp_per_capita:,.0f}")
+
+print(f"\n✅ Answer: The GDP per capita of the Netherlands (where Python was created) is approximately ${gdp_per_capita:,.0f}")
+</textarea>
+    <div class="code-output"><div class="output-label">Output</div><div class="output-text" style="color:var(--text-muted)">Click "Run" to execute</div></div>
+  </div>
+  <div class="quiz-wrapper" data-topic-id="m4-topic4">
+    <h4>📝 Knowledge Check</h4>
+    <div class="quiz-question" data-correct="b" data-explanation="Multi-hop RAG chains multiple retrieval steps, combining information across documents."><p>1. What is multi-hop RAG?</p><div class="quiz-options"><div class="quiz-option" data-value="a"><span class="radio"></span> Using multiple vector databases</div><div class="quiz-option" data-value="b"><span class="radio"></span> Chaining multiple retrieval steps to combine information</div><div class="quiz-option" data-value="c"><span class="radio"></span> Retrieving from multiple languages</div></div><div class="quiz-feedback"></div></div>
+    <div class="quiz-question" data-correct="a" data-explanation="Parent-child retrieval embeds small chunks for precise matching but returns the larger parent for more context."><p>2. What is parent-child retrieval?</p><div class="quiz-options"><div class="quiz-option" data-value="a"><span class="radio"></span> Embed small chunks, return the larger parent chunk</div><div class="quiz-option" data-value="b"><span class="radio"></span> Retrieve from parent and child databases</div><div class="quiz-option" data-value="c"><span class="radio"></span> A family tree search algorithm</div></div><div class="quiz-feedback"></div></div>
+    <div class="quiz-question" data-correct="c" data-explanation="Metadata filtering reduces noise by narrowing results by date, type, access level, etc."><p>3. Why use metadata filtering in RAG?</p><div class="quiz-options"><div class="quiz-option" data-value="a"><span class="radio"></span> It makes embeddings more accurate</div><div class="quiz-option" data-value="b"><span class="radio"></span> It replaces the vector search entirely</div><div class="quiz-option" data-value="c"><span class="radio"></span> It narrows results by date, source, access level</div></div><div class="quiz-feedback"></div></div>
+    <button class="quiz-submit">Check Answers</button><div class="quiz-result"></div>
+  </div>
+  <div class="takeaways"><h4>Key Takeaways</h4><ul><li>Multi-hop RAG chains retrieval steps for complex reasoning</li><li>Agentic RAG: agent decides when and what to retrieve</li><li>Parent-child retrieval balances precision and context</li><li>Metadata filtering narrows results for relevance and access control</li></ul></div>
+</section>
+
+<!-- Topic 5: Agent Communication -->
+<section class="topic-section" id="m4-topic5">
+  <h2>5. Agent Communication Protocols</h2>
+  <div class="why-box"><strong>Why this matters:</strong> Production systems often need multiple agents working together. How agents communicate, share state, and coordinate determines whether the system is reliable or chaotic.</div>
+  <div class="content-text">
+    <h3>Multi-Agent Systems</h3>
+    <p>Instead of one monolithic agent, production systems often use specialized agents that collaborate:</p>
+    <ul>
+      <li><strong>Supervisor pattern:</strong> A coordinator agent delegates tasks to specialist agents</li>
+      <li><strong>Peer-to-peer:</strong> Agents communicate directly, passing messages</li>
+      <li><strong>Hierarchical:</strong> Agents organized in layers (manager → team leads → workers)</li>
+    </ul>
+    <div class="diagram-wrapper"><pre class="mermaid">
+flowchart TD
+  S[Supervisor Agent] --> R[Research Agent]
+  S --> W[Writer Agent]
+  S --> C[Code Agent]
+  R -->|findings| S
+  W -->|draft| S
+  C -->|code| S
+  S --> U[Final Output to User]
+  style S fill:#38bdf8,color:#000
+  style U fill:#4ade80,color:#000
+    </pre></div>
+    <h3>Communication Patterns</h3>
+    <h4>1. Message Passing</h4>
+    <p>Agents send structured messages to each other. Each message has a sender, receiver, content, and type:</p>
+    <pre style="background:var(--bg-tertiary);padding:12px;border-radius:6px;font-size:0.85rem;overflow-x:auto;">{
+  "from": "research_agent",
+  "to": "writer_agent",
+  "type": "research_complete",
+  "content": {"findings": [...], "sources": [...]}
+}</pre>
+    <h4>2. Shared State</h4>
+    <p>All agents read from and write to a shared state object (like LangGraph's state). Simpler but requires careful state management to avoid conflicts.</p>
+    <h4>3. Event-Driven</h4>
+    <p>Agents publish events and subscribe to event types they care about. Loosely coupled — agents don't need to know about each other.</p>
+    <h3>Coordination Challenges</h3>
+    <ul>
+      <li><strong>Race conditions:</strong> Two agents modifying state simultaneously</li>
+      <li><strong>Deadlocks:</strong> Agents waiting on each other</li>
+      <li><strong>Infinite loops:</strong> Agents triggering each other endlessly</li>
+      <li><strong>Error propagation:</strong> One agent's failure cascading to others</li>
+    </ul>
+    <div class="info-box"><strong>Best practice:</strong> Use explicit turn-taking or a supervisor to prevent race conditions. Set maximum iteration limits to prevent infinite loops.</div>
+    <h3>Multi-Agent Communication Visualized</h3>
+    <div class="animation-wrapper" data-animation="multi-agent">
+      <div class="animation-header"><span class="title">Agent Message Passing</span><div class="animation-controls"><button class="play-btn">▶ Play</button><button class="pause-btn">⏸ Pause</button><button class="step-btn">⏭ Step</button><button class="anim-reset-btn">↺ Reset</button></div></div>
+      <div class="animation-canvas"></div>
+    </div>
+  </div>
+  <div class="code-editor-wrapper">
+    <div class="code-editor-header"><span class="filename">Multi-Agent Communication</span><div class="actions"><button class="run-btn">▶ Run</button><button class="reset-btn">↺ Reset</button></div></div>
+    <textarea class="code-textarea" rows="30">
+# Multi-agent system with supervisor pattern
+
+class Agent:
+    def __init__(self, name, role):
+        self.name = name
+        self.role = role
+    
+    def process(self, task):
+        """Each agent processes tasks differently"""
+        if self.role == "researcher":
+            return {"findings": f"Research on '{task}': Found 3 relevant papers", "status": "complete"}
+        elif self.role == "writer":
+            return {"draft": f"Article about {task}: [Well-written draft...]", "status": "complete"}
+        elif self.role == "reviewer":
+            return {"feedback": "Looks good! Minor suggestion: add more examples", "approved": True}
+        return {"error": "Unknown role"}
+
+class Supervisor:
+    def __init__(self):
+        self.agents = {}
+        self.messages = []
+    
+    def register(self, agent):
+        self.agents[agent.name] = agent
+    
+    def send_message(self, from_name, to_name, content):
+        msg = {"from": from_name, "to": to_name, "content": content}
+        self.messages.append(msg)
+        print(f"  📨 {from_name} → {to_name}: {list(content.keys())}")
+    
+    def orchestrate(self, task):
+        print(f"Supervisor: Received task '{task}'\n")
+        
+        # Step 1: Research
+        print("Step 1: Delegating to researcher...")
+        result = self.agents["researcher"].process(task)
+        self.send_message("researcher", "supervisor", result)
+        
+        # Step 2: Write
+        print("\nStep 2: Delegating to writer...")
+        result = self.agents["writer"].process(task)
+        self.send_message("writer", "supervisor", result)
+        
+        # Step 3: Review
+        print("\nStep 3: Delegating to reviewer...")
+        result = self.agents["reviewer"].process(task)
+        self.send_message("reviewer", "supervisor", result)
+        
+        print(f"\n✅ Task complete! {len(self.messages)} messages exchanged")
+        return result
+
+# Set up multi-agent system
+sup = Supervisor()
+sup.register(Agent("researcher", "researcher"))
+sup.register(Agent("writer", "writer"))
+sup.register(Agent("reviewer", "reviewer"))
+
+# Execute
+sup.orchestrate("Benefits of RAG in production AI systems")
+</textarea>
+    <div class="code-output"><div class="output-label">Output</div><div class="output-text" style="color:var(--text-muted)">Click "Run" to execute</div></div>
+  </div>
+  <div class="quiz-wrapper" data-topic-id="m4-topic5">
+    <h4>📝 Knowledge Check</h4>
+    <div class="quiz-question" data-correct="a" data-explanation="The supervisor pattern has a coordinator that delegates tasks and aggregates results."><p>1. What is the supervisor pattern?</p><div class="quiz-options"><div class="quiz-option" data-value="a"><span class="radio"></span> A coordinator delegates tasks to specialist agents</div><div class="quiz-option" data-value="b"><span class="radio"></span> All agents work independently without coordination</div><div class="quiz-option" data-value="c"><span class="radio"></span> A single agent handles all tasks</div></div><div class="quiz-feedback"></div></div>
+    <div class="quiz-question" data-correct="c" data-explanation="Event-driven communication is loosely coupled — agents don't need to know about each other."><p>2. Which communication pattern is most loosely coupled?</p><div class="quiz-options"><div class="quiz-option" data-value="a"><span class="radio"></span> Direct message passing</div><div class="quiz-option" data-value="b"><span class="radio"></span> Shared state</div><div class="quiz-option" data-value="c"><span class="radio"></span> Event-driven pub/sub</div></div><div class="quiz-feedback"></div></div>
+    <div class="quiz-question" data-correct="b" data-explanation="Setting max iterations prevents agents from triggering each other in an infinite cycle."><p>3. How do you prevent infinite loops in multi-agent systems?</p><div class="quiz-options"><div class="quiz-option" data-value="a"><span class="radio"></span> Use more agents</div><div class="quiz-option" data-value="b"><span class="radio"></span> Set maximum iteration limits</div><div class="quiz-option" data-value="c"><span class="radio"></span> Infinite loops can't happen with agents</div></div><div class="quiz-feedback"></div></div>
+    <button class="quiz-submit">Check Answers</button><div class="quiz-result"></div>
+  </div>
+  <div class="takeaways"><h4>Key Takeaways</h4><ul><li>Multi-agent patterns: supervisor, peer-to-peer, hierarchical</li><li>Communication: message passing, shared state, event-driven</li><li>Watch for: race conditions, deadlocks, infinite loops</li><li>Use supervisors and iteration limits for safe coordination</li></ul></div>
+</section>
+
+<!-- Topic 6: Output Validation -->
+<section class="topic-section" id="m4-topic6">
+  <h2>6. Output Validation & Guardrails</h2>
+  <div class="why-box"><strong>Why this matters:</strong> LLMs can produce invalid JSON, harmful content, hallucinated data, or off-topic responses. Guardrails catch these issues before they reach users or downstream systems.</div>
+  <div class="content-text">
+    <h3>Types of Validation</h3>
+    <h4>1. Structural Validation</h4>
+    <p>Ensure the output matches the expected format:</p>
+    <ul>
+      <li>Valid JSON/YAML</li>
+      <li>Matches Pydantic schema</li>
+      <li>Required fields present</li>
+      <li>Correct data types</li>
+    </ul>
+    <h4>2. Content Validation</h4>
+    <ul>
+      <li>No harmful/toxic content</li>
+      <li>No PII (personally identifiable information) leakage</li>
+      <li>Stays on topic (relevance check)</li>
+      <li>Factual consistency with source documents</li>
+    </ul>
+    <h4>3. Business Logic Validation</h4>
+    <ul>
+      <li>Prices are within expected range</li>
+      <li>Dates are in the future (for bookings)</li>
+      <li>Recommendations match user preferences</li>
+    </ul>
+    <h3>Guardrail Architecture</h3>
+    <div class="diagram-wrapper"><pre class="mermaid">
+flowchart LR
+  I[User Input] --> IG[Input Guard]
+  IG --> LLM[LLM Processing]
+  LLM --> OG[Output Guard]
+  OG -->|Pass| U[User]
+  OG -->|Fail| R[Retry / Fallback]
+  R --> LLM
+  style I fill:#38bdf8,color:#000
+  style U fill:#4ade80,color:#000
+  style R fill:#fbbf24,color:#000
+    </pre></div>
+    <h3>Implementation Strategies</h3>
+    <ul>
+      <li><strong>Regex patterns:</strong> Check for PII (emails, phone numbers, SSNs)</li>
+      <li><strong>Schema validation:</strong> Pydantic, JSON Schema for structural checks</li>
+      <li><strong>Classifier models:</strong> Small models that classify toxicity, relevance</li>
+      <li><strong>LLM-as-judge:</strong> Use a second LLM to evaluate the first LLM's output</li>
+      <li><strong>Rule-based:</strong> Hardcoded business rules (price ranges, allowed categories)</li>
+    </ul>
+    <h3>Retry Strategies</h3>
+    <ul>
+      <li><strong>Simple retry:</strong> Call the LLM again with the same prompt</li>
+      <li><strong>Retry with feedback:</strong> Include the error message in the next prompt</li>
+      <li><strong>Fallback model:</strong> Try a different model if the first fails</li>
+      <li><strong>Graceful degradation:</strong> Return a safe default response</li>
+    </ul>
+  </div>
+  <div class="code-editor-wrapper">
+    <div class="code-editor-header"><span class="filename">Output Validation System</span><div class="actions"><button class="run-btn">▶ Run</button><button class="reset-btn">↺ Reset</button></div></div>
+    <textarea class="code-textarea" rows="30">
+import json
+import re
+
+class OutputGuard:
+    def __init__(self):
+        self.checks = []
+    
+    def add_check(self, name, func):
+        self.checks.append({"name": name, "func": func})
+    
+    def validate(self, output):
+        results = []
+        for check in self.checks:
+            passed, msg = check["func"](output)
+            results.append({"check": check["name"], "passed": passed, "message": msg})
+        return results
+
+# Define validation functions
+def check_valid_json(output):
+    try:
+        json.loads(output)
+        return True, "Valid JSON"
+    except:
+        return False, "Invalid JSON format"
+
+def check_no_pii(output):
+    patterns = {
+        "email": r'\b[\w.-]+@[\w.-]+\.\w+\b',
+        "phone": r'\b\d{3}[-.]?\d{3}[-.]?\d{4}\b',
+        "ssn": r'\b\d{3}-\d{2}-\d{4}\b',
+    }
+    for pii_type, pattern in patterns.items():
+        if re.search(pattern, output):
+            return False, f"Contains PII: {pii_type}"
+    return True, "No PII detected"
+
+def check_length(output):
+    if len(output) > 5000:
+        return False, f"Too long: {len(output)} chars (max 5000)"
+    if len(output) < 10:
+        return False, f"Too short: {len(output)} chars (min 10)"
+    return True, f"Length OK: {len(output)} chars"
+
+def check_no_harmful(output):
+    harmful_phrases = ["hack into", "steal password", "create malware"]
+    lower = output.lower()
+    for phrase in harmful_phrases:
+        if phrase in lower:
+            return False, f"Harmful content: '{phrase}'"
+    return True, "No harmful content"
+
+# Build guard
+guard = OutputGuard()
+guard.add_check("Valid JSON", check_valid_json)
+guard.add_check("No PII", check_no_pii)
+guard.add_check("Length", check_length)
+guard.add_check("Safety", check_no_harmful)
+
+# Test outputs
+test_outputs = [
+    '{"answer": "Python is great for AI", "confidence": 0.9}',
+    '{"answer": "Contact john@email.com for details"}',
+    '{"answer": "To hack into a system..."}',
+    'not valid json at all',
+    '{"ok": true}',
+]
+
+for i, output in enumerate(test_outputs):
+    print(f"Output {i+1}: {output[:60]}...")
+    results = guard.validate(output)
+    all_passed = all(r["passed"] for r in results)
+    print(f"  {'✅ PASS' if all_passed else '❌ FAIL'}")
+    for r in results:
+        if not r["passed"]:
+            print(f"    ⚠ {r['check']}: {r['message']}")
+    print()
+</textarea>
+    <div class="code-output"><div class="output-label">Output</div><div class="output-text" style="color:var(--text-muted)">Click "Run" to execute</div></div>
+  </div>
+  <div class="quiz-wrapper" data-topic-id="m4-topic6">
+    <h4>📝 Knowledge Check</h4>
+    <div class="quiz-question" data-correct="b" data-explanation="Guardrails validate both input and output to catch invalid, harmful, or off-topic content."><p>1. What are guardrails in LLM applications?</p><div class="quiz-options"><div class="quiz-option" data-value="a"><span class="radio"></span> Physical barriers around servers</div><div class="quiz-option" data-value="b"><span class="radio"></span> Validation checks on LLM input/output</div><div class="quiz-option" data-value="c"><span class="radio"></span> Rate limiting rules</div></div><div class="quiz-feedback"></div></div>
+    <div class="quiz-question" data-correct="c" data-explanation="Include the validation error in the retry prompt so the LLM can fix the specific issue."><p>2. What's the best retry strategy when validation fails?</p><div class="quiz-options"><div class="quiz-option" data-value="a"><span class="radio"></span> Retry with identical prompt</div><div class="quiz-option" data-value="b"><span class="radio"></span> Give up immediately</div><div class="quiz-option" data-value="c"><span class="radio"></span> Retry with error feedback in the prompt</div></div><div class="quiz-feedback"></div></div>
+    <div class="quiz-question" data-correct="a" data-explanation="PII detection uses regex patterns to find emails, phone numbers, SSNs, etc."><p>3. How is PII typically detected in LLM output?</p><div class="quiz-options"><div class="quiz-option" data-value="a"><span class="radio"></span> Regex pattern matching</div><div class="quiz-option" data-value="b"><span class="radio"></span> Asking the LLM if it included PII</div><div class="quiz-option" data-value="c"><span class="radio"></span> Checking the token count</div></div><div class="quiz-feedback"></div></div>
+    <button class="quiz-submit">Check Answers</button><div class="quiz-result"></div>
+  </div>
+  <div class="takeaways"><h4>Key Takeaways</h4><ul><li>Validate: structure (JSON/schema), content (PII, toxicity), business logic</li><li>Guardrails run on both input and output sides</li><li>Retry with error feedback for best recovery</li><li>Use multiple validation layers: regex, schema, classifiers, LLM-as-judge</li></ul></div>
+</section>
+
+<!-- Topic 7: Memory Architecture -->
+<section class="topic-section" id="m4-topic7">
+  <h2>7. Memory Architecture for Production Agents</h2>
+  <div class="why-box"><strong>Why this matters:</strong> Production agents need sophisticated memory — tracking users, conversations, and learned facts across sessions, while staying within context limits and keeping responses fast.</div>
+  <div class="content-text">
+    <h3>Production Memory Requirements</h3>
+    <ul>
+      <li><strong>Persistence:</strong> Survive server restarts and deployments</li>
+      <li><strong>Scalability:</strong> Handle thousands of concurrent users</li>
+      <li><strong>Latency:</strong> Memory retrieval must be fast (&lt;100ms)</li>
+      <li><strong>Privacy:</strong> Each user only sees their own data</li>
+      <li><strong>Consistency:</strong> Memory updates must be atomic and reliable</li>
+    </ul>
+    <h3>Memory Architecture</h3>
+    <div class="diagram-wrapper"><pre class="mermaid">
+flowchart TD
+  A[Agent] --> CM[Context Manager]
+  CM --> STM[Short-Term Memory<br/>Redis / In-memory]
+  CM --> LTM[Long-Term Memory<br/>Vector DB]
+  CM --> EM[Entity Memory<br/>PostgreSQL]
+  CM --> PM[Procedural Memory<br/>Learned patterns]
+  STM --> W[Context Window<br/>Recent messages]
+  LTM --> W
+  EM --> W
+  style A fill:#38bdf8,color:#000
+  style W fill:#4ade80,color:#000
+    </pre></div>
+    <h3>Memory Tiers</h3>
+    <h4>Tier 1: Working Memory (in-context)</h4>
+    <p>The current conversation. Fits in the LLM's context window. Fast but limited.</p>
+    <h4>Tier 2: Session Memory (Redis/cache)</h4>
+    <p>Full conversation history for the current session. Retrieved on demand. Millisecond latency.</p>
+    <h4>Tier 3: User Memory (database)</h4>
+    <p>Per-user facts, preferences, and history. Persists across sessions. Queried by user ID.</p>
+    <h4>Tier 4: Knowledge Memory (vector store)</h4>
+    <p>Organization-wide knowledge base. Shared across users. Retrieved by semantic similarity.</p>
+    <h3>Context Window Management</h3>
+    <p>The context window is limited. Strategies to manage it:</p>
+    <ul>
+      <li><strong>Sliding window:</strong> Keep last N messages, drop oldest</li>
+      <li><strong>Summarization:</strong> Periodically summarize old messages</li>
+      <li><strong>Selective retrieval:</strong> Only bring in relevant memories</li>
+      <li><strong>Importance scoring:</strong> Keep important messages, drop routine ones</li>
+    </ul>
+  </div>
+  <div class="code-editor-wrapper">
+    <div class="code-editor-header"><span class="filename">Production Memory System</span><div class="actions"><button class="run-btn">▶ Run</button><button class="reset-btn">↺ Reset</button></div></div>
+    <textarea class="code-textarea" rows="30">
+import numpy as np
+
+class ProductionMemory:
+    """Multi-tier memory system for production agents"""
+    
+    def __init__(self, context_limit=10, user_id="user_123"):
+        self.user_id = user_id
+        self.context_limit = context_limit
+        # Tier 1: Working memory (current context)
+        self.working = []
+        # Tier 2: Session memory (full conversation)
+        self.session = []
+        # Tier 3: User memory (persisted facts)
+        self.user_facts = {}
+        # Tier 4: Knowledge base
+        self.knowledge = []
+    
+    def add_message(self, role, content):
+        msg = {"role": role, "content": content}
+        self.session.append(msg)
+        self.working.append(msg)
+        
+        # Extract facts (simplified)
+        if "my name is" in content.lower():
+            name = content.split("my name is")[-1].strip().split()[0]
+            self.user_facts["name"] = name
+        if "i prefer" in content.lower():
+            pref = content.split("i prefer")[-1].strip()
+            self.user_facts["preference"] = pref
+        
+        # Manage context window
+        if len(self.working) > self.context_limit:
+            removed = self.working.pop(0)
+            print(f"  ⚠ Context full — dropped: \"{removed['content'][:30]}...\"")
+    
+    def get_context(self):
+        """Build context for LLM"""
+        context = []
+        # Add user facts as system context
+        if self.user_facts:
+            facts = ", ".join(f"{k}: {v}" for k, v in self.user_facts.items())
+            context.append({"role": "system", "content": f"Known user facts: {facts}"})
+        # Add working memory
+        context.extend(self.working)
+        return context
+    
+    def stats(self):
+        return {
+            "working_memory": len(self.working),
+            "session_messages": len(self.session),
+            "user_facts": len(self.user_facts),
+            "context_utilization": f"{len(self.working)}/{self.context_limit}"
+        }
+
+# Demo
+mem = ProductionMemory(context_limit=5, user_id="user_42")
+
+messages = [
+    ("user", "Hi there! My name is Alice"),
+    ("assistant", "Hello Alice! How can I help?"),
+    ("user", "I prefer dark mode in all my apps"),
+    ("assistant", "I'll remember that!"),
+    ("user", "What's the weather today?"),
+    ("assistant", "It's sunny and 72°F"),
+    ("user", "Can you recommend a restaurant?"),
+    ("assistant", "Based on your area, I'd suggest..."),
+]
+
+print("=== Adding Messages ===\n")
+for role, content in messages:
+    mem.add_message(role, content)
+
+print(f"\n=== Memory Stats ===")
+for k, v in mem.stats().items():
+    print(f"  {k}: {v}")
+
+print(f"\n=== User Facts (persistent) ===")
+for k, v in mem.user_facts.items():
+    print(f"  {k}: {v}")
+
+print(f"\n=== Current Context ===")
+for msg in mem.get_context():
+    print(f"  [{msg['role']}] {msg['content'][:60]}")
+</textarea>
+    <div class="code-output"><div class="output-label">Output</div><div class="output-text" style="color:var(--text-muted)">Click "Run" to execute</div></div>
+  </div>
+  <div class="quiz-wrapper" data-topic-id="m4-topic7">
+    <h4>📝 Knowledge Check</h4>
+    <div class="quiz-question" data-correct="b" data-explanation="User memory persists facts about individual users across sessions (preferences, history)."><p>1. What is user memory in a production agent?</p><div class="quiz-options"><div class="quiz-option" data-value="a"><span class="radio"></span> The model's training data</div><div class="quiz-option" data-value="b"><span class="radio"></span> Per-user facts and preferences persisted across sessions</div><div class="quiz-option" data-value="c"><span class="radio"></span> The conversation history of the current chat</div></div><div class="quiz-feedback"></div></div>
+    <div class="quiz-question" data-correct="a" data-explanation="Summarization condenses old messages to free up context space while preserving key information."><p>2. How does summarization help with context limits?</p><div class="quiz-options"><div class="quiz-option" data-value="a"><span class="radio"></span> Condenses old messages to free context space</div><div class="quiz-option" data-value="b"><span class="radio"></span> Increases the context window size</div><div class="quiz-option" data-value="c"><span class="radio"></span> Removes all old messages permanently</div></div><div class="quiz-feedback"></div></div>
+    <div class="quiz-question" data-correct="c" data-explanation="User isolation ensures each user only sees their own data, which is critical for privacy."><p>3. Why is memory isolation important?</p><div class="quiz-options"><div class="quiz-option" data-value="a"><span class="radio"></span> It makes the agent faster</div><div class="quiz-option" data-value="b"><span class="radio"></span> It reduces memory usage</div><div class="quiz-option" data-value="c"><span class="radio"></span> It ensures users only see their own data</div></div><div class="quiz-feedback"></div></div>
+    <button class="quiz-submit">Check Answers</button><div class="quiz-result"></div>
+  </div>
+  <div class="takeaways"><h4>Key Takeaways</h4><ul><li>Production memory needs: persistence, scalability, low latency, privacy</li><li>Four tiers: working (context), session (cache), user (DB), knowledge (vector)</li><li>Context management: sliding window, summarization, selective retrieval</li><li>Extract and persist user facts for personalized experiences</li></ul></div>
+</section>
+
+<!-- Topic 8: Advanced Orchestration -->
+<section class="topic-section" id="m4-topic8">
+  <h2>8. Advanced Orchestration</h2>
+  <div class="why-box"><strong>Why this matters:</strong> Real-world AI systems need to orchestrate multiple LLM calls, tool executions, and human approvals in complex workflows. Advanced orchestration patterns make these systems reliable and maintainable.</div>
+  <div class="content-text">
+    <h3>Orchestration Patterns</h3>
+    <h4>1. Chain of Thought Orchestration</h4>
+    <p>Break complex reasoning into explicit steps, each handled by a specialized prompt or model:</p>
+    <pre style="background:var(--bg-tertiary);padding:12px;border-radius:6px;font-size:0.85rem;overflow-x:auto;">Step 1: Extract entities (cheap model)
+Step 2: Classify intent (cheap model)
+Step 3: Generate response (expensive model, only if needed)
+Step 4: Validate output (guardrail)</pre>
+    <h4>2. Map-Reduce</h4>
+    <p>Split a large task into parallel subtasks, process each, then combine results:</p>
+    <ul>
+      <li><strong>Map:</strong> Summarize each of 10 documents in parallel</li>
+      <li><strong>Reduce:</strong> Combine all summaries into one final summary</li>
+    </ul>
+    <h4>3. Router Pattern</h4>
+    <p>A classifier routes requests to the right handler — different models, prompts, or tools for different request types.</p>
+    <h4>4. Human-in-the-Loop</h4>
+    <p>Pause the workflow at critical points for human approval before continuing:</p>
+    <div class="diagram-wrapper"><pre class="mermaid">
+flowchart LR
+  A[Agent Draft] --> R{Risk Level?}
+  R -->|Low| E[Execute Directly]
+  R -->|Medium| N[Notify Human]
+  R -->|High| W[Wait for Approval]
+  N --> E
+  W -->|Approved| E
+  W -->|Rejected| M[Modify & Retry]
+  M --> A
+  style A fill:#38bdf8,color:#000
+  style E fill:#4ade80,color:#000
+    </pre></div>
+    <h3>Workflow State Management</h3>
+    <ul>
+      <li><strong>Checkpointing:</strong> Save workflow state at each step so you can resume on failure</li>
+      <li><strong>Idempotency:</strong> Make operations safe to retry without side effects</li>
+      <li><strong>Timeouts:</strong> Set per-step timeouts to prevent hanging workflows</li>
+      <li><strong>Cancellation:</strong> Allow users to cancel long-running workflows</li>
+    </ul>
+    <h3>LangGraph for Advanced Orchestration</h3>
+    <p>LangGraph excels at this — it provides built-in support for checkpointing, human-in-the-loop interrupts, and parallel execution within a graph-based workflow.</p>
+  </div>
+  <div class="code-editor-wrapper">
+    <div class="code-editor-header"><span class="filename">Map-Reduce Orchestration</span><div class="actions"><button class="run-btn">▶ Run</button><button class="reset-btn">↺ Reset</button></div></div>
+    <textarea class="code-textarea" rows="28">
+# Map-Reduce pattern for processing multiple documents
+
+documents = [
+    "Machine learning is transforming healthcare with diagnostic tools.",
+    "Natural language processing enables chatbots and translation services.",
+    "Computer vision powers autonomous vehicles and facial recognition.",
+    "Reinforcement learning trains robots and game-playing agents.",
+    "Generative AI creates text, images, and code from prompts.",
+]
+
+def map_step(doc, index):
+    """Simulate summarizing a single document"""
+    words = doc.split()
+    # Simple "summary" = first few words + word count
+    summary = " ".join(words[:5]) + "..."
+    return {
+        "index": index,
+        "original_length": len(words),
+        "summary": summary,
+        "key_topic": words[0] + " " + words[1]
+    }
+
+def reduce_step(summaries):
+    """Combine all summaries into a final report"""
+    topics = [s["key_topic"] for s in summaries]
+    total_words = sum(s["original_length"] for s in summaries)
+    
+    return {
+        "total_documents": len(summaries),
+        "total_words": total_words,
+        "topics_covered": topics,
+        "combined_summary": "; ".join(s["summary"] for s in summaries)
+    }
+
+# === Map Phase (would run in parallel in production) ===
+print("=== MAP PHASE ===\n")
+summaries = []
+for i, doc in enumerate(documents):
+    result = map_step(doc, i)
+    summaries.append(result)
+    print(f"  Doc {i+1}: {result['summary']} ({result['original_length']} words)")
+
+# === Reduce Phase ===
+print("\n=== REDUCE PHASE ===\n")
+final = reduce_step(summaries)
+print(f"  Documents processed: {final['total_documents']}")
+print(f"  Total words analyzed: {final['total_words']}")
+print(f"  Topics: {', '.join(final['topics_covered'])}")
+print(f"\n  Combined: {final['combined_summary']}")
+
+# === Router Pattern ===
+print("\n\n=== ROUTER PATTERN ===\n")
+requests = [
+    {"text": "What is 2+2?", "type": "math"},
+    {"text": "Write a poem about AI", "type": "creative"},
+    {"text": "Summarize this 100-page PDF", "type": "complex"},
+]
+
+model_costs = {"cheap": 0.001, "mid": 0.01, "expensive": 0.10}
+
+for req in requests:
+    if req["type"] == "math":
+        model = "cheap"
+    elif req["type"] == "creative":
+        model = "mid"
+    else:
+        model = "expensive"
+    print(f"  \"{req['text'][:30]}\" → {model} model (${model_costs[model]}/call)")
+</textarea>
+    <div class="code-output"><div class="output-label">Output</div><div class="output-text" style="color:var(--text-muted)">Click "Run" to execute</div></div>
+  </div>
+  <div class="quiz-wrapper" data-topic-id="m4-topic8">
+    <h4>📝 Knowledge Check</h4>
+    <div class="quiz-question" data-correct="b" data-explanation="Map-Reduce splits a task into parallel subtasks (map) then combines results (reduce)."><p>1. What is the Map-Reduce pattern?</p><div class="quiz-options"><div class="quiz-option" data-value="a"><span class="radio"></span> A database query optimization</div><div class="quiz-option" data-value="b"><span class="radio"></span> Split task into parallel subtasks, then combine results</div><div class="quiz-option" data-value="c"><span class="radio"></span> Mapping user inputs to model outputs</div></div><div class="quiz-feedback"></div></div>
+    <div class="quiz-question" data-correct="a" data-explanation="Checkpointing saves state at each step so the workflow can resume from the last successful step on failure."><p>2. Why is checkpointing important?</p><div class="quiz-options"><div class="quiz-option" data-value="a"><span class="radio"></span> Resume from last successful step on failure</div><div class="quiz-option" data-value="b"><span class="radio"></span> Make the workflow faster</div><div class="quiz-option" data-value="c"><span class="radio"></span> Reduce LLM costs</div></div><div class="quiz-feedback"></div></div>
+    <div class="quiz-question" data-correct="c" data-explanation="Human-in-the-loop pauses for approval at critical points, preventing dangerous auto-execution."><p>3. When should you use human-in-the-loop?</p><div class="quiz-options"><div class="quiz-option" data-value="a"><span class="radio"></span> For every LLM call</div><div class="quiz-option" data-value="b"><span class="radio"></span> Never — it slows things down</div><div class="quiz-option" data-value="c"><span class="radio"></span> For high-risk actions that need human approval</div></div><div class="quiz-feedback"></div></div>
+    <button class="quiz-submit">Check Answers</button><div class="quiz-result"></div>
+  </div>
+  <div class="takeaways"><h4>Key Takeaways</h4><ul><li>Map-Reduce: parallelize subtasks, combine results</li><li>Router pattern: route requests to the right model/handler</li><li>Human-in-the-loop for high-risk decisions</li><li>Checkpointing + idempotency for reliable workflows</li></ul></div>
+</section>
+
+<!-- Topic 9: Resilience & Fallbacks -->
+<section class="topic-section" id="m4-topic9">
+  <h2>9. Resilience & Fallbacks</h2>
+  <div class="why-box"><strong>Why this matters:</strong> LLM APIs go down. Models hallucinate. Network timeouts happen. Production systems must handle failures gracefully — users should never see a raw error.</div>
+  <div class="content-text">
+    <h3>Failure Modes in LLM Systems</h3>
+    <ul>
+      <li><strong>API outages:</strong> Provider is down (OpenAI, Anthropic, etc.)</li>
+      <li><strong>Rate limiting:</strong> Too many requests</li>
+      <li><strong>Timeout:</strong> Model takes too long to respond</li>
+      <li><strong>Invalid output:</strong> Model returns malformed JSON or nonsense</li>
+      <li><strong>Hallucination:</strong> Model generates factually incorrect content</li>
+      <li><strong>Context overflow:</strong> Input exceeds model's context window</li>
+    </ul>
+    <h3>Resilience Patterns</h3>
+    <h4>Circuit Breaker</h4>
+    <p>After N consecutive failures, stop calling the failing service. Periodically test if it's recovered:</p>
+    <ul>
+      <li><strong>Closed:</strong> Normal operation — requests pass through</li>
+      <li><strong>Open:</strong> Too many failures — redirect to fallback</li>
+      <li><strong>Half-open:</strong> Let one test request through to check recovery</li>
+    </ul>
+    <h3>Circuit Breaker Visualized</h3>
+    <div class="animation-wrapper" data-animation="circuit-breaker">
+      <div class="animation-header"><span class="title">Circuit Breaker State Machine</span><div class="animation-controls"><button class="play-btn">▶ Play</button><button class="pause-btn">⏸ Pause</button><button class="step-btn">⏭ Step</button><button class="anim-reset-btn">↺ Reset</button></div></div>
+      <div class="animation-canvas"></div>
+    </div>
+    <h4>Fallback Chains</h4>
+    <div class="diagram-wrapper"><pre class="mermaid">
+flowchart LR
+  R[Request] --> P1[Primary: GPT-4]
+  P1 -->|Fail| P2[Fallback 1: Claude]
+  P2 -->|Fail| P3[Fallback 2: Local Model]
+  P3 -->|Fail| P4[Fallback 3: Cached Response]
+  P4 -->|Fail| E[Graceful Error Message]
+  P1 -->|Success| O[Response]
+  P2 -->|Success| O
+  P3 -->|Success| O
+  P4 -->|Success| O
+  style R fill:#38bdf8,color:#000
+  style O fill:#4ade80,color:#000
+  style E fill:#f87171,color:#000
+    </pre></div>
+    <h4>Graceful Degradation</h4>
+    <ul>
+      <li>Return cached results when the API is down</li>
+      <li>Use a simpler model when the primary is unavailable</li>
+      <li>Show partial results rather than nothing</li>
+      <li>Queue requests for later processing</li>
+    </ul>
+    <h3>Timeout Management</h3>
+    <ul>
+      <li><strong>Per-request timeouts:</strong> Don't wait forever for a response (30-60s typical)</li>
+      <li><strong>Streaming:</strong> Use streaming responses so users see partial output immediately</li>
+      <li><strong>Background processing:</strong> For long tasks, process async and notify when done</li>
+    </ul>
+  </div>
+  <div class="code-editor-wrapper">
+    <div class="code-editor-header"><span class="filename">Circuit Breaker & Fallback</span><div class="actions"><button class="run-btn">▶ Run</button><button class="reset-btn">↺ Reset</button></div></div>
+    <textarea class="code-textarea" rows="30">
+import numpy as np
+
+class CircuitBreaker:
+    def __init__(self, failure_threshold=3, recovery_timeout=5):
+        self.failure_count = 0
+        self.threshold = failure_threshold
+        self.state = "closed"  # closed, open, half-open
+        self.recovery_timeout = recovery_timeout
+        self.calls_since_open = 0
+    
+    def call(self, func, *args):
+        if self.state == "open":
+            self.calls_since_open += 1
+            if self.calls_since_open >= self.recovery_timeout:
+                self.state = "half-open"
+                print(f"    Circuit: half-open (testing...)")
+            else:
+                raise Exception("Circuit OPEN — blocking request")
+        
+        try:
+            result = func(*args)
+            if self.state == "half-open":
+                self.state = "closed"
+                self.failure_count = 0
+                print(f"    Circuit: recovered → closed")
+            return result
+        except Exception as e:
+            self.failure_count += 1
+            if self.failure_count >= self.threshold:
+                self.state = "open"
+                self.calls_since_open = 0
+                print(f"    Circuit: OPEN (too many failures)")
+            raise
+
+# Simulated LLM providers
+call_count = {"primary": 0}
+
+def primary_llm(query):
+    call_count["primary"] += 1
+    if call_count["primary"] <= 4:  # First 4 calls fail
+        raise Exception("API Error 503")
+    return f"Primary response for: {query}"
+
+def fallback_llm(query):
+    return f"Fallback response for: {query}"
+
+def cached_response(query):
+    return f"[Cached] Generic response for: {query}"
+
+# === Fallback Chain with Circuit Breaker ===
+cb = CircuitBreaker(failure_threshold=3, recovery_timeout=3)
+
+def resilient_call(query):
+    # Try primary with circuit breaker
+    try:
+        return cb.call(primary_llm, query)
+    except:
+        pass
+    
+    # Try fallback
+    try:
+        return fallback_llm(query)
+    except:
+        pass
+    
+    # Last resort: cached
+    return cached_response(query)
+
+print("=== Resilient LLM Calls ===\n")
+for i in range(8):
+    result = resilient_call(f"query_{i}")
+    print(f"  Call {i+1}: {result}")
+    print(f"    State: {cb.state}, Failures: {cb.failure_count}\n")
+</textarea>
+    <div class="code-output"><div class="output-label">Output</div><div class="output-text" style="color:var(--text-muted)">Click "Run" to execute</div></div>
+  </div>
+  <div class="quiz-wrapper" data-topic-id="m4-topic9">
+    <h4>📝 Knowledge Check</h4>
+    <div class="quiz-question" data-correct="b" data-explanation="A circuit breaker stops calling a failing service after N failures, preventing cascading issues."><p>1. What does a circuit breaker do?</p><div class="quiz-options"><div class="quiz-option" data-value="a"><span class="radio"></span> Increases the number of retries</div><div class="quiz-option" data-value="b"><span class="radio"></span> Stops calling a failing service after repeated failures</div><div class="quiz-option" data-value="c"><span class="radio"></span> Speeds up API responses</div></div><div class="quiz-feedback"></div></div>
+    <div class="quiz-question" data-correct="a" data-explanation="Graceful degradation means showing partial/cached results instead of errors when the primary fails."><p>2. What is graceful degradation?</p><div class="quiz-options"><div class="quiz-option" data-value="a"><span class="radio"></span> Providing reduced functionality instead of complete failure</div><div class="quiz-option" data-value="b"><span class="radio"></span> Gradually reducing model quality over time</div><div class="quiz-option" data-value="c"><span class="radio"></span> Shutting down the entire system on any error</div></div><div class="quiz-feedback"></div></div>
+    <div class="quiz-question" data-correct="c" data-explanation="Streaming shows partial output as it generates, so users aren't waiting for a complete response."><p>3. Why use streaming for LLM responses?</p><div class="quiz-options"><div class="quiz-option" data-value="a"><span class="radio"></span> It reduces token usage</div><div class="quiz-option" data-value="b"><span class="radio"></span> It makes the model more accurate</div><div class="quiz-option" data-value="c"><span class="radio"></span> Users see partial output immediately</div></div><div class="quiz-feedback"></div></div>
+    <button class="quiz-submit">Check Answers</button><div class="quiz-result"></div>
+  </div>
+  <div class="takeaways"><h4>Key Takeaways</h4><ul><li>Circuit breaker prevents cascading failures from downed APIs</li><li>Fallback chains: primary → secondary → cached → error message</li><li>Graceful degradation: partial results > no results</li><li>Streaming + timeouts for responsive user experience</li></ul></div>
+</section>
+
+<!-- Topic 10: Tracing & Debugging -->
+<section class="topic-section" id="m4-topic10">
+  <h2>10. Tracing & Debugging Agents</h2>
+  <div class="why-box"><strong>Why this matters:</strong> When an agent gives a wrong answer or gets stuck in a loop, you need to trace exactly what happened — every LLM call, tool use, and decision point. Without tracing, debugging AI systems is nearly impossible.</div>
+  <div class="content-text">
+    <h3>Why Tracing Is Essential</h3>
+    <p>Traditional debugging (print statements, breakpoints) doesn't work well for LLM agents because:</p>
+    <ul>
+      <li>LLM calls are non-deterministic — same input can give different outputs</li>
+      <li>Agent loops may run for many iterations before the bug appears</li>
+      <li>Tool calls have side effects that compound</li>
+      <li>Context window changes at each step affect all subsequent steps</li>
+    </ul>
+    <h3>Observability Stack</h3>
+    <div class="diagram-wrapper"><pre class="mermaid">
+flowchart TD
+  A[Agent Execution] --> T[Traces]
+  A --> L[Logs]
+  A --> M[Metrics]
+  T --> D[LangSmith / LangFuse / Phoenix]
+  L --> E[ELK / CloudWatch]
+  M --> G[Grafana / Datadog]
+  D --> DB[Debug Dashboard]
+  E --> DB
+  G --> DB
+  style A fill:#38bdf8,color:#000
+  style DB fill:#4ade80,color:#000
+    </pre></div>
+    <h3>What to Trace</h3>
+    <ul>
+      <li><strong>LLM calls:</strong> Input prompt, output, model, temperature, tokens used, latency</li>
+      <li><strong>Tool calls:</strong> Tool name, arguments, result, latency</li>
+      <li><strong>Retrieval:</strong> Query, retrieved documents, relevance scores</li>
+      <li><strong>Decisions:</strong> Why the agent chose a particular path</li>
+      <li><strong>State changes:</strong> Before and after snapshots of agent state</li>
+    </ul>
+    <h3>Tracing Tools</h3>
+    <ul>
+      <li><strong>LangSmith:</strong> Official LangChain tracing platform. Rich UI for inspecting chains.</li>
+      <li><strong>LangFuse:</strong> Open-source alternative. Self-hostable.</li>
+      <li><strong>Phoenix (Arize):</strong> Open-source observability for LLM apps.</li>
+      <li><strong>OpenTelemetry:</strong> Industry-standard tracing, adapted for LLM apps.</li>
+    </ul>
+    <h3>Debugging Strategies</h3>
+    <ul>
+      <li><strong>Replay traces:</strong> Re-run a specific trace with the exact same inputs</li>
+      <li><strong>Compare traces:</strong> Diff a successful vs. failed trace to find the divergence</li>
+      <li><strong>Step-through:</strong> Execute the agent step-by-step, inspecting state at each point</li>
+      <li><strong>Prompt debugging:</strong> Extract the exact prompt that caused the issue and test in isolation</li>
+    </ul>
+  </div>
+  <div class="code-editor-wrapper">
+    <div class="code-editor-header"><span class="filename">Simple Tracing System</span><div class="actions"><button class="run-btn">▶ Run</button><button class="reset-btn">↺ Reset</button></div></div>
+    <textarea class="code-textarea" rows="30">
+import json
+
+class Tracer:
+    """Simple tracing system for agent debugging"""
+    def __init__(self):
+        self.spans = []
+        self.current_trace_id = 0
+    
+    def start_trace(self, name):
+        self.current_trace_id += 1
+        span = {
+            "trace_id": self.current_trace_id,
+            "name": name,
+            "events": [],
+            "status": "running"
+        }
+        self.spans.append(span)
+        return span
+    
+    def log_event(self, span, event_type, data):
+        event = {"type": event_type, "data": data}
+        span["events"].append(event)
+    
+    def end_trace(self, span, status="success"):
+        span["status"] = status
+    
+    def print_trace(self, span):
+        print(f"\n{'='*50}")
+        print(f"Trace #{span['trace_id']}: {span['name']} [{span['status']}]")
+        print(f"{'='*50}")
+        for i, event in enumerate(span["events"]):
+            icon = {"llm_call": "🤖", "tool_call": "🔧", "decision": "🔀", 
+                    "retrieval": "📚", "error": "❌"}.get(event["type"], "📝")
+            print(f"  {icon} [{event['type']}]")
+            for k, v in event["data"].items():
+                val = str(v)[:80]
+                print(f"     {k}: {val}")
+
+# Simulate agent execution with tracing
+tracer = Tracer()
+
+# Run 1: Successful
+trace1 = tracer.start_trace("Answer user question")
+tracer.log_event(trace1, "llm_call", {
+    "prompt": "Classify: 'What's the weather in Tokyo?'",
+    "output": "intent: weather_query",
+    "tokens": 45, "latency_ms": 230
+})
+tracer.log_event(trace1, "tool_call", {
+    "tool": "weather_api",
+    "args": {"city": "Tokyo"},
+    "result": "22°C, partly cloudy",
+    "latency_ms": 150
+})
+tracer.log_event(trace1, "llm_call", {
+    "prompt": "Generate response with weather data...",
+    "output": "It's 22°C and partly cloudy in Tokyo today.",
+    "tokens": 82, "latency_ms": 310
+})
+tracer.end_trace(trace1, "success")
+
+# Run 2: Failed
+trace2 = tracer.start_trace("Answer user question")
+tracer.log_event(trace2, "llm_call", {
+    "prompt": "Classify: 'Book me a flight'",
+    "output": "intent: booking_request",
+    "tokens": 38, "latency_ms": 210
+})
+tracer.log_event(trace2, "tool_call", {
+    "tool": "booking_api",
+    "args": {"action": "search_flights"},
+    "result": "ERROR: API timeout after 30s",
+    "latency_ms": 30000
+})
+tracer.log_event(trace2, "error", {
+    "message": "Booking API timed out",
+    "fallback": "Returned cached availability"
+})
+tracer.end_trace(trace2, "degraded")
+
+# Display traces
+for span in tracer.spans:
+    tracer.print_trace(span)
+
+# Summary
+print(f"\n{'='*50}")
+print(f"Total traces: {len(tracer.spans)}")
+print(f"Successful: {sum(1 for s in tracer.spans if s['status']=='success')}")
+print(f"Degraded: {sum(1 for s in tracer.spans if s['status']=='degraded')}")
+</textarea>
+    <div class="code-output"><div class="output-label">Output</div><div class="output-text" style="color:var(--text-muted)">Click "Run" to execute</div></div>
+  </div>
+  <div class="quiz-wrapper" data-topic-id="m4-topic10">
+    <h4>📝 Knowledge Check</h4>
+    <div class="quiz-question" data-correct="c" data-explanation="Tracing records every LLM call, tool use, and decision for debugging non-deterministic agents."><p>1. Why is tracing important for LLM agents?</p><div class="quiz-options"><div class="quiz-option" data-value="a"><span class="radio"></span> It makes the agent faster</div><div class="quiz-option" data-value="b"><span class="radio"></span> It reduces API costs</div><div class="quiz-option" data-value="c"><span class="radio"></span> LLM calls are non-deterministic and need detailed recording</div></div><div class="quiz-feedback"></div></div>
+    <div class="quiz-question" data-correct="b" data-explanation="Comparing a successful and failed trace reveals exactly where and why the agent diverged."><p>2. What's the most effective debugging strategy for agents?</p><div class="quiz-options"><div class="quiz-option" data-value="a"><span class="radio"></span> Add more print statements</div><div class="quiz-option" data-value="b"><span class="radio"></span> Compare successful vs. failed traces</div><div class="quiz-option" data-value="c"><span class="radio"></span> Increase the temperature</div></div><div class="quiz-feedback"></div></div>
+    <div class="quiz-question" data-correct="a" data-explanation="LangSmith, LangFuse, and Phoenix are popular open-source tracing tools for LLM applications."><p>3. Which tool provides tracing for LangChain applications?</p><div class="quiz-options"><div class="quiz-option" data-value="a"><span class="radio"></span> LangSmith</div><div class="quiz-option" data-value="b"><span class="radio"></span> TensorBoard</div><div class="quiz-option" data-value="c"><span class="radio"></span> Jupyter Notebook</div></div><div class="quiz-feedback"></div></div>
+    <button class="quiz-submit">Check Answers</button><div class="quiz-result"></div>
+  </div>
+  <div class="takeaways"><h4>Key Takeaways</h4><ul><li>Trace everything: LLM calls, tool calls, decisions, state changes</li><li>Use dedicated tools: LangSmith, LangFuse, Phoenix</li><li>Debug by comparing successful vs. failed traces</li><li>Replay traces for reproducible debugging</li></ul></div>
+</section>
+
+<!-- Topic 11: Evaluation & Testing -->
+<section class="topic-section" id="m4-topic11">
+  <h2>11. Evaluation & Testing AI Systems</h2>
+  <div class="why-box"><strong>Why this matters:</strong> You can't improve what you can't measure. Evaluating LLM systems requires different approaches than traditional software testing — you need metrics for quality, safety, and reliability.</div>
+  <div class="content-text">
+    <h3>Types of Evaluation</h3>
+    <h4>1. Unit-Level Evaluation</h4>
+    <ul>
+      <li>Test individual LLM calls with known input/output pairs</li>
+      <li>Validate tool calls return expected results</li>
+      <li>Check prompt templates produce valid output</li>
+    </ul>
+    <h4>2. Component-Level Evaluation</h4>
+    <ul>
+      <li>RAG retrieval quality (precision@k, recall@k)</li>
+      <li>Agent decision accuracy (does it choose the right tool?)</li>
+      <li>Memory recall accuracy (does it remember the right facts?)</li>
+    </ul>
+    <h4>3. System-Level Evaluation</h4>
+    <ul>
+      <li>End-to-end task completion rate</li>
+      <li>User satisfaction scores</li>
+      <li>Latency and cost per request</li>
+    </ul>
+    <h3>Evaluation Frameworks</h3>
+    <table style="width:100%;border-collapse:collapse;margin:16px 0;">
+      <tr style="border-bottom:1px solid var(--border);"><th style="text-align:left;padding:8px;">Framework</th><th style="text-align:left;padding:8px;">Focus</th><th style="text-align:left;padding:8px;">Key Metrics</th></tr>
+      <tr style="border-bottom:1px solid var(--border);"><td style="padding:8px;">RAGAS</td><td style="padding:8px;">RAG quality</td><td style="padding:8px;">Faithfulness, context relevance, answer relevance</td></tr>
+      <tr style="border-bottom:1px solid var(--border);"><td style="padding:8px;">DeepEval</td><td style="padding:8px;">General LLM eval</td><td style="padding:8px;">Hallucination, toxicity, task completion</td></tr>
+      <tr style="border-bottom:1px solid var(--border);"><td style="padding:8px;">LangSmith</td><td style="padding:8px;">Chain/agent eval</td><td style="padding:8px;">Custom metrics, A/B testing</td></tr>
+      <tr><td style="padding:8px;">Promptfoo</td><td style="padding:8px;">Prompt testing</td><td style="padding:8px;">Assertion-based, regression testing</td></tr>
+    </table>
+    <h3>LLM-as-Judge</h3>
+    <p>Use a powerful LLM to evaluate another LLM's output. Surprisingly effective and scalable:</p>
+    <pre style="background:var(--bg-tertiary);padding:12px;border-radius:6px;font-size:0.85rem;overflow-x:auto;">Rate the following response on a scale of 1-5:
+- Relevance: Does it answer the question?
+- Accuracy: Is the information correct?
+- Completeness: Are all aspects covered?
+
+Question: {question}
+Response: {response}
+Context: {source_documents}</pre>
+    <h3>Regression Testing</h3>
+    <p>Maintain a test suite of known good inputs/outputs. Run it after every model change, prompt update, or code change to catch regressions.</p>
+  </div>
+  <div class="code-editor-wrapper">
+    <div class="code-editor-header"><span class="filename">Evaluation Framework</span><div class="actions"><button class="run-btn">▶ Run</button><button class="reset-btn">↺ Reset</button></div></div>
+    <textarea class="code-textarea" rows="30">
+import numpy as np
+
+class LLMEvaluator:
+    """Simple evaluation framework for LLM outputs"""
+    
+    def __init__(self):
+        self.results = []
+    
+    def evaluate_faithfulness(self, answer, context):
+        """Check if answer is grounded in context (simplified)"""
+        answer_words = set(answer.lower().split())
+        context_words = set(context.lower().split())
+        overlap = len(answer_words & context_words)
+        score = overlap / max(len(answer_words), 1)
+        return min(score * 2, 1.0)  # Scale to 0-1
+    
+    def evaluate_relevance(self, answer, question):
+        """Check if answer addresses the question (simplified)"""
+        q_words = set(question.lower().split()) - {"what", "is", "the", "how", "a", "an"}
+        a_words = set(answer.lower().split())
+        overlap = len(q_words & a_words)
+        return min(overlap / max(len(q_words), 1), 1.0)
+    
+    def evaluate_completeness(self, answer, expected_points):
+        """Check if answer covers expected points"""
+        covered = sum(1 for p in expected_points if p.lower() in answer.lower())
+        return covered / max(len(expected_points), 1)
+    
+    def run_eval(self, test_case):
+        scores = {
+            "faithfulness": self.evaluate_faithfulness(
+                test_case["answer"], test_case["context"]),
+            "relevance": self.evaluate_relevance(
+                test_case["answer"], test_case["question"]),
+            "completeness": self.evaluate_completeness(
+                test_case["answer"], test_case.get("expected_points", []))
+        }
+        scores["overall"] = np.mean(list(scores.values()))
+        self.results.append({"case": test_case["name"], **scores})
+        return scores
+
+# Test cases
+test_cases = [
+    {
+        "name": "Good RAG response",
+        "question": "What is machine learning?",
+        "context": "Machine learning is a subset of AI where systems learn from data to make predictions.",
+        "answer": "Machine learning is a subset of artificial intelligence where systems learn from data to make predictions without explicit programming.",
+        "expected_points": ["subset", "AI", "learn", "data"]
+    },
+    {
+        "name": "Hallucinated response",
+        "question": "What is machine learning?",
+        "context": "Machine learning is a subset of AI.",
+        "answer": "Machine learning was invented by Alan Turing in 1950 and uses quantum computing to process data at light speed.",
+        "expected_points": ["subset", "AI", "learn", "data"]
+    },
+    {
+        "name": "Off-topic response",
+        "question": "What is machine learning?",
+        "context": "Machine learning is a subset of AI that learns from data.",
+        "answer": "The weather today is sunny with a high of 75 degrees.",
+        "expected_points": ["subset", "AI", "learn", "data"]
+    }
+]
+
+evaluator = LLMEvaluator()
+print("=== LLM Output Evaluation ===\n")
+for tc in test_cases:
+    scores = evaluator.run_eval(tc)
+    status = "✅" if scores["overall"] > 0.5 else "❌"
+    print(f"{status} {tc['name']}:")
+    for metric, score in scores.items():
+        bar = "█" * int(score * 20)
+        print(f"    {metric:15} {score:.2f} {bar}")
+    print()
+</textarea>
+    <div class="code-output"><div class="output-label">Output</div><div class="output-text" style="color:var(--text-muted)">Click "Run" to execute</div></div>
+  </div>
+  <div class="quiz-wrapper" data-topic-id="m4-topic11">
+    <h4>📝 Knowledge Check</h4>
+    <div class="quiz-question" data-correct="b" data-explanation="Faithfulness measures whether the LLM's answer is actually supported by the retrieved context."><p>1. What does "faithfulness" measure?</p><div class="quiz-options"><div class="quiz-option" data-value="a"><span class="radio"></span> How fast the model responds</div><div class="quiz-option" data-value="b"><span class="radio"></span> Whether the answer is grounded in the provided context</div><div class="quiz-option" data-value="c"><span class="radio"></span> User satisfaction with the response</div></div><div class="quiz-feedback"></div></div>
+    <div class="quiz-question" data-correct="a" data-explanation="LLM-as-judge uses a powerful LLM to score another model's outputs on defined criteria."><p>2. What is LLM-as-judge?</p><div class="quiz-options"><div class="quiz-option" data-value="a"><span class="radio"></span> Using an LLM to evaluate another LLM's output</div><div class="quiz-option" data-value="b"><span class="radio"></span> Having users rate LLM responses</div><div class="quiz-option" data-value="c"><span class="radio"></span> A legal AI system</div></div><div class="quiz-feedback"></div></div>
+    <div class="quiz-question" data-correct="c" data-explanation="Regression tests ensure model/prompt changes don't break previously working functionality."><p>3. Why run regression tests on LLM systems?</p><div class="quiz-options"><div class="quiz-option" data-value="a"><span class="radio"></span> To make the model train faster</div><div class="quiz-option" data-value="b"><span class="radio"></span> To increase the context window</div><div class="quiz-option" data-value="c"><span class="radio"></span> To catch breakages from model or prompt changes</div></div><div class="quiz-feedback"></div></div>
+    <button class="quiz-submit">Check Answers</button><div class="quiz-result"></div>
+  </div>
+  <div class="takeaways"><h4>Key Takeaways</h4><ul><li>Evaluate at unit, component, and system levels</li><li>Key metrics: faithfulness, relevance, completeness, task completion</li><li>LLM-as-judge is scalable and surprisingly effective</li><li>Regression testing catches breakages from model/prompt changes</li></ul></div>
+</section>
+
+<!-- Topic 12: SLIs, SLOs & Monitoring -->
+<section class="topic-section" id="m4-topic12">
+  <h2>12. SLIs, SLOs & Monitoring</h2>
+  <div class="why-box"><strong>Why this matters:</strong> Production AI systems need measurable reliability targets. SLIs (what to measure) and SLOs (target values) let you know when your system is healthy — and when to sound the alarm.</div>
+  <div class="content-text">
+    <h3>Key Definitions</h3>
+    <ul>
+      <li><strong>SLI (Service Level Indicator):</strong> A measurable metric — e.g., "response latency in ms"</li>
+      <li><strong>SLO (Service Level Objective):</strong> A target for an SLI — e.g., "p95 latency &lt; 3s"</li>
+      <li><strong>SLA (Service Level Agreement):</strong> A contract with consequences — e.g., "99.9% uptime or credits issued"</li>
+      <li><strong>Error Budget:</strong> How much failure your SLO allows — e.g., 99.9% uptime = 43 minutes of downtime/month</li>
+    </ul>
+    <h3>SLIs for LLM Systems</h3>
+    <table style="width:100%;border-collapse:collapse;margin:16px 0;">
+      <tr style="border-bottom:1px solid var(--border);"><th style="text-align:left;padding:8px;">SLI</th><th style="text-align:left;padding:8px;">Typical SLO</th><th style="text-align:left;padding:8px;">Why It Matters</th></tr>
+      <tr style="border-bottom:1px solid var(--border);"><td style="padding:8px;">Response latency (p50, p95, p99)</td><td style="padding:8px;">p95 &lt; 3s</td><td style="padding:8px;">User experience</td></tr>
+      <tr style="border-bottom:1px solid var(--border);"><td style="padding:8px;">Availability</td><td style="padding:8px;">99.9%</td><td style="padding:8px;">Service reliability</td></tr>
+      <tr style="border-bottom:1px solid var(--border);"><td style="padding:8px;">Error rate</td><td style="padding:8px;">&lt; 1%</td><td style="padding:8px;">Output quality</td></tr>
+      <tr style="border-bottom:1px solid var(--border);"><td style="padding:8px;">Hallucination rate</td><td style="padding:8px;">&lt; 5%</td><td style="padding:8px;">Trustworthiness</td></tr>
+      <tr style="border-bottom:1px solid var(--border);"><td style="padding:8px;">Token cost per request</td><td style="padding:8px;">&lt; $0.05</td><td style="padding:8px;">Cost control</td></tr>
+      <tr><td style="padding:8px;">Task completion rate</td><td style="padding:8px;">&gt; 90%</td><td style="padding:8px;">Effectiveness</td></tr>
+    </table>
+    <h3>Monitoring Dashboard</h3>
+    <p>A production LLM monitoring dashboard should show:</p>
+    <ul>
+      <li><strong>Real-time:</strong> Request rate, latency, error rate, active users</li>
+      <li><strong>Quality:</strong> Faithfulness scores, user ratings, hallucination detections</li>
+      <li><strong>Cost:</strong> Token usage, API spend, cost per conversation</li>
+      <li><strong>Alerts:</strong> SLO violations, error spikes, latency degradation</li>
+    </ul>
+    <h3>Alerting Strategy</h3>
+    <ul>
+      <li><strong>Page (wake someone up):</strong> SLO violation, complete outage, data leak</li>
+      <li><strong>Ticket (fix this week):</strong> Approaching SLO limits, cost spike, quality degradation</li>
+      <li><strong>Log (investigate when convenient):</strong> Minor anomalies, unusual patterns</li>
+    </ul>
+  </div>
+  <div class="code-editor-wrapper">
+    <div class="code-editor-header"><span class="filename">SLI/SLO Monitoring</span><div class="actions"><button class="run-btn">▶ Run</button><button class="reset-btn">↺ Reset</button></div></div>
+    <textarea class="code-textarea" rows="28">
+import numpy as np
+
+class SLOMonitor:
+    def __init__(self):
+        self.slos = {}
+        self.measurements = {}
+    
+    def define_slo(self, name, metric, target, comparison="<"):
+        self.slos[name] = {"metric": metric, "target": target, "comparison": comparison}
+        self.measurements[name] = []
+    
+    def record(self, name, value):
+        self.measurements[name].append(value)
+    
+    def check_slo(self, name):
+        slo = self.slos[name]
+        values = self.measurements[name]
+        if not values:
+            return {"status": "no_data"}
+        
+        if slo["comparison"] == "<":
+            p95 = np.percentile(values, 95)
+            met = p95 < slo["target"]
+            return {"met": met, "p95": p95, "target": slo["target"]}
+        elif slo["comparison"] == ">":
+            actual = np.mean(values)
+            met = actual > slo["target"]
+            return {"met": met, "actual": actual, "target": slo["target"]}
+    
+    def report(self):
+        print("=== SLO Status Report ===\n")
+        for name, slo in self.slos.items():
+            result = self.check_slo(name)
+            status = "✅ MET" if result.get("met") else "❌ VIOLATED"
+            print(f"  {status} | {name}")
+            print(f"    Target: {slo['comparison']} {slo['target']}")
+            if "p95" in result:
+                print(f"    Actual (p95): {result['p95']:.2f}")
+            elif "actual" in result:
+                print(f"    Actual (avg): {result['actual']:.2f}")
+            
+            # Error budget
+            values = self.measurements[name]
+            if slo["comparison"] == "<":
+                violations = sum(1 for v in values if v >= slo["target"])
+            else:
+                violations = sum(1 for v in values if v < slo["target"])
+            budget_used = (violations / max(len(values), 1)) * 100
+            print(f"    Error budget used: {budget_used:.1f}%")
+            print()
+
+# Set up monitoring
+monitor = SLOMonitor()
+monitor.define_slo("Latency", "response_time_ms", 3000, "<")
+monitor.define_slo("Availability", "success_rate", 0.999, ">")
+monitor.define_slo("Quality", "faithfulness_score", 0.8, ">")
+
+# Simulate 100 requests
+np.random.seed(42)
+for _ in range(100):
+    monitor.record("Latency", np.random.lognormal(6.5, 0.8))  # ms
+    monitor.record("Availability", 1 if np.random.random() > 0.005 else 0)
+    monitor.record("Quality", np.random.beta(8, 2))  # Usually high
+
+monitor.report()
+
+# Show error budget calculation
+print("=== Error Budget Example ===")
+uptime_target = 0.999
+month_minutes = 30 * 24 * 60
+budget_minutes = month_minutes * (1 - uptime_target)
+print(f"  99.9% uptime SLO = {budget_minutes:.0f} min downtime/month allowed")
+print(f"  That's {budget_minutes/60:.1f} hours")
+</textarea>
+    <div class="code-output"><div class="output-label">Output</div><div class="output-text" style="color:var(--text-muted)">Click "Run" to execute</div></div>
+  </div>
+  <div class="quiz-wrapper" data-topic-id="m4-topic12">
+    <h4>📝 Knowledge Check</h4>
+    <div class="quiz-question" data-correct="a" data-explanation="An SLI is a specific metric you measure (like latency); an SLO is the target value for that metric."><p>1. What's the difference between SLI and SLO?</p><div class="quiz-options"><div class="quiz-option" data-value="a"><span class="radio"></span> SLI is the metric, SLO is the target value</div><div class="quiz-option" data-value="b"><span class="radio"></span> SLI is for testing, SLO is for production</div><div class="quiz-option" data-value="c"><span class="radio"></span> They are the same thing</div></div><div class="quiz-feedback"></div></div>
+    <div class="quiz-question" data-correct="b" data-explanation="Error budget is the allowed failure margin — 99.9% uptime allows ~43 minutes of downtime per month."><p>2. What is an error budget?</p><div class="quiz-options"><div class="quiz-option" data-value="a"><span class="radio"></span> The cost of fixing bugs</div><div class="quiz-option" data-value="b"><span class="radio"></span> The amount of failure your SLO allows</div><div class="quiz-option" data-value="c"><span class="radio"></span> A budget for error handling code</div></div><div class="quiz-feedback"></div></div>
+    <div class="quiz-question" data-correct="c" data-explanation="Hallucination rate is unique to LLM systems — it tracks how often the model generates false information."><p>3. Which SLI is unique to LLM systems?</p><div class="quiz-options"><div class="quiz-option" data-value="a"><span class="radio"></span> Response latency</div><div class="quiz-option" data-value="b"><span class="radio"></span> Availability</div><div class="quiz-option" data-value="c"><span class="radio"></span> Hallucination rate</div></div><div class="quiz-feedback"></div></div>
+    <button class="quiz-submit">Check Answers</button><div class="quiz-result"></div>
+  </div>
+  <div class="takeaways"><h4>Key Takeaways</h4><ul><li>SLI = what to measure; SLO = target value; SLA = contract</li><li>LLM-specific SLIs: hallucination rate, faithfulness, token cost</li><li>Error budgets quantify how much failure your SLO allows</li><li>Tiered alerting: page for critical, ticket for important, log for minor</li></ul></div>
+</section>
+
+<!-- Topic 13: Deployment (FastAPI & Streamlit) -->
+<section class="topic-section" id="m4-topic13">
+  <h2>13. Deployment with FastAPI & Streamlit</h2>
+  <div class="why-box"><strong>Why this matters:</strong> An AI model in a notebook is useless until it's deployed. FastAPI lets you expose it as an API; Streamlit lets you build a demo UI. Together, they're the fastest path from prototype to production.</div>
+  <div class="content-text">
+    <h3>FastAPI for AI APIs</h3>
+    <p>FastAPI is the go-to framework for deploying Python AI services:</p>
+    <ul>
+      <li><strong>Async support:</strong> Handle concurrent LLM calls efficiently</li>
+      <li><strong>Type validation:</strong> Pydantic models validate request/response</li>
+      <li><strong>Auto-docs:</strong> Swagger UI generated automatically</li>
+      <li><strong>Streaming:</strong> SSE (Server-Sent Events) for streaming LLM responses</li>
+    </ul>
+    <pre style="background:var(--bg-tertiary);padding:12px;border-radius:6px;font-size:0.85rem;overflow-x:auto;">from fastapi import FastAPI
+from pydantic import BaseModel
+
+app = FastAPI()
+
+class Query(BaseModel):
+    question: str
+    max_tokens: int = 500
+
+class Response(BaseModel):
+    answer: str
+    sources: list[str]
+
+@app.post("/ask", response_model=Response)
+async def ask(query: Query):
+    # 1. Retrieve relevant documents
+    # 2. Generate answer with LLM
+    # 3. Return structured response
+    return Response(answer="...", sources=["doc1.pdf"])</pre>
+    <h3>Streamlit for Demo UIs</h3>
+    <p>Streamlit turns Python scripts into interactive web apps in minutes:</p>
+    <pre style="background:var(--bg-tertiary);padding:12px;border-radius:6px;font-size:0.85rem;overflow-x:auto;">import streamlit as st
+
+st.title("AI Assistant")
+question = st.text_input("Ask a question:")
+if st.button("Ask"):
+    with st.spinner("Thinking..."):
+        answer = call_llm(question)  # Your AI logic
+    st.write(answer)</pre>
+    <h3>Deployment Options</h3>
+    <div class="diagram-wrapper"><pre class="mermaid">
+flowchart TD
+  A[AI Application] --> B{Deployment Target}
+  B --> C[Docker Container]
+  B --> D[Cloud Platform]
+  B --> E[Serverless]
+  C --> F[AWS ECS / GCP Cloud Run]
+  D --> G[Railway / Render / Fly.io]
+  E --> H[AWS Lambda / GCP Functions]
+  style A fill:#38bdf8,color:#000
+    </pre></div>
+    <h3>Production Checklist</h3>
+    <ul>
+      <li>Environment variables for API keys (never hardcode!)</li>
+      <li>Health check endpoint (<code>/health</code>)</li>
+      <li>Request logging and error tracking</li>
+      <li>CORS configuration for frontend access</li>
+      <li>Rate limiting per user/IP</li>
+      <li>Graceful shutdown handling</li>
+      <li>Docker containerization for consistent deployments</li>
+    </ul>
+  </div>
+  <div class="code-editor-wrapper">
+    <div class="code-editor-header"><span class="filename">FastAPI App Structure</span><div class="actions"><button class="run-btn">▶ Run</button><button class="reset-btn">↺ Reset</button></div></div>
+    <textarea class="code-textarea" rows="28">
+# Simulating a FastAPI + AI service (can't run actual server in browser)
+
+import json
+
+# --- Models (Pydantic-style) ---
+def validate_query(data):
+    required = ["question"]
+    for field in required:
+        if field not in data:
+            return None, f"Missing required field: {field}"
+    return {
+        "question": str(data["question"]),
+        "max_tokens": int(data.get("max_tokens", 500)),
+        "temperature": float(data.get("temperature", 0.7))
+    }, None
+
+# --- Route handlers ---
+def handle_ask(request_data):
+    """POST /ask endpoint"""
+    query, error = validate_query(request_data)
+    if error:
+        return {"status": 422, "error": error}
+    
+    # Simulate AI processing
+    answer = f"Based on my knowledge: The answer to '{query['question']}' is..."
+    sources = ["knowledge_base.pdf", "docs/guide.md"]
+    
+    return {
+        "status": 200,
+        "data": {
+            "answer": answer,
+            "sources": sources,
+            "tokens_used": len(answer.split()) * 2,
+            "model": "gpt-4",
+        }
+    }
+
+def handle_health():
+    """GET /health endpoint"""
+    return {"status": "healthy", "model_loaded": True, "version": "1.0.0"}
+
+# --- Simulate API calls ---
+print("=== FastAPI AI Service Simulation ===\n")
+
+print("GET /health")
+print(f"  → {json.dumps(handle_health(), indent=2)}\n")
+
+print("POST /ask")
+requests = [
+    {"question": "What is RAG?", "max_tokens": 200},
+    {"question": "How do agents work?"},
+    {"temperature": 0.5},  # Missing question!
+]
+
+for req in requests:
+    print(f"  Request: {json.dumps(req)}")
+    response = handle_ask(req)
+    if response["status"] == 200:
+        print(f"  ✅ {response['data']['answer'][:50]}...")
+        print(f"     Tokens: {response['data']['tokens_used']}, Sources: {response['data']['sources']}")
+    else:
+        print(f"  ❌ {response['status']}: {response['error']}")
+    print()
+</textarea>
+    <div class="code-output"><div class="output-label">Output</div><div class="output-text" style="color:var(--text-muted)">Click "Run" to execute</div></div>
+  </div>
+  <div class="quiz-wrapper" data-topic-id="m4-topic13">
+    <h4>📝 Knowledge Check</h4>
+    <div class="quiz-question" data-correct="b" data-explanation="FastAPI provides async support, auto-validation, and auto-generated docs — ideal for AI APIs."><p>1. Why is FastAPI popular for AI deployments?</p><div class="quiz-options"><div class="quiz-option" data-value="a"><span class="radio"></span> It's the only Python web framework</div><div class="quiz-option" data-value="b"><span class="radio"></span> Async support, auto-validation, and auto-generated docs</div><div class="quiz-option" data-value="c"><span class="radio"></span> It includes a built-in LLM</div></div><div class="quiz-feedback"></div></div>
+    <div class="quiz-question" data-correct="a" data-explanation="API keys must be stored in environment variables, never in source code."><p>2. Where should API keys be stored?</p><div class="quiz-options"><div class="quiz-option" data-value="a"><span class="radio"></span> Environment variables</div><div class="quiz-option" data-value="b"><span class="radio"></span> Hardcoded in the source code</div><div class="quiz-option" data-value="c"><span class="radio"></span> In the database</div></div><div class="quiz-feedback"></div></div>
+    <div class="quiz-question" data-correct="c" data-explanation="SSE (Server-Sent Events) enables streaming LLM tokens to the client as they're generated."><p>3. How do you stream LLM responses in FastAPI?</p><div class="quiz-options"><div class="quiz-option" data-value="a"><span class="radio"></span> WebSockets only</div><div class="quiz-option" data-value="b"><span class="radio"></span> Polling every second</div><div class="quiz-option" data-value="c"><span class="radio"></span> SSE (Server-Sent Events) with StreamingResponse</div></div><div class="quiz-feedback"></div></div>
+    <button class="quiz-submit">Check Answers</button><div class="quiz-result"></div>
+  </div>
+  <div class="takeaways"><h4>Key Takeaways</h4><ul><li>FastAPI: async, Pydantic validation, auto-docs, streaming support</li><li>Streamlit: rapid prototyping of AI demo UIs</li><li>Always: env vars for secrets, health checks, error tracking, rate limiting</li><li>Docker containerization for consistent deployments</li></ul></div>
+</section>
+
+<!-- Topic 14: Ops: Caching & Concurrency -->
+<section class="topic-section" id="m4-topic14">
+  <h2>14. Ops: Caching & Concurrency</h2>
+  <div class="why-box"><strong>Why this matters:</strong> LLM API calls are slow (1-30s) and expensive. Caching avoids redundant calls. Concurrency handles multiple users simultaneously. Together, they make your AI system fast and cost-effective.</div>
+  <div class="content-text">
+    <h3>Caching Strategies</h3>
+    <h4>Exact Match Cache</h4>
+    <p>Hash the prompt and check if you've seen it before. Fast and simple but only catches identical requests.</p>
+    <h4>Semantic Cache</h4>
+    <p>Embed the prompt and search for similar cached prompts. Catches paraphrases ("What's ML?" ≈ "Explain machine learning").</p>
+    <h4>Cache Layers</h4>
+    <ul>
+      <li><strong>L1 (in-memory):</strong> Dict/LRU cache in the process. Fastest, lost on restart.</li>
+      <li><strong>L2 (Redis):</strong> Shared cache across instances. Persists across restarts. Millisecond latency.</li>
+      <li><strong>L3 (database):</strong> Permanent cache. Survives everything. Slower but unlimited storage.</li>
+    </ul>
+    <h3>Cache Invalidation</h3>
+    <ul>
+      <li><strong>TTL (Time-To-Live):</strong> Expire after N hours/days</li>
+      <li><strong>Version-based:</strong> Invalidate when the model version changes</li>
+      <li><strong>Event-based:</strong> Invalidate when source documents are updated</li>
+    </ul>
+    <h3>Concurrency</h3>
+    <h4>Async/Await</h4>
+    <p>Python's <code>asyncio</code> lets you make multiple LLM calls concurrently without blocking:</p>
+    <pre style="background:var(--bg-tertiary);padding:12px;border-radius:6px;font-size:0.85rem;overflow-x:auto;">import asyncio
+
+async def call_llm(prompt):
+    response = await client.chat.completions.create(...)
+    return response
+
+# Run 5 calls concurrently instead of sequentially
+results = await asyncio.gather(
+    call_llm("prompt1"),
+    call_llm("prompt2"),
+    call_llm("prompt3"),
+    call_llm("prompt4"),
+    call_llm("prompt5"),
+)</pre>
+    <h4>Connection Pooling</h4>
+    <p>Reuse HTTP connections to the LLM API instead of creating new ones for each request. Reduces latency and resource usage.</p>
+    <h4>Rate-Limit-Aware Concurrency</h4>
+    <p>Use semaphores to limit concurrent calls to match your API rate limit:</p>
+    <pre style="background:var(--bg-tertiary);padding:12px;border-radius:6px;font-size:0.85rem;overflow-x:auto;">semaphore = asyncio.Semaphore(10)  # Max 10 concurrent calls
+
+async def rate_limited_call(prompt):
+    async with semaphore:
+        return await call_llm(prompt)</pre>
+  </div>
+  <div class="code-editor-wrapper">
+    <div class="code-editor-header"><span class="filename">Caching System</span><div class="actions"><button class="run-btn">▶ Run</button><button class="reset-btn">↺ Reset</button></div></div>
+    <textarea class="code-textarea" rows="28">
+import hashlib
+import numpy as np
+
+class LLMCache:
+    """Multi-layer cache for LLM responses"""
+    
+    def __init__(self, max_size=100):
+        self.exact_cache = {}  # L1: exact match
+        self.semantic_cache = []  # L2: semantic similarity
+        self.max_size = max_size
+        self.stats = {"hits": 0, "misses": 0, "semantic_hits": 0}
+    
+    def _hash(self, prompt):
+        return hashlib.md5(prompt.encode()).hexdigest()
+    
+    def _embed(self, text):
+        words = set(text.lower().split())
+        all_words = ["what", "is", "how", "the", "machine", "learning", 
+                     "ai", "rag", "agent", "model", "data", "work", "explain"]
+        return np.array([1.0 if w in words else 0.0 for w in all_words])
+    
+    def get(self, prompt, similarity_threshold=0.8):
+        # L1: Exact match
+        key = self._hash(prompt)
+        if key in self.exact_cache:
+            self.stats["hits"] += 1
+            return self.exact_cache[key], "exact_hit"
+        
+        # L2: Semantic match
+        query_emb = self._embed(prompt)
+        for entry in self.semantic_cache:
+            sim = np.dot(query_emb, entry["embedding"])
+            norm = np.linalg.norm(query_emb) * np.linalg.norm(entry["embedding"])
+            if norm > 0 and (sim / norm) > similarity_threshold:
+                self.stats["semantic_hits"] += 1
+                return entry["response"], "semantic_hit"
+        
+        self.stats["misses"] += 1
+        return None, "miss"
+    
+    def put(self, prompt, response):
+        key = self._hash(prompt)
+        self.exact_cache[key] = response
+        self.semantic_cache.append({
+            "prompt": prompt,
+            "embedding": self._embed(prompt),
+            "response": response
+        })
+
+# Demo
+cache = LLMCache()
+
+# Simulate requests
+requests = [
+    ("What is machine learning?", "ML is a subset of AI that learns from data"),
+    ("What is machine learning?", None),  # Exact hit!
+    ("Explain machine learning", None),   # Semantic hit!
+    ("How does RAG work?", "RAG retrieves documents to augment generation"),
+    ("What is RAG?", None),              # Semantic hit!
+    ("Tell me about quantum computing", "Quantum computing uses qubits..."),
+]
+
+print("=== LLM Cache Demo ===\n")
+for prompt, new_response in requests:
+    cached, hit_type = cache.get(prompt)
+    if cached:
+        print(f"  {'🎯' if hit_type == 'exact_hit' else '🔍'} {hit_type}: \"{prompt[:40]}\"")
+        print(f"     → {cached[:50]}")
+    else:
+        print(f"  ❌ miss: \"{prompt[:40]}\"")
+        if new_response:
+            cache.put(prompt, new_response)
+            print(f"     → Cached new response")
+    print()
+
+print(f"=== Cache Stats ===")
+total = sum(cache.stats.values())
+for k, v in cache.stats.items():
+    pct = (v / total * 100) if total > 0 else 0
+    print(f"  {k}: {v} ({pct:.0f}%)")
+print(f"  Hit rate: {((cache.stats['hits'] + cache.stats['semantic_hits']) / total * 100):.0f}%")
+</textarea>
+    <div class="code-output"><div class="output-label">Output</div><div class="output-text" style="color:var(--text-muted)">Click "Run" to execute</div></div>
+  </div>
+  <div class="quiz-wrapper" data-topic-id="m4-topic14">
+    <h4>📝 Knowledge Check</h4>
+    <div class="quiz-question" data-correct="b" data-explanation="Semantic caching embeds prompts and finds similar cached entries, catching paraphrases."><p>1. How does semantic caching differ from exact caching?</p><div class="quiz-options"><div class="quiz-option" data-value="a"><span class="radio"></span> It's faster</div><div class="quiz-option" data-value="b"><span class="radio"></span> It catches semantically similar (paraphrased) requests</div><div class="quiz-option" data-value="c"><span class="radio"></span> It stores more data</div></div><div class="quiz-feedback"></div></div>
+    <div class="quiz-question" data-correct="a" data-explanation="Semaphores limit concurrent calls to match your API rate limit, preventing 429 errors."><p>2. What limits concurrent API calls to respect rate limits?</p><div class="quiz-options"><div class="quiz-option" data-value="a"><span class="radio"></span> Semaphores</div><div class="quiz-option" data-value="b"><span class="radio"></span> More API keys</div><div class="quiz-option" data-value="c"><span class="radio"></span> Larger context windows</div></div><div class="quiz-feedback"></div></div>
+    <div class="quiz-question" data-correct="c" data-explanation="TTL expires cached entries after a set time, ensuring data doesn't get too stale."><p>3. What does TTL do for cache entries?</p><div class="quiz-options"><div class="quiz-option" data-value="a"><span class="radio"></span> Makes them permanent</div><div class="quiz-option" data-value="b"><span class="radio"></span> Makes them faster to access</div><div class="quiz-option" data-value="c"><span class="radio"></span> Automatically expires them after a set time</div></div><div class="quiz-feedback"></div></div>
+    <button class="quiz-submit">Check Answers</button><div class="quiz-result"></div>
+  </div>
+  <div class="takeaways"><h4>Key Takeaways</h4><ul><li>Exact caching: fast, simple, catches identical requests</li><li>Semantic caching: catches paraphrases using embedding similarity</li><li>Async/await for concurrent LLM calls; semaphores for rate limiting</li><li>Cache invalidation: TTL, version-based, or event-based</li></ul></div>
+</section>
+
+<!-- Topic 15: Maintenance & Disaster Recovery -->
+<section class="topic-section" id="m4-topic15">
+  <h2>15. Maintenance & Disaster Recovery</h2>
+  <div class="why-box"><strong>Why this matters:</strong> AI systems degrade over time — models drift, APIs change, and knowledge bases go stale. A maintenance plan and disaster recovery strategy keep your system reliable for the long term.</div>
+  <div class="content-text">
+    <h3>Model Drift</h3>
+    <p>Over time, LLM behavior changes even with the same prompt. Causes:</p>
+    <ul>
+      <li><strong>Provider updates:</strong> Model weights change with fine-tuning updates</li>
+      <li><strong>World changes:</strong> The real world changes but your prompts/data don't</li>
+      <li><strong>User drift:</strong> User behavior changes over time</li>
+      <li><strong>Data staleness:</strong> Your knowledge base becomes outdated</li>
+    </ul>
+    <h3>Maintenance Tasks</h3>
+    <table style="width:100%;border-collapse:collapse;margin:16px 0;">
+      <tr style="border-bottom:1px solid var(--border);"><th style="text-align:left;padding:8px;">Task</th><th style="text-align:left;padding:8px;">Frequency</th><th style="text-align:left;padding:8px;">Why</th></tr>
+      <tr style="border-bottom:1px solid var(--border);"><td style="padding:8px;">Run eval suite</td><td style="padding:8px;">Daily/Weekly</td><td style="padding:8px;">Catch quality regressions</td></tr>
+      <tr style="border-bottom:1px solid var(--border);"><td style="padding:8px;">Update knowledge base</td><td style="padding:8px;">Weekly</td><td style="padding:8px;">Keep information current</td></tr>
+      <tr style="border-bottom:1px solid var(--border);"><td style="padding:8px;">Review error logs</td><td style="padding:8px;">Daily</td><td style="padding:8px;">Identify new failure patterns</td></tr>
+      <tr style="border-bottom:1px solid var(--border);"><td style="padding:8px;">Test model versions</td><td style="padding:8px;">Monthly</td><td style="padding:8px;">Evaluate upgrades</td></tr>
+      <tr style="border-bottom:1px solid var(--border);"><td style="padding:8px;">Rotate API keys</td><td style="padding:8px;">Quarterly</td><td style="padding:8px;">Security hygiene</td></tr>
+      <tr><td style="padding:8px;">Cost review</td><td style="padding:8px;">Monthly</td><td style="padding:8px;">Optimize spend</td></tr>
+    </table>
+    <h3>Disaster Recovery</h3>
+    <h4>Common Disasters</h4>
+    <ul>
+      <li><strong>API provider outage:</strong> OpenAI/Anthropic down for hours</li>
+      <li><strong>Model deprecation:</strong> Your pinned model version is sunset</li>
+      <li><strong>Data loss:</strong> Vector store corrupted or deleted</li>
+      <li><strong>Prompt injection attack:</strong> Malicious users exploit your system</li>
+      <li><strong>Cost explosion:</strong> Bug causes runaway API spending</li>
+    </ul>
+    <h4>DR Playbook</h4>
+    <ul>
+      <li><strong>Multi-provider setup:</strong> Have fallback providers (OpenAI + Anthropic + local model)</li>
+      <li><strong>Regular backups:</strong> Back up vector store, configurations, and evaluation datasets</li>
+      <li><strong>Spending alerts:</strong> Set hard caps and alerts on API spend</li>
+      <li><strong>Kill switch:</strong> Ability to instantly disable the AI system</li>
+      <li><strong>Rollback plan:</strong> Quickly revert to a previous working configuration</li>
+    </ul>
+    <div class="diagram-wrapper"><pre class="mermaid">
+flowchart TD
+  D[Disaster Detected] --> A{Type?}
+  A -->|API Down| F1[Activate Fallback Provider]
+  A -->|Data Loss| F2[Restore from Backup]
+  A -->|Cost Spike| F3[Kill Switch + Investigation]
+  A -->|Security| F4[Disable Public Access + Audit]
+  F1 --> R[Recovery Complete]
+  F2 --> R
+  F3 --> R
+  F4 --> R
+  style D fill:#f87171,color:#000
+  style R fill:#4ade80,color:#000
+    </pre></div>
+  </div>
+  <div class="code-editor-wrapper">
+    <div class="code-editor-header"><span class="filename">Maintenance Automation</span><div class="actions"><button class="run-btn">▶ Run</button><button class="reset-btn">↺ Reset</button></div></div>
+    <textarea class="code-textarea" rows="28">
+import numpy as np
+
+class MaintenanceMonitor:
+    """Automated maintenance checks for AI systems"""
+    
+    def __init__(self):
+        self.checks = []
+    
+    def add_check(self, name, func, severity="warning"):
+        self.checks.append({"name": name, "func": func, "severity": severity})
+    
+    def run_all(self):
+        results = []
+        for check in self.checks:
+            passed, details = check["func"]()
+            results.append({
+                "name": check["name"],
+                "passed": passed,
+                "severity": check["severity"],
+                "details": details
+            })
+        return results
+
+# Define maintenance checks
+def check_knowledge_freshness():
+    days_since_update = 15
+    return days_since_update < 7, f"Last updated {days_since_update} days ago"
+
+def check_eval_scores():
+    current_score = 0.82
+    baseline = 0.85
+    return current_score >= baseline * 0.95, f"Score: {current_score:.2f} (baseline: {baseline:.2f})"
+
+def check_error_rate():
+    error_rate = 0.02
+    return error_rate < 0.05, f"Error rate: {error_rate*100:.1f}%"
+
+def check_cost_budget():
+    monthly_spend = 450
+    budget = 500
+    return monthly_spend < budget * 0.9, f"${monthly_spend}/{budget} ({monthly_spend/budget*100:.0f}%)"
+
+def check_api_key_age():
+    days_old = 95
+    return days_old < 90, f"API key is {days_old} days old"
+
+def check_model_version():
+    current = "gpt-4-0613"
+    latest = "gpt-4-0125"
+    return current == latest, f"Using {current}, latest is {latest}"
+
+# Run maintenance
+monitor = MaintenanceMonitor()
+monitor.add_check("Knowledge freshness", check_knowledge_freshness, "warning")
+monitor.add_check("Eval score regression", check_eval_scores, "critical")
+monitor.add_check("Error rate", check_error_rate, "critical")
+monitor.add_check("Cost budget", check_cost_budget, "warning")
+monitor.add_check("API key rotation", check_api_key_age, "warning")
+monitor.add_check("Model version", check_model_version, "info")
+
+print("=== Maintenance Check Report ===\n")
+results = monitor.run_all()
+for r in results:
+    icon = "✅" if r["passed"] else {"critical": "🔴", "warning": "🟡", "info": "🔵"}[r["severity"]]
+    print(f"  {icon} {r['name']}")
+    print(f"     {r['details']}")
+    if not r["passed"]:
+        print(f"     Action needed! (severity: {r['severity']})")
+    print()
+
+failed = [r for r in results if not r["passed"]]
+print(f"Summary: {len(results) - len(failed)}/{len(results)} checks passed")
+if failed:
+    print(f"⚠ {len(failed)} issues need attention:")
+    for r in failed:
+        print(f"  - [{r['severity']}] {r['name']}: {r['details']}")
+</textarea>
+    <div class="code-output"><div class="output-label">Output</div><div class="output-text" style="color:var(--text-muted)">Click "Run" to execute</div></div>
+  </div>
+  <div class="quiz-wrapper" data-topic-id="m4-topic15">
+    <h4>📝 Knowledge Check</h4>
+    <div class="quiz-question" data-correct="b" data-explanation="Model drift means LLM behavior changes over time due to provider updates, world changes, or data staleness."><p>1. What is model drift?</p><div class="quiz-options"><div class="quiz-option" data-value="a"><span class="radio"></span> The model physically moving servers</div><div class="quiz-option" data-value="b"><span class="radio"></span> LLM behavior changing over time</div><div class="quiz-option" data-value="c"><span class="radio"></span> Users switching to different models</div></div><div class="quiz-feedback"></div></div>
+    <div class="quiz-question" data-correct="a" data-explanation="A kill switch instantly disables the AI system in emergencies (cost spikes, security breaches)."><p>2. What is a "kill switch" for an AI system?</p><div class="quiz-options"><div class="quiz-option" data-value="a"><span class="radio"></span> Ability to instantly disable the AI system</div><div class="quiz-option" data-value="b"><span class="radio"></span> A button that deletes all data</div><div class="quiz-option" data-value="c"><span class="radio"></span> Switching from GPU to CPU</div></div><div class="quiz-feedback"></div></div>
+    <div class="quiz-question" data-correct="c" data-explanation="Multi-provider setup ensures you can switch to a different LLM provider if your primary goes down."><p>3. How do you handle API provider outages?</p><div class="quiz-options"><div class="quiz-option" data-value="a"><span class="radio"></span> Wait for the provider to come back</div><div class="quiz-option" data-value="b"><span class="radio"></span> Show errors to users</div><div class="quiz-option" data-value="c"><span class="radio"></span> Failover to a backup provider</div></div><div class="quiz-feedback"></div></div>
+    <button class="quiz-submit">Check Answers</button><div class="quiz-result"></div>
+  </div>
+  <div class="takeaways"><h4>Key Takeaways</h4><ul><li>AI systems degrade: model drift, data staleness, API changes</li><li>Automate maintenance: eval suites, freshness checks, cost monitoring</li><li>DR essentials: multi-provider, backups, spending caps, kill switch</li><li>Rotate API keys and test model upgrades regularly</li></ul></div>
+</section>
+
+<!-- Topic 16: Capstone Project -->
+<section class="topic-section" id="m4-topic16">
+  <h2>16. Capstone Project: Build a Production AI Agent</h2>
+  <div class="why-box"><strong>Why this matters:</strong> This is where everything comes together. You'll design and build a complete, production-ready AI agent system — applying every concept from all four modules.</div>
+  <div class="content-text">
+    <h3>Project Overview</h3>
+    <p>Build a <strong>Customer Support AI Agent</strong> that can:</p>
+    <ul>
+      <li>Answer questions using a company knowledge base (RAG)</li>
+      <li>Perform actions (check order status, initiate refunds)</li>
+      <li>Route complex issues to human agents</li>
+      <li>Remember user context across conversations</li>
+      <li>Handle errors gracefully with fallbacks</li>
+    </ul>
+    <h3>Architecture</h3>
+    <div class="diagram-wrapper"><pre class="mermaid">
+flowchart TD
+  U[User Message] --> IG[Input Guard]
+  IG --> C[Classifier Agent]
+  C -->|Question| RAG[RAG Agent]
+  C -->|Action| TA[Tool Agent]
+  C -->|Complex| HE[Human Escalation]
+  RAG --> OG[Output Guard]
+  TA --> OG
+  HE --> N[Notify Human]
+  OG --> M[Memory Update]
+  M --> R[Response to User]
+  
+  subgraph "Supporting Systems"
+    KB[(Knowledge Base)]
+    VDB[(Vector Store)]
+    DB[(User DB)]
+    Cache[(Redis Cache)]
+  end
+  
+  RAG --> KB
+  RAG --> VDB
+  TA --> DB
+  M --> Cache
+  
+  style U fill:#38bdf8,color:#000
+  style R fill:#4ade80,color:#000
+    </pre></div>
+    <h3>Implementation Phases</h3>
+    <h4>Phase 1: Foundation (Module 1 skills)</h4>
+    <ul>
+      <li>Set up project structure with Git</li>
+      <li>Define data models (Python classes)</li>
+      <li>Load and process knowledge base documents</li>
+      <li>Set up configuration management</li>
+    </ul>
+    <h4>Phase 2: Intelligence (Module 2-3 skills)</h4>
+    <ul>
+      <li>Implement RAG pipeline (embeddings, vector store, retrieval)</li>
+      <li>Build classifier for intent routing</li>
+      <li>Create tool functions (order lookup, refund processing)</li>
+      <li>Implement agent loop with ReAct pattern</li>
+    </ul>
+    <h4>Phase 3: Production (Module 4 skills)</h4>
+    <ul>
+      <li>Add memory architecture (short-term + long-term)</li>
+      <li>Implement guardrails (input/output validation)</li>
+      <li>Add circuit breaker and fallback chain</li>
+      <li>Set up tracing and monitoring</li>
+      <li>Deploy with FastAPI + health checks</li>
+    </ul>
+    <h3>Evaluation Criteria</h3>
+    <table style="width:100%;border-collapse:collapse;margin:16px 0;">
+      <tr style="border-bottom:1px solid var(--border);"><th style="text-align:left;padding:8px;">Criterion</th><th style="text-align:left;padding:8px;">Weight</th><th style="text-align:left;padding:8px;">What We Look For</th></tr>
+      <tr style="border-bottom:1px solid var(--border);"><td style="padding:8px;">Functionality</td><td style="padding:8px;">30%</td><td style="padding:8px;">Agent correctly handles all task types</td></tr>
+      <tr style="border-bottom:1px solid var(--border);"><td style="padding:8px;">Architecture</td><td style="padding:8px;">25%</td><td style="padding:8px;">Clean separation of concerns, modular design</td></tr>
+      <tr style="border-bottom:1px solid var(--border);"><td style="padding:8px;">Reliability</td><td style="padding:8px;">20%</td><td style="padding:8px;">Error handling, fallbacks, monitoring</td></tr>
+      <tr style="border-bottom:1px solid var(--border);"><td style="padding:8px;">Code Quality</td><td style="padding:8px;">15%</td><td style="padding:8px;">Clean code, documentation, tests</td></tr>
+      <tr><td style="padding:8px;">Innovation</td><td style="padding:8px;">10%</td><td style="padding:8px;">Creative features or optimizations</td></tr>
+    </table>
+    <h3>Completion Requirements</h3>
+    <ul>
+      <li>Complete all 4 modules (pass all quizzes at ≥66%)</li>
+      <li>Submit capstone project with working demo</li>
+      <li>Project must include: RAG, tool use, memory, guardrails, deployment config</li>
+      <li>Code must be in a Git repository with clear README</li>
+    </ul>
+  </div>
+  <div class="code-editor-wrapper">
+    <div class="code-editor-header"><span class="filename">Capstone: Agent Skeleton</span><div class="actions"><button class="run-btn">▶ Run</button><button class="reset-btn">↺ Reset</button></div></div>
+    <textarea class="code-textarea" rows="30">
+# Capstone Project Skeleton: Customer Support AI Agent
+# This demonstrates the architecture — you'd fill in real LLM calls
+
+class CustomerSupportAgent:
+    """Production-ready customer support AI agent"""
+    
+    def __init__(self):
+        self.memory = {"user_facts": {}, "conversation": []}
+        self.tools = {
+            "check_order": self.check_order,
+            "initiate_refund": self.initiate_refund,
+        }
+        self.knowledge_base = [
+            "Returns are accepted within 30 days of purchase.",
+            "Free shipping on orders over $50.",
+            "Premium members get 20% discount.",
+            "Order tracking available at track.example.com.",
+        ]
+    
+    # === Tool Functions ===
+    def check_order(self, order_id):
+        orders = {"ORD-123": "Shipped", "ORD-456": "Delivered", "ORD-789": "Processing"}
+        return orders.get(order_id, "Order not found")
+    
+    def initiate_refund(self, order_id):
+        return f"Refund initiated for {order_id}. Expect 3-5 business days."
+    
+    # === Core Agent Logic ===
+    def classify_intent(self, message):
+        msg = message.lower()
+        if "order" in msg and ("status" in msg or "track" in msg or "where" in msg):
+            return "action_order_status"
+        elif "refund" in msg or "return" in msg:
+            return "action_refund"
+        elif "?" in msg:
+            return "question"
+        else:
+            return "general"
+    
+    def retrieve_context(self, query):
+        """Simple keyword retrieval (would be vector search in production)"""
+        query_words = set(query.lower().split())
+        scored = []
+        for doc in self.knowledge_base:
+            doc_words = set(doc.lower().split())
+            score = len(query_words & doc_words)
+            scored.append((score, doc))
+        scored.sort(reverse=True)
+        return [doc for _, doc in scored[:2]]
+    
+    def process(self, message):
+        """Main agent loop"""
+        self.memory["conversation"].append({"role": "user", "content": message})
+        
+        # Step 1: Classify
+        intent = self.classify_intent(message)
+        print(f"  Intent: {intent}")
+        
+        # Step 2: Route and handle
+        if intent == "action_order_status":
+            # Extract order ID (simplified)
+            import re
+            match = re.search(r'ORD-\d+', message)
+            if match:
+                status = self.check_order(match.group())
+                response = f"Order {match.group()} status: {status}"
+            else:
+                response = "Please provide your order ID (e.g., ORD-123)"
+        
+        elif intent == "action_refund":
+            response = "I can help with a refund. " + self.retrieve_context("refund return")[0]
+        
+        elif intent == "question":
+            context = self.retrieve_context(message)
+            response = "Based on our policies: " + " ".join(context)
+        
+        else:
+            response = "I'm here to help! You can ask about orders, returns, or our policies."
+        
+        self.memory["conversation"].append({"role": "assistant", "content": response})
+        return response
+
+# === Demo ===
+agent = CustomerSupportAgent()
+print("=== Customer Support AI Agent ===\n")
+
+test_messages = [
+    "What's the status of ORD-123?",
+    "I want to return my purchase",
+    "Do you offer free shipping?",
+    "Hello!",
+]
+
+for msg in test_messages:
+    print(f"User: {msg}")
+    response = agent.process(msg)
+    print(f"Agent: {response}\n")
+
+print(f"Conversation memory: {len(agent.memory['conversation'])} messages")
+</textarea>
+    <div class="code-output"><div class="output-label">Output</div><div class="output-text" style="color:var(--text-muted)">Click "Run" to execute</div></div>
+  </div>
+  <div class="quiz-wrapper" data-topic-id="m4-topic16">
+    <h4>📝 Knowledge Check</h4>
+    <div class="quiz-question" data-correct="b" data-explanation="A production agent needs RAG for knowledge, tools for actions, memory, guardrails, and monitoring."><p>1. What components does a production AI agent need?</p><div class="quiz-options"><div class="quiz-option" data-value="a"><span class="radio"></span> Just an LLM API call</div><div class="quiz-option" data-value="b"><span class="radio"></span> RAG, tools, memory, guardrails, and monitoring</div><div class="quiz-option" data-value="c"><span class="radio"></span> A large training dataset</div></div><div class="quiz-feedback"></div></div>
+    <div class="quiz-question" data-correct="a" data-explanation="A classifier routes different types of requests to appropriate handlers (RAG, tools, escalation)."><p>2. Why use an intent classifier in the agent?</p><div class="quiz-options"><div class="quiz-option" data-value="a"><span class="radio"></span> Route requests to the right handler</div><div class="quiz-option" data-value="b"><span class="radio"></span> Make the model respond faster</div><div class="quiz-option" data-value="c"><span class="radio"></span> Reduce token count</div></div><div class="quiz-feedback"></div></div>
+    <div class="quiz-question" data-correct="c" data-explanation="Human escalation routes complex/sensitive issues to human agents for proper handling."><p>3. When should an agent escalate to a human?</p><div class="quiz-options"><div class="quiz-option" data-value="a"><span class="radio"></span> For every request</div><div class="quiz-option" data-value="b"><span class="radio"></span> Never — AI should handle everything</div><div class="quiz-option" data-value="c"><span class="radio"></span> For complex or sensitive issues it can't handle</div></div><div class="quiz-feedback"></div></div>
+    <button class="quiz-submit">Check Answers</button><div class="quiz-result"></div>
+  </div>
+  <div class="takeaways"><h4>Key Takeaways</h4><ul><li>Production agents combine: RAG + tools + memory + guardrails + monitoring</li><li>Phase your build: foundation → intelligence → production hardening</li><li>Evaluate on: functionality, architecture, reliability, code quality</li><li>Always include: error handling, human escalation, and a kill switch</li></ul></div>
+
+  <div class="info-box" style="margin-top:30px;text-align:center;">
+    <h3 style="margin-bottom:10px;">Module 4 Complete!</h3>
+    <p>You've mastered agentic system design — from LLM internals to production deployment. Next up: real-world platform APIs and capstone projects.</p>
+    <p style="margin-top:12px;"><a href="module5.html" style="color:var(--accent);font-weight:600;">Continue to Module 5: Real-World Platforms & Capstones →</a></p>
+  </div>
+</section>
+
+    </main>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script>mermaid.initialize({startOnLoad:true, theme:'dark'});</script>
+  <script src="https://cdn.jsdelivr.net/pyodide/v0.24.1/full/pyodide.js"></script>
+  <script src="js/nav.js"></script>
+  <script src="js/pyodide-runner.js"></script>
+  <script src="js/quiz.js"></script>
+  <script src="js/animations.js"></script>
+  <script src="js/features.js"></script>
+</body>
+</html>

@@ -1,0 +1,23 @@
+/* Print Styles */
+@media print {
+  .navbar, .sidebar, .sidebar-toggle, .theme-toggle, .search-btn,
+  .streak-badge, .bookmark-controls, .eli5-toggle, .eli5-box,
+  .animation-wrapper, .animation-controls, .quiz-submit,
+  .reading-progress-bar, .search-overlay, .shortcuts-overlay,
+  .xp-toast, .code-output, .run-btn, .reset-btn, .anim-reset-btn,
+  .nav-controls, .user-note-area { display: none !important; }
+
+  body { background: #fff !important; color: #000 !important; font-size: 12pt; }
+  .page-wrapper { display: block !important; }
+  .main-content { margin: 0 !important; padding: 0 !important; max-width: 100% !important; }
+  .topic-section { break-inside: avoid; page-break-inside: avoid; margin-bottom: 20pt; }
+  .content-text { color: #000 !important; }
+  .code-textarea { border: 1px solid #ccc; font-size: 10pt; white-space: pre-wrap; }
+  .quiz-wrapper { border: 1px solid #ccc; padding: 10pt; }
+  h2 { font-size: 16pt; border-bottom: 1pt solid #000; }
+  h3 { font-size: 13pt; }
+  a { color: #000; text-decoration: underline; }
+  a[href^="http"]::after { content: " (" attr(href) ")"; font-size: 9pt; }
+  .mermaid { display: none; } /* Mermaid doesn't render in print */
+  .diagram-wrapper::after { content: "[Diagram — view online]"; font-style: italic; color: #666; }
+}

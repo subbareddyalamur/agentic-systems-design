@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Knowledge Graph — Agentic Systems & Design</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/print.css">
+  <style>
+    .kg-page { max-width: 1200px; margin: 0 auto; padding: 80px 20px 40px; }
+    .kg-header { text-align: center; margin-bottom: 30px; }
+    .kg-header h1 { font-size: 1.8rem; margin-bottom: 8px; }
+    .kg-header p { color: var(--text-muted); }
+    .kg-controls { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-bottom: 20px; }
+    .kg-filter-btn {
+      padding: 6px 16px; border-radius: 20px; border: 1px solid var(--border);
+      background: var(--bg-secondary); color: var(--text-secondary); cursor: pointer;
+      font-size: 0.82rem; transition: all 0.2s;
+    }
+    .kg-filter-btn:hover, .kg-filter-btn.active { border-color: var(--accent); color: var(--accent); background: rgba(56,189,248,0.1); }
+    .kg-canvas-wrap {
+      position: relative; width: 100%; height: 600px; border: 1px solid var(--border);
+      border-radius: 12px; overflow: hidden; background: var(--bg-secondary);
+    }
+    #kg-canvas { width: 100%; height: 100%; }
+    .kg-tooltip {
+      position: fixed; background: var(--bg-primary); border: 1px solid var(--accent);
+      border-radius: 8px; padding: 10px 14px; font-size: 0.82rem; pointer-events: none;
+      display: none; z-index: 100; max-width: 250px; box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    }
+    .kg-tooltip .tt-title { font-weight: 700; color: var(--accent); margin-bottom: 4px; }
+    .kg-tooltip .tt-module { font-size: 0.72rem; color: var(--text-muted); }
+    .kg-legend { display: flex; gap: 16px; justify-content: center; margin-top: 16px; flex-wrap: wrap; }
+    .kg-legend-item { display: flex; align-items: center; gap: 6px; font-size: 0.78rem; color: var(--text-muted); }
+    .kg-legend-dot { width: 12px; height: 12px; border-radius: 50%; }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="logo"><span>🤖</span><span>Agentic Systems & Design</span></div>
+    <div class="feature-nav">
+      <a href="dashboard.html">Dashboard</a>
+      <a href="glossary.html">Glossary</a>
+      <a href="flashcards.html">Flashcards</a>
+      <a href="challenges.html">Challenges</a>
+      <a href="knowledge-graph.html" style="color:var(--accent);">Graph</a>
+      <a href="certificate.html">Certificate</a>
+    </div>
+    <div class="nav-controls">
+      <button class="theme-toggle" title="Toggle theme">☀️</button>
+    </div>
+  </nav>
+
+  <div class="kg-page">
+    <div class="kg-header">
+      <h1>Knowledge Graph</h1>
+      <p>Explore how all 70 topics connect across modules. Click a node to navigate to the topic.</p>
+    </div>
+
+    <div class="kg-controls">
+      <button class="kg-filter-btn active" data-filter="all">All</button>
+      <button class="kg-filter-btn" data-filter="m1">Module 1</button>
+      <button class="kg-filter-btn" data-filter="m2">Module 2</button>
+      <button class="kg-filter-btn" data-filter="m3">Module 3</button>
+      <button class="kg-filter-btn" data-filter="m4">Module 4</button>
+      <button class="kg-filter-btn" data-filter="m5">Module 5</button>
+    </div>
+
+    <div class="kg-canvas-wrap">
+      <canvas id="kg-canvas"></canvas>
+    </div>
+    <div class="kg-tooltip" id="kg-tooltip">
+      <div class="tt-title"></div>
+      <div class="tt-module"></div>
+      <div class="tt-prereqs" style="margin-top:4px;font-size:0.7rem;color:var(--text-secondary);"></div>
+    </div>
+
+    <div class="kg-legend">
+      <div class="kg-legend-item"><div class="kg-legend-dot" style="background:#38bdf8;"></div>Module 1: Foundations</div>
+      <div class="kg-legend-item"><div class="kg-legend-dot" style="background:#a78bfa;"></div>Module 2: ML</div>
+      <div class="kg-legend-item"><div class="kg-legend-dot" style="background:#4ade80;"></div>Module 3: GenAI</div>
+      <div class="kg-legend-item"><div class="kg-legend-dot" style="background:#f59e0b;"></div>Module 4: Agentic</div>
+      <div class="kg-legend-item"><div class="kg-legend-dot" style="background:#f87171;"></div>Module 5: Platforms</div>
+      <div class="kg-legend-item" style="margin-left:24px;"><div style="width:24px;height:2px;background:var(--text-muted);margin-right:2px;"></div>Prerequisite</div>
+      <div class="kg-legend-item"><div style="width:24px;height:0;border-top:2px dashed var(--text-muted);margin-right:2px;"></div>Related</div>
+    </div>
+  </div>
+
+  <script>
+  const KG = (() => {
+    const colors = { m1: '#38bdf8', m2: '#a78bfa', m3: '#4ade80', m4: '#f59e0b', m5: '#f87171' };
+
+    const nodes = [
+      // Module 1
+      { id: 'm1-1', label: 'AI Landscape', m: 'm1', x: 0, y: 0 },
+      { id: 'm1-2', label: 'Python Setup', m: 'm1', x: 0, y: 0 },
+      { id: 'm1-3', label: 'Git Basics', m: 'm1', x: 0, y: 0 },
+      { id: 'm1-4', label: 'Variables & Types', m: 'm1', x: 0, y: 0 },
+      { id: 'm1-5', label: 'Conditionals', m: 'm1', x: 0, y: 0 },
+      { id: 'm1-6', label: 'Loops', m: 'm1', x: 0, y: 0 },
+      { id: 'm1-7', label: 'Functions', m: 'm1', x: 0, y: 0 },
+      { id: 'm1-8', label: 'Data Structures', m: 'm1', x: 0, y: 0 },
+      { id: 'm1-9', label: 'NumPy', m: 'm1', x: 0, y: 0 },
+      { id: 'm1-10', label: 'JSON', m: 'm1', x: 0, y: 0 },
+      { id: 'm1-11', label: 'Pandas', m: 'm1', x: 0, y: 0 },
+      { id: 'm1-12', label: 'SQL', m: 'm1', x: 0, y: 0 },
+      { id: 'm1-13', label: 'APIs', m: 'm1', x: 0, y: 0 },
+      // Module 2
+      { id: 'm2-1', label: 'ML Framing', m: 'm2', x: 0, y: 0 },
+      { id: 'm2-2', label: 'Data Prep', m: 'm2', x: 0, y: 0 },
+      { id: 'm2-3', label: 'Cross-Validation', m: 'm2', x: 0, y: 0 },
+      { id: 'm2-4', label: 'Linear Regression', m: 'm2', x: 0, y: 0 },
+      { id: 'm2-5', label: 'Logistic Regression', m: 'm2', x: 0, y: 0 },
+      { id: 'm2-6', label: 'Decision Trees', m: 'm2', x: 0, y: 0 },
+      { id: 'm2-7', label: 'Random Forests', m: 'm2', x: 0, y: 0 },
+      { id: 'm2-8', label: 'Gradient Descent', m: 'm2', x: 0, y: 0 },
+      { id: 'm2-9', label: 'Regularization', m: 'm2', x: 0, y: 0 },
+      { id: 'm2-10', label: 'Classification Metrics', m: 'm2', x: 0, y: 0 },
+      { id: 'm2-11', label: 'Regression Metrics', m: 'm2', x: 0, y: 0 },
+      { id: 'm2-12', label: 'K-Means', m: 'm2', x: 0, y: 0 },
+      { id: 'm2-13', label: 'PCA', m: 'm2', x: 0, y: 0 },
+      { id: 'm2-14', label: 'Hyperparameters', m: 'm2', x: 0, y: 0 },
+      { id: 'm2-15', label: 'Model Selection', m: 'm2', x: 0, y: 0 },
+      { id: 'm2-16', label: 'ML Pipeline', m: 'm2', x: 0, y: 0 },
+      // Module 3
+      { id: 'm3-1', label: 'LLM Concepts', m: 'm3', x: 0, y: 0 },
+      { id: 'm3-2', label: 'Prompt Engineering', m: 'm3', x: 0, y: 0 },
+      { id: 'm3-3', label: 'Local Models', m: 'm3', x: 0, y: 0 },
+      { id: 'm3-4', label: 'LangChain', m: 'm3', x: 0, y: 0 },
+      { id: 'm3-5', label: 'RAG Foundations', m: 'm3', x: 0, y: 0 },
+      { id: 'm3-6', label: 'Embeddings', m: 'm3', x: 0, y: 0 },
+      { id: 'm3-7', label: 'RAG App', m: 'm3', x: 0, y: 0 },
+      { id: 'm3-8', label: 'Multimodal', m: 'm3', x: 0, y: 0 },
+      { id: 'm3-9', label: 'Agent Patterns', m: 'm3', x: 0, y: 0 },
+      { id: 'm3-10', label: 'Memory & Control', m: 'm3', x: 0, y: 0 },
+      { id: 'm3-11', label: 'LangGraph', m: 'm3', x: 0, y: 0 },
+      { id: 'm3-12', label: 'Structured Output', m: 'm3', x: 0, y: 0 },
+      { id: 'm3-13', label: 'AI Security', m: 'm3', x: 0, y: 0 },
+      { id: 'm3-14', label: 'AI-Assisted Coding', m: 'm3', x: 0, y: 0 },
+      // Module 4
+      { id: 'm4-1', label: 'LLM Internals', m: 'm4', x: 0, y: 0 },
+      { id: 'm4-2', label: 'Rate Limits', m: 'm4', x: 0, y: 0 },
+      { id: 'm4-3', label: 'Retrieval', m: 'm4', x: 0, y: 0 },
+      { id: 'm4-4', label: 'Advanced RAG', m: 'm4', x: 0, y: 0 },
+      { id: 'm4-5', label: 'Agent Comms', m: 'm4', x: 0, y: 0 },
+      { id: 'm4-6', label: 'Guardrails', m: 'm4', x: 0, y: 0 },
+      { id: 'm4-7', label: 'Memory Arch', m: 'm4', x: 0, y: 0 },
+      { id: 'm4-8', label: 'Orchestration', m: 'm4', x: 0, y: 0 },
+      { id: 'm4-9', label: 'Resilience', m: 'm4', x: 0, y: 0 },
+      { id: 'm4-10', label: 'Tracing', m: 'm4', x: 0, y: 0 },
+      { id: 'm4-11', label: 'Evaluation', m: 'm4', x: 0, y: 0 },
+      { id: 'm4-12', label: 'SLIs/SLOs', m: 'm4', x: 0, y: 0 },
+      { id: 'm4-13', label: 'Deployment', m: 'm4', x: 0, y: 0 },
+      { id: 'm4-14', label: 'Caching', m: 'm4', x: 0, y: 0 },
+      { id: 'm4-15', label: 'Maintenance', m: 'm4', x: 0, y: 0 },
+      { id: 'm4-16', label: 'Capstone', m: 'm4', x: 0, y: 0 },
+      // Module 5
+      { id: 'm5-1', label: 'OpenAI Tools', m: 'm5', x: 0, y: 0 },
+      { id: 'm5-2', label: 'Claude Tools', m: 'm5', x: 0, y: 0 },
+      { id: 'm5-3', label: 'Bedrock', m: 'm5', x: 0, y: 0 },
+      { id: 'm5-4', label: 'MCP', m: 'm5', x: 0, y: 0 },
+      { id: 'm5-5', label: 'Multi-Agent FW', m: 'm5', x: 0, y: 0 },
+      { id: 'm5-6', label: 'Prompt Mgmt', m: 'm5', x: 0, y: 0 },
+      { id: 'm5-7', label: 'CI/CD for AI', m: 'm5', x: 0, y: 0 },
+      { id: 'm5-8', label: 'Ethics & Bias', m: 'm5', x: 0, y: 0 },
+      { id: 'm5-9', label: 'RAG Capstone', m: 'm5', x: 0, y: 0 },
+      { id: 'm5-10', label: 'Agent Capstone', m: 'm5', x: 0, y: 0 },
+      { id: 'm5-11', label: 'Support Capstone', m: 'm5', x: 0, y: 0 },
+    ];
+
+    // Key cross-topic connections: [from, to, type]
+    // type: 'prereq' = prerequisite (solid arrow), 'related' = conceptually related (dotted)
+    const edges = [
+      // M1 internal flow (prerequisite chain)
+      ['m1-2','m1-4','prereq'],['m1-4','m1-5','prereq'],['m1-5','m1-6','prereq'],['m1-6','m1-7','prereq'],['m1-7','m1-8','prereq'],
+      ['m1-8','m1-9','prereq'],['m1-8','m1-10','prereq'],['m1-9','m1-11','prereq'],['m1-10','m1-13','prereq'],['m1-11','m1-12','related'],
+      // M1 → M2 (prerequisites)
+      ['m1-9','m2-2','prereq'],['m1-11','m2-2','prereq'],['m1-8','m2-1','prereq'],
+      // M2 internal
+      ['m2-1','m2-2','prereq'],['m2-2','m2-3','prereq'],['m2-3','m2-4','prereq'],['m2-4','m2-5','prereq'],['m2-5','m2-6','prereq'],
+      ['m2-6','m2-7','prereq'],['m2-4','m2-8','related'],['m2-8','m2-9','prereq'],['m2-5','m2-10','related'],['m2-4','m2-11','related'],
+      ['m2-12','m2-13','related'],['m2-3','m2-14','prereq'],['m2-14','m2-15','prereq'],['m2-15','m2-16','prereq'],
+      // M2 → M3
+      ['m2-8','m3-1','prereq'],['m2-16','m3-4','prereq'],['m2-13','m3-6','related'],
+      // M3 internal
+      ['m3-1','m3-2','prereq'],['m3-1','m3-3','related'],['m3-2','m3-4','prereq'],['m3-4','m3-5','prereq'],['m3-5','m3-6','prereq'],
+      ['m3-6','m3-7','prereq'],['m3-1','m3-8','related'],['m3-4','m3-9','prereq'],['m3-9','m3-10','prereq'],['m3-10','m3-11','prereq'],
+      ['m3-2','m3-12','related'],['m3-2','m3-13','related'],['m3-9','m3-14','related'],
+      // M3 → M4
+      ['m3-1','m4-1','prereq'],['m3-5','m4-3','prereq'],['m3-7','m4-4','prereq'],['m3-9','m4-5','prereq'],['m3-10','m4-7','prereq'],
+      ['m3-11','m4-8','prereq'],['m3-12','m4-6','related'],['m3-13','m4-6','related'],
+      // M4 internal
+      ['m4-1','m4-2','related'],['m4-3','m4-4','prereq'],['m4-5','m4-8','prereq'],['m4-6','m4-9','related'],['m4-7','m4-8','prereq'],
+      ['m4-8','m4-9','prereq'],['m4-9','m4-10','prereq'],['m4-10','m4-11','prereq'],['m4-11','m4-12','prereq'],['m4-12','m4-13','prereq'],
+      ['m4-13','m4-14','related'],['m4-14','m4-15','related'],['m4-15','m4-16','prereq'],
+      // M4 → M5
+      ['m4-5','m5-5','prereq'],['m4-1','m5-1','prereq'],['m4-1','m5-2','prereq'],['m4-3','m5-3','prereq'],['m4-8','m5-4','prereq'],
+      ['m4-6','m5-8','related'],['m4-16','m5-9','prereq'],
+      // M5 internal
+      ['m5-1','m5-5','related'],['m5-2','m5-4','related'],['m5-3','m5-5','related'],['m5-5','m5-10','prereq'],['m5-6','m5-7','prereq'],
+      ['m5-7','m5-9','prereq'],['m5-8','m5-11','related'],['m5-9','m5-10','prereq'],['m5-10','m5-11','prereq'],
+    ];
+
+    const cvs = document.getElementById('kg-canvas');
+    const ctx = cvs.getContext('2d');
+    const tooltip = document.getElementById('kg-tooltip');
+    let W, H, activeFilter = 'all', hoveredNode = null, animId = null;
+
+    function resize() {
+      const rect = cvs.parentElement.getBoundingClientRect();
+      W = rect.width; H = rect.height;
+      cvs.width = W * devicePixelRatio; cvs.height = H * devicePixelRatio;
+      cvs.style.width = W + 'px'; cvs.style.height = H + 'px';
+      ctx.setTransform(devicePixelRatio, 0, 0, devicePixelRatio, 0, 0);
+    }
+
+    function initPositions() {
+      const cx = W / 2, cy = H / 2;
+      const moduleGroups = { m1: [], m2: [], m3: [], m4: [], m5: [] };
+      nodes.forEach(n => moduleGroups[n.m].push(n));
+
+      const moduleAngles = { m1: -Math.PI/2, m2: -Math.PI/2 + 2*Math.PI/5, m3: -Math.PI/2 + 4*Math.PI/5, m4: -Math.PI/2 + 6*Math.PI/5, m5: -Math.PI/2 + 8*Math.PI/5 };
+      const R = Math.min(W, H) * 0.35;
+
+      Object.entries(moduleGroups).forEach(([m, group]) => {
+        const angle = moduleAngles[m];
+        const gcx = cx + R * Math.cos(angle);
+        const gcy = cy + R * Math.sin(angle);
+        group.forEach((n, i) => {
+          const a = (i / group.length) * Math.PI * 2;
+          const r = 30 + group.length * 4;
+          n.x = gcx + r * Math.cos(a) + (Math.random() - 0.5) * 20;
+          n.y = gcy + r * Math.sin(a) + (Math.random() - 0.5) * 20;
+          n.vx = 0; n.vy = 0;
+        });
+      });
+    }
+
+    function simulate() {
+      // Simple force simulation
+      const k = 0.001, repulse = 800, damping = 0.9;
+      // Repulsion
+      for (let i = 0; i < nodes.length; i++) {
+        for (let j = i + 1; j < nodes.length; j++) {
+          const dx = nodes[j].x - nodes[i].x, dy = nodes[j].y - nodes[i].y;
+          const dist = Math.max(1, Math.sqrt(dx * dx + dy * dy));
+          const f = repulse / (dist * dist);
+          nodes[i].vx -= f * dx / dist; nodes[i].vy -= f * dy / dist;
+          nodes[j].vx += f * dx / dist; nodes[j].vy += f * dy / dist;
+        }
+      }
+      // Attraction along edges
+      edges.forEach(([a, b, type]) => {
+        const na = nodes.find(n => n.id === a.replace('topic', '')), nb = nodes.find(n => n.id === b.replace('topic', ''));
+        if (!na || !nb) return;
+        const dx = nb.x - na.x, dy = nb.y - na.y, dist = Math.sqrt(dx * dx + dy * dy);
+        const strength = type === 'prereq' ? k * 1.5 : k;
+        const f = dist * strength;
+        na.vx += f * dx / dist; na.vy += f * dy / dist;
+        nb.vx -= f * dx / dist; nb.vy -= f * dy / dist;
+      });
+      // Center gravity
+      nodes.forEach(n => {
+        n.vx += (W / 2 - n.x) * 0.0003;
+        n.vy += (H / 2 - n.y) * 0.0003;
+        n.vx *= damping; n.vy *= damping;
+        n.x += n.vx; n.y += n.vy;
+        n.x = Math.max(30, Math.min(W - 30, n.x));
+        n.y = Math.max(30, Math.min(H - 30, n.y));
+      });
+    }
+
+    function draw() {
+      const dk = document.documentElement.getAttribute('data-theme') !== 'light';
+      ctx.clearRect(0, 0, W, H);
+
+      // Edges
+      edges.forEach(([a, b, type]) => {
+        const na = nodes.find(n => n.id === a), nb = nodes.find(n => n.id === b);
+        if (!na || !nb) return;
+        if (activeFilter !== 'all' && na.m !== activeFilter && nb.m !== activeFilter) return;
+        const isHovered = hoveredNode && (hoveredNode.id === a || hoveredNode.id === b);
+        const isPrereq = type === 'prereq';
+
+        ctx.beginPath();
+        if (!isPrereq) { ctx.setLineDash([4, 4]); } else { ctx.setLineDash([]); }
+        ctx.moveTo(na.x, na.y); ctx.lineTo(nb.x, nb.y);
+        ctx.strokeStyle = isHovered ? 'rgba(56,189,248,0.5)' :
+          isPrereq ? (dk ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.15)') :
+          (dk ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)');
+        ctx.lineWidth = isPrereq ? 1.5 : 1; ctx.stroke();
+        ctx.setLineDash([]);
+
+        // Arrowhead for prerequisites
+        if (isPrereq) {
+          const dx = nb.x - na.x, dy = nb.y - na.y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < 1) return;
+          const mx = na.x + dx * 0.6, my = na.y + dy * 0.6;
+          const angle = Math.atan2(dy, dx);
+          const sz = 5;
+          ctx.beginPath();
+          ctx.moveTo(mx + sz * Math.cos(angle), my + sz * Math.sin(angle));
+          ctx.lineTo(mx + sz * Math.cos(angle + 2.5), my + sz * Math.sin(angle + 2.5));
+          ctx.lineTo(mx + sz * Math.cos(angle - 2.5), my + sz * Math.sin(angle - 2.5));
+          ctx.closePath();
+          ctx.fillStyle = isHovered ? 'rgba(56,189,248,0.5)' : (dk ? 'rgba(255,255,255,0.2)' : 'rgba(0,0,0,0.2)');
+          ctx.fill();
+        }
+      });
+
+      // Nodes
+      nodes.forEach(n => {
+        if (activeFilter !== 'all' && n.m !== activeFilter) { return; }
+        const isHovered = hoveredNode === n;
+        const r = isHovered ? 8 : 5;
+        ctx.beginPath(); ctx.arc(n.x, n.y, r, 0, Math.PI * 2);
+        ctx.fillStyle = colors[n.m]; ctx.globalAlpha = isHovered ? 1 : 0.8;
+        ctx.fill(); ctx.globalAlpha = 1;
+
+        if (isHovered || activeFilter !== 'all') {
+          ctx.font = `${isHovered ? '600' : '400'} 11px Inter, sans-serif`;
+          ctx.fillStyle = dk ? '#e2e8f0' : '#1e293b';
+          ctx.fillText(n.label, n.x + r + 4, n.y + 4);
+        }
+      });
+    }
+
+    function loop() {
+      simulate(); draw();
+      animId = requestAnimationFrame(loop);
+    }
+
+    function getNodeAt(mx, my) {
+      return nodes.find(n => {
+        if (activeFilter !== 'all' && n.m !== activeFilter) return false;
+        return Math.hypot(n.x - mx, n.y - my) < 12;
+      });
+    }
+
+    function init() {
+      resize(); initPositions();
+
+      cvs.addEventListener('mousemove', e => {
+        const rect = cvs.getBoundingClientRect();
+        const mx = e.clientX - rect.left, my = e.clientY - rect.top;
+        const node = getNodeAt(mx, my);
+        hoveredNode = node;
+        cvs.style.cursor = node ? 'pointer' : 'default';
+        if (node) {
+          tooltip.style.display = 'block';
+          tooltip.style.left = (e.clientX + 14) + 'px';
+          tooltip.style.top = (e.clientY + 14) + 'px';
+          tooltip.querySelector('.tt-title').textContent = node.label;
+          const mNames = { m1: 'Module 1: Foundations', m2: 'Module 2: ML', m3: 'Module 3: GenAI', m4: 'Module 4: Agentic', m5: 'Module 5: Platforms' };
+          tooltip.querySelector('.tt-module').textContent = mNames[node.m];
+          const prereqs = edges.filter(([a, b, t]) => b === node.id && t === 'prereq').map(([a]) => nodes.find(n => n.id === a)?.label).filter(Boolean);
+          tooltip.querySelector('.tt-prereqs').textContent = prereqs.length ? 'Requires: ' + prereqs.join(', ') : '';
+        } else {
+          tooltip.style.display = 'none';
+        }
+      });
+
+      cvs.addEventListener('click', e => {
+        const rect = cvs.getBoundingClientRect();
+        const node = getNodeAt(e.clientX - rect.left, e.clientY - rect.top);
+        if (node) {
+          const topicNum = node.id.split('-')[1];
+          const moduleFile = `module${node.m.replace('m','')}.html`;
+          window.location.href = `${moduleFile}#${node.m}-topic${topicNum}`;
+        }
+      });
+
+      document.querySelectorAll('.kg-filter-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelector('.kg-filter-btn.active').classList.remove('active');
+          btn.classList.add('active');
+          activeFilter = btn.dataset.filter;
+        });
+      });
+
+      window.addEventListener('resize', () => { resize(); initPositions(); });
+      loop();
+    }
+
+    return { init };
+  })();
+
+  document.addEventListener('DOMContentLoaded', () => KG.init());
+  </script>
+  <script src="js/nav.js"></script>
+  <script src="js/features.js"></script>
+</body>
+</html>

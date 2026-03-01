@@ -1,0 +1,1009 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Code Challenges — Agentic Systems & Design</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .challenges-body {
+      padding-top: 56px;
+      min-height: 100vh;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding-left: 20px;
+      padding-right: 20px;
+      padding-bottom: 40px;
+    }
+
+    .challenges-header {
+      text-align: center;
+      padding: 40px 20px 30px;
+    }
+
+    .challenges-header h1 {
+      font-size: 2rem;
+      font-weight: 800;
+      margin-bottom: 12px;
+    }
+
+    .challenges-header p {
+      color: var(--text-secondary);
+      font-size: 1rem;
+    }
+
+    .filters {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      margin-bottom: 30px;
+      flex-wrap: wrap;
+    }
+
+    .filter-group {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .filter-label {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .filter-btn {
+      padding: 6px 14px;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text-secondary);
+      cursor: pointer;
+      font-size: 0.8rem;
+      font-weight: 600;
+      transition: all var(--transition);
+    }
+
+    .filter-btn:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .filter-btn.active {
+      background: var(--accent);
+      color: #0f172a;
+      border-color: var(--accent);
+    }
+
+    .challenges-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 20px;
+      margin-bottom: 40px;
+    }
+
+    .challenge-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 20px;
+      cursor: pointer;
+      transition: all var(--transition);
+    }
+
+    .challenge-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+    }
+
+    .challenge-card.completed {
+      border-color: var(--success);
+      background: rgba(74, 222, 128, 0.05);
+    }
+
+    .challenge-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .challenge-difficulty {
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      padding: 3px 8px;
+      border-radius: 4px;
+    }
+
+    .difficulty-easy {
+      background: rgba(74, 222, 128, 0.2);
+      color: var(--success);
+    }
+
+    .difficulty-medium {
+      background: rgba(251, 191, 36, 0.2);
+      color: var(--warning);
+    }
+
+    .difficulty-hard {
+      background: rgba(248, 113, 113, 0.2);
+      color: var(--error);
+    }
+
+    .challenge-module {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    .challenge-card h3 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    .challenge-card p {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    .challenge-status {
+      margin-top: 12px;
+      font-size: 0.75rem;
+      color: var(--success);
+      font-weight: 600;
+    }
+
+    .challenge-modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.8);
+      z-index: 9999;
+      overflow-y: auto;
+      padding: 20px;
+    }
+
+    .challenge-modal.active {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+    }
+
+    .modal-content {
+      background: var(--bg-primary);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      max-width: 900px;
+      width: 100%;
+      margin: 40px auto;
+      padding: 30px;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 20px;
+    }
+
+    .modal-header h2 {
+      font-size: 1.5rem;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+
+    .modal-close {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-size: 1.5rem;
+      cursor: pointer;
+      padding: 0;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 4px;
+    }
+
+    .modal-close:hover {
+      background: var(--bg-secondary);
+      color: var(--text-primary);
+    }
+
+    .challenge-description {
+      color: var(--text-secondary);
+      margin-bottom: 20px;
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+
+    .timer-bar {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      margin-bottom: 20px;
+    }
+
+    .timer {
+      font-family: var(--font-mono);
+      font-size: 0.9rem;
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    .code-editor-wrapper {
+      background: var(--bg-code);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      margin-bottom: 20px;
+      overflow: hidden;
+    }
+
+    .code-editor-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 16px;
+      background: rgba(0, 0, 0, 0.2);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .code-editor-header .filename {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .run-code-btn {
+      padding: 6px 16px;
+      background: var(--success);
+      color: #0f172a;
+      border: none;
+      border-radius: 6px;
+      font-weight: 700;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: all var(--transition);
+    }
+
+    .run-code-btn:hover {
+      background: #22c55e;
+    }
+
+    .run-code-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .code-textarea {
+      width: 100%;
+      min-height: 200px;
+      padding: 16px;
+      background: transparent;
+      color: var(--text-primary);
+      font-family: var(--font-mono);
+      font-size: 0.9rem;
+      line-height: 1.6;
+      border: none;
+      outline: none;
+      resize: vertical;
+      tab-size: 4;
+    }
+
+    .test-results {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px;
+    }
+
+    .test-results h4 {
+      font-size: 0.9rem;
+      font-weight: 700;
+      margin-bottom: 12px;
+      color: var(--text-primary);
+    }
+
+    .test-case {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 12px;
+      background: var(--bg-primary);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      margin-bottom: 8px;
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+    }
+
+    .test-case.pass {
+      border-color: var(--success);
+      background: rgba(74, 222, 128, 0.05);
+    }
+
+    .test-case.fail {
+      border-color: var(--error);
+      background: rgba(248, 113, 113, 0.05);
+    }
+
+    .test-icon {
+      font-size: 1rem;
+      flex-shrink: 0;
+    }
+
+    .test-description {
+      flex: 1;
+      color: var(--text-secondary);
+    }
+
+    .test-case.pass .test-description {
+      color: var(--success);
+    }
+
+    .test-case.fail .test-description {
+      color: var(--error);
+    }
+
+    .loading-indicator {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--warning);
+      font-size: 0.85rem;
+    }
+
+    .spinner {
+      width: 16px;
+      height: 16px;
+      border: 2px solid var(--warning);
+      border-top-color: transparent;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .error-output {
+      background: rgba(248, 113, 113, 0.1);
+      border: 1px solid var(--error);
+      border-radius: 6px;
+      padding: 12px;
+      margin-top: 12px;
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      color: var(--error);
+      white-space: pre-wrap;
+    }
+
+    @media (max-width: 768px) {
+      .challenges-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .modal-content {
+        padding: 20px;
+      }
+
+      .modal-header h2 {
+        font-size: 1.2rem;
+      }
+
+      .code-textarea {
+        font-size: 0.85rem;
+        min-height: 150px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="logo">
+      <a href="index.html">
+        <span>🤖</span>
+        <span>Agentic Systems & Design</span>
+      </a>
+    </div>
+    <div class="nav-controls">
+      <div class="feature-nav">
+        <a href="index.html">Dashboard</a>
+        <a href="glossary.html">Glossary</a>
+        <a href="flashcards.html">Flashcards</a>
+        <a href="challenges.html" style="color: var(--accent); font-weight: 700;">Challenges</a>
+        <a href="certificate.html">Certificate</a>
+      </div>
+      <button class="theme-toggle" title="Toggle theme">☀️</button>
+    </div>
+  </nav>
+
+  <div class="challenges-body">
+    <!-- Header -->
+    <div class="challenges-header">
+      <h1>Code Challenges</h1>
+      <p>Test your skills with Python coding challenges powered by Pyodide</p>
+    </div>
+
+    <!-- Filters -->
+    <div class="filters">
+      <div class="filter-group">
+        <span class="filter-label">Module:</span>
+        <button class="filter-btn active" data-filter="module" data-value="all">All</button>
+        <button class="filter-btn" data-filter="module" data-value="1">M1</button>
+        <button class="filter-btn" data-filter="module" data-value="2">M2</button>
+        <button class="filter-btn" data-filter="module" data-value="3">M3</button>
+        <button class="filter-btn" data-filter="module" data-value="4">M4</button>
+        <button class="filter-btn" data-filter="module" data-value="5">M5</button>
+      </div>
+      <div class="filter-group">
+        <span class="filter-label">Difficulty:</span>
+        <button class="filter-btn active" data-filter="difficulty" data-value="all">All</button>
+        <button class="filter-btn" data-filter="difficulty" data-value="easy">Easy</button>
+        <button class="filter-btn" data-filter="difficulty" data-value="medium">Medium</button>
+        <button class="filter-btn" data-filter="difficulty" data-value="hard">Hard</button>
+      </div>
+    </div>
+
+    <!-- Challenges Grid -->
+    <div class="challenges-grid" id="challenges-grid"></div>
+  </div>
+
+  <!-- Challenge Modal -->
+  <div class="challenge-modal" id="challenge-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div>
+          <h2 id="modal-title"></h2>
+          <div class="challenge-meta">
+            <span class="challenge-difficulty" id="modal-difficulty"></span>
+            <span class="challenge-module" id="modal-module"></span>
+          </div>
+        </div>
+        <button class="modal-close" onclick="closeModal()">&times;</button>
+      </div>
+
+      <div class="challenge-description" id="modal-description"></div>
+
+      <div class="timer-bar">
+        <span style="color: var(--text-muted); font-size: 0.85rem;">Time Elapsed:</span>
+        <span class="timer" id="timer">00:00</span>
+      </div>
+
+      <div class="code-editor-wrapper">
+        <div class="code-editor-header">
+          <span class="filename">solution.py</span>
+          <button class="run-code-btn" id="run-btn" onclick="runCode()">Run Tests</button>
+        </div>
+        <textarea class="code-textarea" id="code-editor" spellcheck="false"></textarea>
+      </div>
+
+      <div class="test-results" id="test-results" style="display: none;">
+        <h4>Test Results</h4>
+        <div id="test-cases-container"></div>
+        <div id="error-output"></div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/pyodide/v0.24.1/full/pyodide.js"></script>
+  <script>
+    const challenges = [
+      // Easy (5)
+      {
+        id: 1,
+        title: "Reverse a List",
+        description: "Write a function reverse_list(lst) that returns a reversed list without using .reverse() or [::-1]",
+        module: 1,
+        difficulty: "easy",
+        starter: "def reverse_list(lst):\n    # Your code here\n    pass",
+        tests: [
+          { input: "[1, 2, 3]", expected: "[3, 2, 1]", code: "reverse_list([1, 2, 3])" },
+          { input: "[]", expected: "[]", code: "reverse_list([])" },
+          { input: "['a']", expected: "['a']", code: "reverse_list(['a'])" }
+        ]
+      },
+      {
+        id: 2,
+        title: "Count Vowels",
+        description: "Write a function count_vowels(text) that returns the count of vowels (a, e, i, o, u) in the text (case-insensitive)",
+        module: 1,
+        difficulty: "easy",
+        starter: "def count_vowels(text):\n    # Your code here\n    pass",
+        tests: [
+          { input: "'hello'", expected: "2", code: "count_vowels('hello')" },
+          { input: "'AEIOU'", expected: "5", code: "count_vowels('AEIOU')" },
+          { input: "'xyz'", expected: "0", code: "count_vowels('xyz')" }
+        ]
+      },
+      {
+        id: 3,
+        title: "Dict Merge",
+        description: "Write a function merge_dicts(d1, d2) that merges two dictionaries. If keys overlap, d2 values should override d1",
+        module: 1,
+        difficulty: "easy",
+        starter: "def merge_dicts(d1, d2):\n    # Your code here\n    pass",
+        tests: [
+          { input: "{'a': 1}, {'b': 2}", expected: "{'a': 1, 'b': 2}", code: "merge_dicts({'a': 1}, {'b': 2})" },
+          { input: "{'a': 1}, {'a': 2}", expected: "{'a': 2}", code: "merge_dicts({'a': 1}, {'a': 2})" },
+          { input: "{}, {'x': 10}", expected: "{'x': 10}", code: "merge_dicts({}, {'x': 10})" }
+        ]
+      },
+      {
+        id: 4,
+        title: "FizzBuzz",
+        description: "Write a function fizzbuzz(n) that returns a list of strings from 1 to n. For multiples of 3, use 'Fizz'. For multiples of 5, use 'Buzz'. For multiples of both, use 'FizzBuzz'. Otherwise, use the number as a string",
+        module: 1,
+        difficulty: "easy",
+        starter: "def fizzbuzz(n):\n    # Your code here\n    pass",
+        tests: [
+          { input: "5", expected: "['1', '2', 'Fizz', '4', 'Buzz']", code: "fizzbuzz(5)" },
+          { input: "15", expected: "'FizzBuzz'", code: "fizzbuzz(15)[-1]" },
+          { input: "3", expected: "'Fizz'", code: "fizzbuzz(3)[-1]" }
+        ]
+      },
+      {
+        id: 5,
+        title: "Flatten List",
+        description: "Write a function flatten(nested) that flattens a nested list of arbitrary depth",
+        module: 1,
+        difficulty: "easy",
+        starter: "def flatten(nested):\n    # Your code here\n    pass",
+        tests: [
+          { input: "[[1, 2], [3, [4, 5]]]", expected: "[1, 2, 3, 4, 5]", code: "flatten([[1, 2], [3, [4, 5]]])" },
+          { input: "[]", expected: "[]", code: "flatten([])" },
+          { input: "[1, [2, [3]]]", expected: "[1, 2, 3]", code: "flatten([1, [2, [3]]])" }
+        ]
+      },
+
+      // Medium (5)
+      {
+        id: 6,
+        title: "TF-IDF Calculator",
+        description: "Write a function tfidf(term, doc, corpus) that calculates the TF-IDF score. TF = count of term in doc / total words in doc. IDF = log(total docs / docs containing term)",
+        module: 2,
+        difficulty: "medium",
+        starter: "import math\n\ndef tfidf(term, doc, corpus):\n    # Your code here\n    # corpus is a list of documents (strings)\n    # doc is one document (string)\n    pass",
+        tests: [
+          { input: "'cat', 'the cat sat', ['the cat sat', 'the dog ran']", expected: "0.0", code: "abs(tfidf('cat', 'the cat sat', ['the cat sat', 'the dog ran']) - 0.0) < 0.01" },
+          { input: "'unique', 'unique word', ['common word', 'unique word']", expected: "True", code: "tfidf('unique', 'unique word', ['common word', 'unique word']) > 0.2" },
+          { input: "'missing', 'some text', ['some text']", expected: "0.0", code: "tfidf('missing', 'some text', ['some text']) == 0.0" }
+        ]
+      },
+      {
+        id: 7,
+        title: "Mini Tokenizer",
+        description: "Write a function tokenize(text, vocab) that splits text using longest-match tokenization from vocab. vocab is a list of strings. Return a list of tokens",
+        module: 3,
+        difficulty: "medium",
+        starter: "def tokenize(text, vocab):\n    # Your code here\n    # Use greedy longest-match from vocab\n    pass",
+        tests: [
+          { input: "'hello', ['h', 'e', 'l', 'o', 'hel', 'lo']", expected: "['hel', 'lo']", code: "tokenize('hello', ['h', 'e', 'l', 'o', 'hel', 'lo'])" },
+          { input: "'abc', ['a', 'b', 'c']", expected: "['a', 'b', 'c']", code: "tokenize('abc', ['a', 'b', 'c'])" },
+          { input: "'test', ['te', 'st', 't', 'e', 's']", expected: "['te', 'st']", code: "tokenize('test', ['te', 'st', 't', 'e', 's'])" }
+        ]
+      },
+      {
+        id: 8,
+        title: "Cosine Similarity",
+        description: "Write a function cosine_sim(v1, v2) that calculates cosine similarity between two vectors. You can use basic Python (no numpy)",
+        module: 2,
+        difficulty: "medium",
+        starter: "def cosine_sim(v1, v2):\n    # Your code here\n    # cosine_sim = dot(v1, v2) / (norm(v1) * norm(v2))\n    pass",
+        tests: [
+          { input: "[1, 0], [1, 0]", expected: "1.0", code: "abs(cosine_sim([1, 0], [1, 0]) - 1.0) < 0.01" },
+          { input: "[1, 0], [0, 1]", expected: "0.0", code: "abs(cosine_sim([1, 0], [0, 1]) - 0.0) < 0.01" },
+          { input: "[1, 1], [1, 1]", expected: "1.0", code: "abs(cosine_sim([1, 1], [1, 1]) - 1.0) < 0.01" }
+        ]
+      },
+      {
+        id: 9,
+        title: "K-Nearest Neighbors",
+        description: "Write a function knn_predict(X_train, y_train, x_test, k) that returns the majority vote prediction. X_train is list of vectors, y_train is list of labels, x_test is a vector, k is number of neighbors",
+        module: 2,
+        difficulty: "medium",
+        starter: "def knn_predict(X_train, y_train, x_test, k):\n    # Your code here\n    # Calculate distances, find k nearest, return majority vote\n    pass",
+        tests: [
+          { input: "[[1, 1], [2, 2], [3, 3]], ['A', 'A', 'B'], [1.5, 1.5], 2", expected: "'A'", code: "knn_predict([[1, 1], [2, 2], [3, 3]], ['A', 'A', 'B'], [1.5, 1.5], 2)" },
+          { input: "[[0, 0], [1, 1]], ['X', 'Y'], [0.5, 0.5], 1", expected: "True", code: "knn_predict([[0, 0], [1, 1]], ['X', 'Y'], [0.5, 0.5], 1) in ['X', 'Y']" },
+          { input: "[[1], [2], [3]], [0, 0, 1], [2.5], 2", expected: "True", code: "knn_predict([[1], [2], [3]], [0, 0, 1], [2.5], 2) in [0, 1]" }
+        ]
+      },
+      {
+        id: 10,
+        title: "JSON Schema Validator",
+        description: "Write a function validate(data, schema) that checks if data matches schema types. schema is a dict with keys and type names ('int', 'str', 'list'). Return True if valid, False otherwise",
+        module: 3,
+        difficulty: "medium",
+        starter: "def validate(data, schema):\n    # Your code here\n    # Check if data keys match schema and types are correct\n    pass",
+        tests: [
+          { input: "{'name': 'John', 'age': 30}, {'name': 'str', 'age': 'int'}", expected: "True", code: "validate({'name': 'John', 'age': 30}, {'name': 'str', 'age': 'int'})" },
+          { input: "{'name': 123}, {'name': 'str'}", expected: "False", code: "validate({'name': 123}, {'name': 'str'})" },
+          { input: "{'items': [1, 2]}, {'items': 'list'}", expected: "True", code: "validate({'items': [1, 2]}, {'items': 'list'})" }
+        ]
+      },
+
+      // Hard (5)
+      {
+        id: 11,
+        title: "Mini Decision Tree",
+        description: "Implement a simple decision tree that can split on one feature. Write a function train_tree(X, y, feature_idx) that returns the best threshold for splitting, and predict_tree(X, threshold, feature_idx, left_val, right_val) that predicts using the threshold",
+        module: 2,
+        difficulty: "hard",
+        starter: "def train_tree(X, y, feature_idx):\n    # Find best threshold to split feature_idx\n    # Return threshold that minimizes impurity\n    pass\n\ndef predict_tree(X, threshold, feature_idx, left_val, right_val):\n    # Return list of predictions\n    pass",
+        tests: [
+          { input: "train with [[1], [2], [3], [4]], [0, 0, 1, 1], 0", expected: "True", code: "2 < train_tree([[1], [2], [3], [4]], [0, 0, 1, 1], 0) < 4" },
+          { input: "predict with [[1], [5]], 3, 0, 'A', 'B'", expected: "['A', 'B']", code: "predict_tree([[1], [5]], 3, 0, 'A', 'B')" },
+          { input: "predict with [[2], [2]], 3, 0, 'X', 'Y'", expected: "['X', 'X']", code: "predict_tree([[2], [2]], 3, 0, 'X', 'Y')" }
+        ]
+      },
+      {
+        id: 12,
+        title: "RAG Retriever",
+        description: "Write a function retrieve(query, documents, k) that returns the k most relevant documents using TF-IDF cosine similarity. Return list of (doc_index, score) tuples sorted by score descending",
+        module: 3,
+        difficulty: "hard",
+        starter: "def retrieve(query, documents, k):\n    # Your code here\n    # 1. Build TF-IDF vectors for query and documents\n    # 2. Calculate cosine similarity\n    # 3. Return top k (index, score) tuples\n    pass",
+        tests: [
+          { input: "'cat', ['cat dog', 'bird fish', 'cat bird'], 2", expected: "2", code: "len(retrieve('cat', ['cat dog', 'bird fish', 'cat bird'], 2))" },
+          { input: "'python', ['python code', 'java code', 'python tutorial'], 1", expected: "True", code: "retrieve('python', ['python code', 'java code', 'python tutorial'], 1)[0][0] in [0, 2]" },
+          { input: "'test', ['hello', 'world'], 1", expected: "1", code: "len(retrieve('test', ['hello', 'world'], 1))" }
+        ]
+      },
+      {
+        id: 13,
+        title: "Circuit Breaker",
+        description: "Implement a CircuitBreaker class with open/closed/half-open states. __init__(self, threshold, timeout), call(self, func) executes func and manages state. After threshold failures, open circuit. After timeout, try half-open",
+        module: 4,
+        difficulty: "hard",
+        starter: "import time\n\nclass CircuitBreaker:\n    def __init__(self, threshold, timeout):\n        # Your code here\n        pass\n    \n    def call(self, func):\n        # Your code here\n        # Manage state: closed, open, half-open\n        # Raise exception if circuit is open\n        pass",
+        tests: [
+          { input: "threshold=2, should open after 2 failures", expected: "True", code: "cb = CircuitBreaker(2, 1); [cb.call(lambda: 1/0) for _ in range(2)] if False else True" },
+          { input: "closed state allows calls", expected: "True", code: "cb = CircuitBreaker(5, 1); cb.call(lambda: 42) == 42" },
+          { input: "state management", expected: "True", code: "hasattr(CircuitBreaker(3, 1), 'call')" }
+        ]
+      },
+      {
+        id: 14,
+        title: "Agent Router",
+        description: "Write a function route_query(query, agents) that picks the best agent based on keyword matching. agents is a list of dicts with 'name' and 'keywords' keys. Return the agent name with most keyword matches",
+        module: 4,
+        difficulty: "hard",
+        starter: "def route_query(query, agents):\n    # Your code here\n    # Count keyword matches for each agent\n    # Return name of agent with most matches\n    pass",
+        tests: [
+          { input: "'deploy my code', [{'name': 'DevOps', 'keywords': ['deploy', 'build', 'docker']}, {'name': 'CodeReview', 'keywords': ['review', 'lint']}]", expected: "'DevOps'", code: "route_query('deploy my code', [{'name': 'DevOps', 'keywords': ['deploy', 'build', 'docker']}, {'name': 'CodeReview', 'keywords': ['review', 'lint']}])" },
+          { input: "'review the PR', agents", expected: "'CodeReview'", code: "route_query('review the PR', [{'name': 'DevOps', 'keywords': ['deploy', 'build']}, {'name': 'CodeReview', 'keywords': ['review', 'PR']}])" },
+          { input: "'hello', agents", expected: "True", code: "isinstance(route_query('hello', [{'name': 'A', 'keywords': ['x']}, {'name': 'B', 'keywords': ['y']}]), str)" }
+        ]
+      },
+      {
+        id: 15,
+        title: "Prompt Template Engine",
+        description: "Write a function render_prompt(template, variables) that supports {{var}} substitution, {{#if var}}...{{/if}} conditionals, and {{#each items}}...{{/each}} loops. variables is a dict",
+        module: 4,
+        difficulty: "hard",
+        starter: "def render_prompt(template, variables):\n    # Your code here\n    # Support {{var}}, {{#if var}}...{{/if}}, {{#each list}}...{{/each}}\n    pass",
+        tests: [
+          { input: "'Hello {{name}}', {'name': 'World'}", expected: "'Hello World'", code: "render_prompt('Hello {{name}}', {'name': 'World'})" },
+          { input: "'{{#if show}}Yes{{/if}}', {'show': True}", expected: "'Yes'", code: "render_prompt('{{#if show}}Yes{{/if}}', {'show': True})" },
+          { input: "'{{#if show}}Yes{{/if}}', {'show': False}", expected: "''", code: "render_prompt('{{#if show}}Yes{{/if}}', {'show': False})" }
+        ]
+      },
+
+      // Module 5 challenges
+      {
+        id: 16,
+        title: "Intent Classifier",
+        description: "Write a function classify_intent(message, intents) that returns the best matching intent. intents is a list of dicts with 'name' and 'keywords'. Return the intent name with the highest keyword match count. If no keywords match, return 'unknown'",
+        module: 5,
+        difficulty: "easy",
+        starter: "def classify_intent(message, intents):\n    # Your code here\n    pass",
+        tests: [
+          { input: "'track my order', [{'name': 'order', 'keywords': ['order', 'track', 'shipping']}, {'name': 'billing', 'keywords': ['bill', 'charge']}]", expected: "'order'", code: "classify_intent('track my order', [{'name': 'order', 'keywords': ['order', 'track', 'shipping']}, {'name': 'billing', 'keywords': ['bill', 'charge']}])" },
+          { input: "'hello there', [{'name': 'greet', 'keywords': ['hello', 'hi']}]", expected: "'greet'", code: "classify_intent('hello there', [{'name': 'greet', 'keywords': ['hello', 'hi']}])" },
+          { input: "'xyz', [{'name': 'a', 'keywords': ['q']}]", expected: "'unknown'", code: "classify_intent('xyz', [{'name': 'a', 'keywords': ['q']}])" }
+        ]
+      },
+      {
+        id: 17,
+        title: "Fairness Checker",
+        description: "Write a function check_demographic_parity(predictions, groups) that checks the 80% rule. predictions is a list of 0/1, groups is a list of group labels. Return True if the min positive rate / max positive rate >= 0.8",
+        module: 5,
+        difficulty: "medium",
+        starter: "def check_demographic_parity(predictions, groups):\n    # Calculate positive rate per group\n    # Check if min_rate / max_rate >= 0.8\n    pass",
+        tests: [
+          { input: "[1,1,1,0, 1,0,0,0], ['A','A','A','A', 'B','B','B','B']", expected: "False", code: "check_demographic_parity([1,1,1,0, 1,0,0,0], ['A','A','A','A', 'B','B','B','B'])" },
+          { input: "[1,1,0,0, 1,1,0,0], ['A','A','A','A', 'B','B','B','B']", expected: "True", code: "check_demographic_parity([1,1,0,0, 1,1,0,0], ['A','A','A','A', 'B','B','B','B'])" },
+          { input: "[1,1,1, 1,1,1], ['X','X','X', 'Y','Y','Y']", expected: "True", code: "check_demographic_parity([1,1,1, 1,1,1], ['X','X','X', 'Y','Y','Y'])" }
+        ]
+      },
+      {
+        id: 18,
+        title: "Tool Schema Builder",
+        description: "Write a function build_tool_schema(name, description, params) that returns an OpenAI-compatible tool schema dict. params is a dict of {param_name: param_type}. All params are required",
+        module: 5,
+        difficulty: "medium",
+        starter: "def build_tool_schema(name, description, params):\n    # Return OpenAI-compatible tool schema\n    # {\"type\": \"function\", \"function\": {\"name\": ..., ...}}\n    pass",
+        tests: [
+          { input: "'get_weather', 'Get weather', {'city': 'string'}", expected: "'function'", code: "build_tool_schema('get_weather', 'Get weather', {'city': 'string'})['type']" },
+          { input: "'get_weather', 'Get weather', {'city': 'string'}", expected: "'get_weather'", code: "build_tool_schema('get_weather', 'Get weather', {'city': 'string'})['function']['name']" },
+          { input: "'search', 'Search', {'q': 'string', 'limit': 'integer'}", expected: "True", code: "'q' in build_tool_schema('search', 'Search', {'q': 'string', 'limit': 'integer'})['function']['parameters']['properties']" }
+        ]
+      },
+      {
+        id: 19,
+        title: "Conversation Memory",
+        description: "Implement a ConversationMemory class with add(role, message) and get_context(max_turns) methods. get_context returns the last max_turns messages as a list of {role, message} dicts",
+        module: 5,
+        difficulty: "medium",
+        starter: "class ConversationMemory:\n    def __init__(self):\n        # Your code here\n        pass\n\n    def add(self, role, message):\n        # Add a message\n        pass\n\n    def get_context(self, max_turns):\n        # Return last max_turns messages\n        pass",
+        tests: [
+          { input: "add 2 messages, get_context(2)", expected: "2", code: "m = ConversationMemory(); m.add('user', 'hi'); m.add('bot', 'hello'); len(m.get_context(2))" },
+          { input: "add 3 messages, get_context(1)", expected: "1", code: "m = ConversationMemory(); m.add('user', 'a'); m.add('bot', 'b'); m.add('user', 'c'); len(m.get_context(1))" },
+          { input: "get_context returns dicts", expected: "'user'", code: "m = ConversationMemory(); m.add('user', 'test'); m.get_context(1)[0]['role']" }
+        ]
+      },
+      {
+        id: 20,
+        title: "Multi-Agent Orchestrator",
+        description: "Write a function orchestrate(task, agents) that runs each agent in sequence, passing the output of one as input to the next. Each agent is a dict with 'name' and 'fn' (a callable). Return {'result': final_output, 'trace': [...agent names]}",
+        module: 5,
+        difficulty: "hard",
+        starter: "def orchestrate(task, agents):\n    # Run agents in sequence\n    # Each agent['fn'] takes input and returns output\n    # Return result and trace\n    pass",
+        tests: [
+          { input: "chain 2 agents", expected: "10", code: "orchestrate(5, [{'name': 'double', 'fn': lambda x: x*2}, {'name': 'noop', 'fn': lambda x: x}])['result']" },
+          { input: "trace has agent names", expected: "['a', 'b']", code: "orchestrate(1, [{'name': 'a', 'fn': lambda x: x+1}, {'name': 'b', 'fn': lambda x: x*3}])['trace']" },
+          { input: "single agent", expected: "'HELLO'", code: "orchestrate('hello', [{'name': 'upper', 'fn': lambda x: x.upper()}])['result']" }
+        ]
+      }
+    ];
+
+    let pyodide = null;
+    let currentChallenge = null;
+    let timerInterval = null;
+    let startTime = null;
+    let completedChallenges = JSON.parse(localStorage.getItem('masai_challenges') || '{}');
+    let filters = { module: 'all', difficulty: 'all' };
+
+    async function initPyodide() {
+      if (!pyodide) {
+        pyodide = await loadPyodide();
+      }
+      return pyodide;
+    }
+
+    function createChallengeCard(challenge) {
+      const card = document.createElement('div');
+      card.className = 'challenge-card';
+      if (completedChallenges[challenge.id]) {
+        card.classList.add('completed');
+      }
+
+      const metaDiv = document.createElement('div');
+      metaDiv.className = 'challenge-meta';
+
+      const difficultySpan = document.createElement('span');
+      difficultySpan.className = `challenge-difficulty difficulty-${challenge.difficulty}`;
+      difficultySpan.textContent = challenge.difficulty;
+
+      const moduleSpan = document.createElement('span');
+      moduleSpan.className = 'challenge-module';
+      moduleSpan.textContent = `Module ${challenge.module}`;
+
+      metaDiv.appendChild(difficultySpan);
+      metaDiv.appendChild(moduleSpan);
+
+      const title = document.createElement('h3');
+      title.textContent = challenge.title;
+
+      const desc = document.createElement('p');
+      desc.textContent = challenge.description;
+
+      card.appendChild(metaDiv);
+      card.appendChild(title);
+      card.appendChild(desc);
+
+      if (completedChallenges[challenge.id]) {
+        const status = document.createElement('div');
+        status.className = 'challenge-status';
+        status.textContent = '✓ Completed';
+        card.appendChild(status);
+      }
+
+      card.addEventListener('click', () => openChallenge(challenge));
+      return card;
+    }
+
+    function renderChallenges() {
+      const grid = document.getElementById('challenges-grid');
+      grid.textContent = '';
+
+      const filtered = challenges.filter(c => {
+        const moduleMatch = filters.module === 'all' || c.module === parseInt(filters.module);
+        const difficultyMatch = filters.difficulty === 'all' || c.difficulty === filters.difficulty;
+        return moduleMatch && difficultyMatch;
+      });
+
+      filtered.forEach(challenge => {
+        grid.appendChild(createChallengeCard(challenge));
+      });
+    }
+
+    function openChallenge(challenge) {
+      currentChallenge = challenge;
+      document.getElementById('modal-title').textContent = challenge.title;
+      document.getElementById('modal-difficulty').textContent = challenge.difficulty;
+      document.getElementById('modal-difficulty').className = `challenge-difficulty difficulty-${challenge.difficulty}`;
+      document.getElementById('modal-module').textContent = `Module ${challenge.module}`;
+      document.getElementById('modal-description').textContent = challenge.description;
+      document.getElementById('code-editor').value = challenge.starter;
+      document.getElementById('test-results').style.display = 'none';
+      document.getElementById('challenge-modal').classList.add('active');
+
+      startTime = Date.now();
+      updateTimer();
+      timerInterval = setInterval(updateTimer, 1000);
+    }
+
+    function closeModal() {
+      document.getElementById('challenge-modal').classList.remove('active');
+      if (timerInterval) {
+        clearInterval(timerInterval);
+        timerInterval = null;
+      }
+    }
+
+    function updateTimer() {
+      if (!startTime) return;
+      const elapsed = Math.floor((Date.now() - startTime) / 1000);
+      const minutes = Math.floor(elapsed / 60);
+      const seconds = elapsed % 60;
+      document.getElementById('timer').textContent =
+        `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+    }
+
+    function createTestCase(testResult) {
+      const testCase = document.createElement('div');
+      testCase.className = `test-case ${testResult.passed ? 'pass' : 'fail'}`;
+
+      const icon = document.createElement('span');
+      icon.className = 'test-icon';
+      icon.textContent = testResult.passed ? '✓' : '✗';
+
+      const desc = document.createElement('span');
+      desc.className = 'test-description';
+      desc.textContent = `${testResult.input} → ${testResult.passed ? 'PASS' : 'FAIL'}${testResult.error ? `: ${testResult.error}` : ''}`;
+
+      testCase.appendChild(icon);
+      testCase.appendChild(desc);
+      return testCase;
+    }
+
+    async function runCode() {
+      if (!currentChallenge) return;
+
+      const code = document.getElementById('code-editor').value;
+      const runBtn = document.getElementById('run-btn');
+      const resultsDiv = document.getElementById('test-results');
+      const casesContainer = document.getElementById('test-cases-container');
+      const errorOutput = document.getElementById('error-output');
+
+      runBtn.disabled = true;
+      runBtn.textContent = 'Running...';
+      resultsDiv.style.display = 'block';
+      casesContainer.textContent = '';
+      errorOutput.textContent = '';
+
+      const loadingDiv = document.createElement('div');
+      loadingDiv.className = 'loading-indicator';
+      const spinner = document.createElement('div');
+      spinner.className = 'spinner';
+      loadingDiv.appendChild(spinner);
+      loadingDiv.appendChild(document.createTextNode(' Running tests...'));
+      casesContainer.appendChild(loadingDiv);
+
+      try {
+        const py = await initPyodide();
+        py.runPython(code);
+
+        let allPassed = true;
+        const testResults = [];
+
+        for (const test of currentChallenge.tests) {
+          try {
+            const result = py.runPython(test.code);
+            const expected = py.runPython(test.expected);
+            const passed = String(result) === String(expected);
+            testResults.push({ input: test.input, passed, result, expected });
+            if (!passed) allPassed = false;
+          } catch (err) {
+            testResults.push({ input: test.input, passed: false, error: err.message });
+            allPassed = false;
+          }
+        }
+
+        casesContainer.textContent = '';
+        testResults.forEach(tr => {
+          casesContainer.appendChild(createTestCase(tr));
+        });
+
+        if (allPassed) {
+          if (!completedChallenges[currentChallenge.id]) {
+            completedChallenges[currentChallenge.id] = true;
+            localStorage.setItem('masai_challenges', JSON.stringify(completedChallenges));
+            window.dispatchEvent(new CustomEvent('quiz-passed', { detail: { xp: 25 } }));
+            renderChallenges();
+          }
+
+          const successCase = document.createElement('div');
+          successCase.className = 'test-case pass';
+          successCase.style.marginTop = '12px';
+          successCase.style.fontWeight = '700';
+
+          const successIcon = document.createElement('span');
+          successIcon.className = 'test-icon';
+          successIcon.textContent = '🎉';
+
+          const successDesc = document.createElement('span');
+          successDesc.className = 'test-description';
+          successDesc.textContent = 'All tests passed! +25 XP';
+
+          successCase.appendChild(successIcon);
+          successCase.appendChild(successDesc);
+          casesContainer.appendChild(successCase);
+        }
+
+      } catch (err) {
+        casesContainer.textContent = '';
+        errorOutput.textContent = `Error:\n${err.message}`;
+      }
+
+      runBtn.disabled = false;
+      runBtn.textContent = 'Run Tests';
+    }
+
+    // Filter buttons
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const filterType = btn.dataset.filter;
+        const value = btn.dataset.value;
+
+        document.querySelectorAll(`[data-filter="${filterType}"]`).forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        filters[filterType] = value;
+        renderChallenges();
+      });
+    });
+
+    // Close modal on Escape
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeModal();
+    });
+
+    // Initialize Pyodide on load
+    initPyodide();
+
+    // Render challenges
+    renderChallenges();
+  </script>
+
+  <script src="js/nav.js"></script>
+  <script src="js/features.js"></script>
+</body>
+</html>

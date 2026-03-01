@@ -1,0 +1,945 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Module 2: ML Fundamentals — Agentic Systems & Design</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/print.css">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="logo"><a href="index.html">← Home</a> &nbsp;|&nbsp; Module 2: ML Fundamentals</div>
+    <div class="nav-controls">
+      <button class="theme-toggle">☀️</button>
+    </div>
+  </nav>
+  <button class="sidebar-toggle">☰</button>
+  <div class="page-wrapper">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <h3>Module 2: ML Fundamentals</h3>
+        <div class="sidebar-progress">0 / 16 topics completed</div>
+        <div class="progress-bar"><div class="fill"></div></div>
+      </div>
+      <ul class="topic-list">
+        <li><a href="#m2-topic1"><span class="check"></span> Problem Framing</a></li>
+        <li><a href="#m2-topic2"><span class="check"></span> Data Preparation</a></li>
+        <li><a href="#m2-topic3"><span class="check"></span> Data Leakage & CV</a></li>
+        <li><a href="#m2-topic4"><span class="check"></span> Linear Regression</a></li>
+        <li><a href="#m2-topic5"><span class="check"></span> Regularization</a></li>
+        <li><a href="#m2-topic6"><span class="check"></span> Regression Metrics</a></li>
+        <li><a href="#m2-topic7"><span class="check"></span> Logistic Regression</a></li>
+        <li><a href="#m2-topic8"><span class="check"></span> Decision Trees</a></li>
+        <li><a href="#m2-topic9"><span class="check"></span> Random Forests</a></li>
+        <li><a href="#m2-topic10"><span class="check"></span> Classification Metrics</a></li>
+        <li><a href="#m2-topic11"><span class="check"></span> ROC Curve & AUC</a></li>
+        <li><a href="#m2-topic12"><span class="check"></span> K-Means Clustering</a></li>
+        <li><a href="#m2-topic13"><span class="check"></span> PCA</a></li>
+        <li><a href="#m2-topic14"><span class="check"></span> Time Series</a></li>
+        <li><a href="#m2-topic15"><span class="check"></span> Model Selection</a></li>
+        <li><a href="#m2-topic16"><span class="check"></span> Transition to GenAI</a></li>
+      </ul>
+    </aside>
+    <main class="main-content">
+
+<!-- ============ TOPIC 1: Problem Framing ============ -->
+<section class="topic-section" id="m2-topic1">
+  <div class="topic-header"><h2>Problem Framing</h2><div class="topic-meta"><span>📖 12 min read</span><span>🎯 Topic 1 of 16</span></div></div>
+  <div class="why-box"><div class="label">Why This Matters</div><p>Before writing any ML code, you need to clearly define what you're trying to predict and what data you have. A badly framed problem wastes weeks of work. The best ML engineers spend more time framing than coding.</p></div>
+  <div class="content-text">
+    <h3>What Makes a Problem an ML Problem?</h3>
+    <p>ML is a good fit when: (1) a pattern exists in the data, (2) you can't write explicit rules for it, (3) you have enough data. Example: recognizing spam emails — you can't list every possible spam pattern, but ML can learn from thousands of examples.</p>
+    <h3>Features vs Labels</h3>
+    <p><strong>Features</strong> (X) are the inputs — what you know. <strong>Labels</strong> (y) are the output — what you want to predict. For house prices: features = square footage, bedrooms, location; label = price.</p>
+    <h3>Train / Validation / Test Split</h3>
+    <p>Think of it like studying for an exam:</p>
+    <ul>
+      <li><strong>Training set (70%)</strong> — your textbook. The model learns from this.</li>
+      <li><strong>Validation set (15%)</strong> — practice exams. Tune your approach without touching the final test.</li>
+      <li><strong>Test set (15%)</strong> — the final exam. Only use ONCE to get your real score.</li>
+    </ul>
+    <h3>Baselines</h3>
+    <p>Always start with a "dumb" model. For regression: predict the mean. For classification: predict the most common class. If your fancy model can't beat the baseline, something is wrong.</p>
+  </div>
+  <div class="diagram-wrapper"><div class="mermaid">
+graph LR
+    A["📊 Full Dataset<br/>100%"] --> B["🎓 Training<br/>70%"]
+    A --> C["🔧 Validation<br/>15%"]
+    A --> D["📝 Test<br/>15%"]
+    B --> E["Model learns patterns"]
+    C --> F["Tune hyperparameters"]
+    D --> G["Final evaluation"]
+    style B fill:#1a3a2a,stroke:#4ade80,color:#e2e8f0
+    style C fill:#3a2e1e,stroke:#fbbf24,color:#e2e8f0
+    style D fill:#3a1e1e,stroke:#f87171,color:#e2e8f0
+  </div></div>
+  <div class="code-editor-wrapper" data-packages="numpy,scikit-learn">
+    <div class="code-editor-header"><span class="filename">problem_framing.py</span><div class="actions"><button class="reset-btn">Reset</button><button class="run-btn">▶ Run</button></div></div>
+    <textarea class="code-textarea" rows="22">import numpy as np
+from sklearn.model_selection import train_test_split
+
+# Simulated house data
+np.random.seed(42)
+n = 100
+sqft = np.random.randint(500, 3000, n)          # Feature: square footage
+bedrooms = np.random.randint(1, 6, n)            # Feature: bedrooms
+price = sqft * 150 + bedrooms * 10000 + np.random.randn(n) * 20000  # Label
+
+# Combine features
+X = np.column_stack([sqft, bedrooms])
+y = price
+
+# Split: 70% train, 15% val, 15% test
+X_train, X_temp, y_train, y_temp = train_test_split(X, y, test_size=0.3, random_state=42)
+X_val, X_test, y_val, y_test = train_test_split(X_temp, y_temp, test_size=0.5, random_state=42)
+
+print(f"Training:   {X_train.shape[0]} samples")
+print(f"Validation: {X_val.shape[0]} samples")
+print(f"Test:       {X_test.shape[0]} samples")
+
+# Baseline: predict the mean
+baseline_pred = y_train.mean()
+baseline_error = np.mean(np.abs(y_test - baseline_pred))
+print(f"\nBaseline (predict mean): ${baseline_pred:,.0f}")
+print(f"Baseline MAE: ${baseline_error:,.0f}")
+print("Any model must beat this to be useful!")
+</textarea>
+    <div class="code-output"><div class="output-label">Output</div><div class="output-text" style="color:var(--text-muted);">Click "Run" to execute</div></div>
+  </div>
+  <div class="quiz-wrapper" data-topic-id="m2-topic1">
+    <h4>📝 Knowledge Check</h4>
+    <div class="quiz-question" data-correct="b" data-explanation="Features are inputs (what you know). Labels are outputs (what you predict)."><p>1. In ML, what are 'features'?</p><div class="quiz-options"><div class="quiz-option" data-value="a"><span class="radio"></span> The predictions the model makes</div><div class="quiz-option" data-value="b"><span class="radio"></span> The input variables used for prediction</div><div class="quiz-option" data-value="c"><span class="radio"></span> The model's accuracy score</div></div><div class="quiz-feedback"></div></div>
+    <div class="quiz-question" data-correct="c" data-explanation="The test set is used ONCE for final evaluation — like a final exam."><p>2. When should you use the test set?</p><div class="quiz-options"><div class="quiz-option" data-value="a"><span class="radio"></span> During training to check progress</div><div class="quiz-option" data-value="b"><span class="radio"></span> To tune hyperparameters</div><div class="quiz-option" data-value="c"><span class="radio"></span> Only once, for final evaluation</div></div><div class="quiz-feedback"></div></div>
+    <div class="quiz-question" data-correct="a" data-explanation="A baseline is the simplest possible model. Your ML model should beat it or something is wrong."><p>3. Why do we need a baseline?</p><div class="quiz-options"><div class="quiz-option" data-value="a"><span class="radio"></span> To set a minimum bar that our model must beat</div><div class="quiz-option" data-value="b"><span class="radio"></span> To replace the need for a test set</div><div class="quiz-option" data-value="c"><span class="radio"></span> To speed up training</div></div><div class="quiz-feedback"></div></div>
+    <button class="quiz-submit">Check Answers</button><div class="quiz-result"></div>
+  </div>
+  <div class="takeaways"><h4>Key Takeaways</h4><ul><li>ML needs: pattern exists, can't write rules, have enough data</li><li>Features = inputs (X), Labels = outputs (y)</li><li>Split data into train/validation/test before doing anything else</li><li>Always start with a baseline — predict the mean or most common class</li></ul></div>
+  <div class="references"><h4>References</h4><ul><li><a href="https://developers.google.com/machine-learning/crash-course/framing/video-lecture" target="_blank">Google ML Crash Course: Framing →</a></li></ul></div>
+</section>
+
+<!-- ============ TOPIC 2: Data Preparation ============ -->
+<section class="topic-section" id="m2-topic2">
+  <div class="topic-header"><h2>Data Preparation</h2><div class="topic-meta"><span>📖 14 min read</span><span>🧹 Topic 2 of 16</span></div></div>
+  <div class="why-box"><div class="label">Why This Matters</div><p>Data scientists spend 80% of their time cleaning data. Garbage in = garbage out. No ML algorithm can overcome terrible data quality.</p></div>
+  <div class="content-text">
+    <h3>Common Data Problems</h3>
+    <table><tr><th>Problem</th><th>Example</th><th>Solution</th></tr>
+    <tr><td>Missing values</td><td>Age field is blank</td><td>Impute (fill) with mean/median/mode</td></tr>
+    <tr><td>Duplicates</td><td>Same row appears twice</td><td>Drop duplicates</td></tr>
+    <tr><td>Wrong types</td><td>Age stored as text "25"</td><td>Convert to numeric</td></tr>
+    <tr><td>Categorical data</td><td>"red", "blue", "green"</td><td>Encode as numbers</td></tr>
+    <tr><td>Different scales</td><td>Age (0-100), Salary (0-500K)</td><td>Scale/normalize</td></tr></table>
+    <h3>Imputing Missing Values</h3>
+    <p><strong>Mean</strong>: good for normally distributed data. <strong>Median</strong>: robust against outliers. <strong>Mode</strong>: use for categorical data.</p>
+    <h3>Encoding Categorical Data</h3>
+    <p><strong>Label Encoding</strong>: red=0, blue=1, green=2. Simple but implies ordering. <strong>One-Hot Encoding</strong>: creates binary columns — is_red, is_blue, is_green. No ordering implied.</p>
+    <h3>Scaling</h3>
+    <p><strong>StandardScaler</strong>: centers at 0, scales to unit variance. <strong>MinMaxScaler</strong>: scales to [0, 1]. Many ML algorithms (like SVM, kNN) need features on the same scale to work properly.</p>
+  </div>
+  <div class="code-editor-wrapper" data-packages="numpy,pandas,scikit-learn">
+    <div class="code-editor-header"><span class="filename">data_prep.py</span><div class="actions"><button class="reset-btn">Reset</button><button class="run-btn">▶ Run</button></div></div>
+    <textarea class="code-textarea" rows="36">import pandas as pd
+import numpy as np
+from sklearn.preprocessing import StandardScaler, LabelEncoder
+
+# Create messy data
+data = {
+    "name": ["Alice", "Bob", "Charlie", "Alice", "Diana", "Eve"],
+    "age": [28, None, 22, 28, 45, None],
+    "department": ["Eng", "Marketing", "Eng", "Eng", "HR", "Marketing"],
+    "salary": [95000, 72000, 85000, 95000, 98000, 76000]
+}
+df = pd.DataFrame(data)
+print("=== Original (messy) ===")
+print(df)
+print(f"Missing values:\n{df.isnull().sum()}\n")
+
+# Step 1: Remove duplicates
+df = df.drop_duplicates()
+print(f"After dropping duplicates: {len(df)} rows")
+
+# Step 2: Fill missing ages with median
+median_age = df["age"].median()
+df["age"] = df["age"].fillna(median_age)
+print(f"Filled missing ages with median: {median_age}")
+
+# Step 3: Encode categorical (department)
+le = LabelEncoder()
+df["dept_encoded"] = le.fit_transform(df["department"])
+print(f"\nEncoding: {dict(zip(le.classes_, le.transform(le.classes_)))}")
+
+# Step 4: Scale numerical features
+scaler = StandardScaler()
+df[["age_scaled", "salary_scaled"]] = scaler.fit_transform(df[["age", "salary"]])
+
+print(f"\n=== Clean Data ===")
+print(df)
+</textarea>
+    <div class="code-output"><div class="output-label">Output</div><div class="output-text" style="color:var(--text-muted);">Click "Run" to execute</div></div>
+  </div>
+  <div class="quiz-wrapper" data-topic-id="m2-topic2">
+    <h4>📝 Knowledge Check</h4>
+    <div class="quiz-question" data-correct="b" data-explanation="Median is resistant to outliers, making it more robust than mean for skewed data."><p>1. Why use median instead of mean for missing values?</p><div class="quiz-options"><div class="quiz-option" data-value="a"><span class="radio"></span> Median is faster to calculate</div><div class="quiz-option" data-value="b"><span class="radio"></span> Median is more robust against outliers</div><div class="quiz-option" data-value="c"><span class="radio"></span> Median always gives better results</div></div><div class="quiz-feedback"></div></div>
+    <div class="quiz-question" data-correct="c" data-explanation="One-hot encoding creates separate binary columns, avoiding false ordering."><p>2. What is one-hot encoding?</p><div class="quiz-options"><div class="quiz-option" data-value="a"><span class="radio"></span> Assigning numbers 0, 1, 2 to categories</div><div class="quiz-option" data-value="b"><span class="radio"></span> Removing categorical columns</div><div class="quiz-option" data-value="c"><span class="radio"></span> Creating binary columns for each category</div></div><div class="quiz-feedback"></div></div>
+    <div class="quiz-question" data-correct="a" data-explanation="Many ML algorithms use distance calculations. Features with larger scales would dominate."><p>3. Why do we scale features?</p><div class="quiz-options"><div class="quiz-option" data-value="a"><span class="radio"></span> So features on different scales don't dominate each other</div><div class="quiz-option" data-value="b"><span class="radio"></span> To make the data smaller</div><div class="quiz-option" data-value="c"><span class="radio"></span> To remove missing values</div></div><div class="quiz-feedback"></div></div>
+    <button class="quiz-submit">Check Answers</button><div class="quiz-result"></div>
+  </div>
+  <div class="takeaways"><h4>Key Takeaways</h4><ul><li>Clean data before training: handle missing values, duplicates, encoding, scaling</li><li>Use median for missing values when outliers exist</li><li>One-hot encoding for categorical data with no ordering</li><li>Scale features before algorithms that use distances (SVM, kNN, neural nets)</li></ul></div>
+  <div class="references"><h4>References</h4><ul><li><a href="https://scikit-learn.org/stable/modules/preprocessing.html" target="_blank">scikit-learn: Preprocessing →</a></li></ul></div>
+</section>
+
+<!-- ============ TOPIC 3: Data Leakage & CV ============ -->
+<section class="topic-section" id="m2-topic3">
+  <div class="topic-header"><h2>Data Leakage & Cross-Validation</h2><div class="topic-meta"><span>📖 10 min read</span><span>⚠️ Topic 3 of 16</span></div></div>
+  <div class="why-box"><div class="label">Why This Matters</div><p>Data leakage is the #1 reason ML models perform great in testing but fail in production. It's like accidentally seeing the test answers before the exam — your score means nothing.</p></div>
+  <div class="content-text">
+    <h3>Common Leakage Sources</h3>
+    <ul><li><strong>Scaling before splitting:</strong> If you fit a scaler on ALL data, the test set's statistics leak into training</li>
+    <li><strong>Using future data:</strong> In time series, accidentally using tomorrow's data to predict today</li>
+    <li><strong>Target leakage:</strong> A feature that's derived from the label (e.g., "transaction_approved" when predicting fraud)</li></ul>
+    <h3>Cross-Validation</h3>
+    <p>K-Fold CV splits data into K parts, trains on K-1, tests on the remaining 1, and rotates. This gives you K different scores — much more reliable than a single train/test split.</p>
+    <h3>Cross-Validation Visualized</h3>
+    <div class="animation-wrapper" data-animation="cross-validation">
+      <div class="animation-header"><span class="title">K-Fold Cross-Validation</span><div class="animation-controls"><button class="play-btn">▶ Play</button><button class="pause-btn">⏸ Pause</button><button class="step-btn">⏭ Step</button><button class="anim-reset-btn">↺ Reset</button></div></div>
+      <div class="animation-canvas"></div>
+    </div>
+  </div>
+  <div class="code-editor-wrapper" data-packages="numpy,scikit-learn">
+    <div class="code-editor-header"><span class="filename">cross_validation.py</span><div class="actions"><button class="reset-btn">Reset</button><button class="run-btn">▶ Run</button></div></div>
+    <textarea class="code-textarea" rows="22">import numpy as np
+from sklearn.model_selection import cross_val_score
+from sklearn.linear_model import LinearRegression
+
+# Generate data
+np.random.seed(42)
+X = np.random.rand(100, 3)
+y = X[:, 0] * 3 + X[:, 1] * 2 + np.random.randn(100) * 0.5
+
+model = LinearRegression()
+
+# 5-Fold Cross-Validation
+scores = cross_val_score(model, X, y, cv=5, scoring='r2')
+
+print("5-Fold Cross-Validation Results:")
+print(f"Scores: {[f'{s:.3f}' for s in scores]}")
+print(f"Mean R²: {scores.mean():.3f}")
+print(f"Std: {scores.std():.3f}")
+print(f"\nThis is more reliable than a single train/test split!")
+print(f"Low std ({scores.std():.3f}) = consistent performance across folds")
+</textarea>
+    <div class="code-output"><div class="output-label">Output</div><div class="output-text" style="color:var(--text-muted);">Click "Run" to execute</div></div>
+  </div>
+  <div class="quiz-wrapper" data-topic-id="m2-topic3">
+    <h4>📝 Knowledge Check</h4>
+    <div class="quiz-question" data-correct="b" data-explanation="Scaling on all data leaks test set statistics into training. Always fit scaler on train only."><p>1. What causes data leakage when scaling?</p><div class="quiz-options"><div class="quiz-option" data-value="a"><span class="radio"></span> Using too many features</div><div class="quiz-option" data-value="b"><span class="radio"></span> Fitting the scaler on all data including the test set</div><div class="quiz-option" data-value="c"><span class="radio"></span> Scaling features to different ranges</div></div><div class="quiz-feedback"></div></div>
+    <div class="quiz-question" data-correct="a" data-explanation="K-Fold gives K scores by rotating which fold is used for testing, providing a more robust evaluation."><p>2. What does K-Fold Cross-Validation do?</p><div class="quiz-options"><div class="quiz-option" data-value="a"><span class="radio"></span> Splits data K ways and rotates train/test to get K scores</div><div class="quiz-option" data-value="b"><span class="radio"></span> Trains K different models</div><div class="quiz-option" data-value="c"><span class="radio"></span> Multiplies the training data by K</div></div><div class="quiz-feedback"></div></div>
+    <div class="quiz-question" data-correct="c" data-explanation="A reliable model has consistent scores across folds (low standard deviation)."><p>3. Low std across CV folds means?</p><div class="quiz-options"><div class="quiz-option" data-value="a"><span class="radio"></span> The model is underfitting</div><div class="quiz-option" data-value="b"><span class="radio"></span> The model is overfitting</div><div class="quiz-option" data-value="c"><span class="radio"></span> The model performs consistently</div></div><div class="quiz-feedback"></div></div>
+    <button class="quiz-submit">Check Answers</button><div class="quiz-result"></div>
+  </div>
+  <div class="takeaways"><h4>Key Takeaways</h4><ul><li>Data leakage = accidentally using test information during training</li><li>Always fit transformations on training data only, then apply to test</li><li>Cross-validation gives more robust evaluation than a single split</li><li>Low std across folds = consistent, reliable model</li></ul></div>
+  <div class="references"><h4>References</h4><ul><li><a href="https://scikit-learn.org/stable/modules/cross_validation.html" target="_blank">scikit-learn: Cross-validation →</a></li></ul></div>
+</section>
+
+<!-- ============ TOPIC 4: Linear Regression ============ -->
+<section class="topic-section" id="m2-topic4">
+  <div class="topic-header"><h2>Linear Regression: Predicting Numbers</h2><div class="topic-meta"><span>📖 14 min read</span><span>📈 Topic 4 of 16</span></div></div>
+  <div class="why-box"><div class="label">Why This Matters</div><p>Linear regression is the "Hello World" of ML. It's simple, interpretable, and surprisingly powerful. Understanding it gives you the foundation for every other ML algorithm.</p></div>
+  <div class="content-text">
+    <h3>The Line of Best Fit</h3>
+    <p>Linear regression finds the best straight line through your data: <code>y = w₁x₁ + w₂x₂ + ... + b</code>. The "weights" (w) tell you how much each feature matters. The "bias" (b) is the y-intercept.</p>
+    <h3>Loss Function: Mean Squared Error</h3>
+    <p>MSE measures how far off predictions are from actual values: <code>MSE = (1/n) × Σ(actual - predicted)²</code>. The model adjusts weights to minimize this.</p>
+    <h3>Gradient Descent</h3>
+    <p>Gradient descent is how the model learns. Imagine a ball rolling down a bowl — it moves in the direction of steepest descent until it reaches the bottom (minimum error).</p>
+  </div>
+  <div class="animation-wrapper" data-animation="gradient-descent">
+    <div class="animation-header"><span class="title">Gradient Descent Visualization</span><div class="animation-controls"><button class="play-btn">▶ Play</button><button class="pause-btn">⏸ Pause</button><button class="step-btn">⏭ Step</button><button class="anim-reset-btn">↺ Reset</button></div></div>
+    <div class="animation-canvas"></div>
+  </div>
+  <div class="code-editor-wrapper" data-packages="numpy,scikit-learn">
+    <div class="code-editor-header"><span class="filename">linear_regression.py</span><div class="actions"><button class="reset-btn">Reset</button><button class="run-btn">▶ Run</button></div></div>
+    <textarea class="code-textarea" rows="26">import numpy as np
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_squared_error, r2_score
+
+# Generate house price data
+np.random.seed(42)
+n = 200
+sqft = np.random.randint(500, 3500, n)
+price = sqft * 200 + np.random.randn(n) * 30000
+
+X = sqft.reshape(-1, 1)
+y = price
+
+# Split
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Train
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+# Predict
+y_pred = model.predict(X_test)
+
+print(f"Weight (per sqft): ${model.coef_[0]:.2f}")
+print(f"Bias (intercept): ${model.intercept_:,.2f}")
+print(f"\nRMSE: ${np.sqrt(mean_squared_error(y_test, y_pred)):,.0f}")
+print(f"R² Score: {r2_score(y_test, y_pred):.3f}")
+print(f"\nPrediction: 2000 sqft house = ${model.predict([[2000]])[0]:,.0f}")
+</textarea>
+    <div class="code-output"><div class="output-label">Output</div><div class="output-text" style="color:var(--text-muted);">Click "Run" to execute</div></div>
+  </div>
+  <div class="quiz-wrapper" data-topic-id="m2-topic4">
+    <h4>📝 Knowledge Check</h4>
+    <div class="quiz-question" data-correct="b" data-explanation="MSE squares errors, penalizing large errors more than small ones."><p>1. What does MSE measure?</p><div class="quiz-options"><div class="quiz-option" data-value="a"><span class="radio"></span> The number of correct predictions</div><div class="quiz-option" data-value="b"><span class="radio"></span> The average squared difference between predictions and actual values</div><div class="quiz-option" data-value="c"><span class="radio"></span> The slope of the best-fit line</div></div><div class="quiz-feedback"></div></div>
+    <div class="quiz-question" data-correct="a" data-explanation="Gradient descent iteratively adjusts weights to minimize the loss function."><p>2. What is gradient descent?</p><div class="quiz-options"><div class="quiz-option" data-value="a"><span class="radio"></span> An optimization algorithm that minimizes error by adjusting weights</div><div class="quiz-option" data-value="b"><span class="radio"></span> A way to split data into training and testing</div><div class="quiz-option" data-value="c"><span class="radio"></span> A method for selecting features</div></div><div class="quiz-feedback"></div></div>
+    <div class="quiz-question" data-correct="c" data-explanation="R²=1 means perfect prediction. R²=0 means no better than predicting the mean."><p>3. What does R²=0.95 mean?</p><div class="quiz-options"><div class="quiz-option" data-value="a"><span class="radio"></span> The model is 95% accurate</div><div class="quiz-option" data-value="b"><span class="radio"></span> 95% of data points are correctly classified</div><div class="quiz-option" data-value="c"><span class="radio"></span> The model explains 95% of the variance in the data</div></div><div class="quiz-feedback"></div></div>
+    <button class="quiz-submit">Check Answers</button><div class="quiz-result"></div>
+  </div>
+  <div class="takeaways"><h4>Key Takeaways</h4><ul><li>Linear regression fits y = wx + b to predict continuous values</li><li>MSE penalizes larger errors more; gradient descent minimizes it</li><li>R² tells you how much variance your model explains (1.0 = perfect)</li><li>Weights tell you each feature's importance and direction</li></ul></div>
+  <div class="references"><h4>References</h4><ul><li><a href="https://scikit-learn.org/stable/modules/linear_model.html" target="_blank">scikit-learn: Linear Models →</a></li></ul></div>
+</section>
+
+<!-- ============ TOPIC 5: Regularization ============ -->
+<section class="topic-section" id="m2-topic5">
+  <div class="topic-header"><h2>Regularization</h2><div class="topic-meta"><span>📖 10 min read</span><span>🎚️ Topic 5 of 16</span></div></div>
+  <div class="why-box"><div class="label">Why This Matters</div><p>Models can memorize training data instead of learning patterns. Regularization prevents this overfitting — it's the difference between a model that works on paper and one that works in the real world.</p></div>
+  <div class="content-text">
+    <h3>Overfitting vs Underfitting</h3>
+    <p><strong>Overfitting:</strong> Model memorizes training data, fails on new data. Like memorizing test answers without understanding. <strong>Underfitting:</strong> Model too simple to capture patterns. Like guessing randomly.</p>
+    <h3>Ridge (L2) vs Lasso (L1)</h3>
+    <table><tr><th>Type</th><th>Penalty</th><th>Effect</th><th>Use When</th></tr>
+    <tr><td>Ridge (L2)</td><td>Sum of weights²</td><td>Shrinks all weights toward zero</td><td>Many small features matter</td></tr>
+    <tr><td>Lasso (L1)</td><td>Sum of |weights|</td><td>Pushes some weights to exactly zero</td><td>Want automatic feature selection</td></tr></table>
+  </div>
+  <div class="code-editor-wrapper" data-packages="numpy,scikit-learn">
+    <div class="code-editor-header"><span class="filename">regularization.py</span><div class="actions"><button class="reset-btn">Reset</button><button class="run-btn">▶ Run</button></div></div>
+    <textarea class="code-textarea" rows="24">import numpy as np
+from sklearn.linear_model import LinearRegression, Ridge, Lasso
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import r2_score
+
+np.random.seed(42)
+X = np.random.randn(100, 10)  # 10 features, but only 2 actually matter
+y = X[:, 0] * 3 + X[:, 1] * 2 + np.random.randn(100) * 0.5
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+models = {
+    "Linear": LinearRegression(),
+    "Ridge (L2)": Ridge(alpha=1.0),
+    "Lasso (L1)": Lasso(alpha=0.1),
+}
+
+for name, model in models.items():
+    model.fit(X_train, y_train)
+    score = r2_score(y_test, model.predict(X_test))
+    nonzero = np.sum(np.abs(model.coef_) > 0.01)
+    print(f"{name:12s} | R²: {score:.3f} | Non-zero weights: {nonzero}/10")
+    print(f"             | Weights: {[f'{w:.2f}' for w in model.coef_]}")
+    print()
+print("Notice: Lasso pushed irrelevant feature weights to ~0!")
+</textarea>
+    <div class="code-output"><div class="output-label">Output</div><div class="output-text" style="color:var(--text-muted);">Click "Run" to execute</div></div>
+  </div>
+  <div class="quiz-wrapper" data-topic-id="m2-topic5">
+    <h4>📝 Knowledge Check</h4>
+    <div class="quiz-question" data-correct="a" data-explanation="Overfitting = great on training data, poor on new data."><p>1. What is overfitting?</p><div class="quiz-options"><div class="quiz-option" data-value="a"><span class="radio"></span> Model memorizes training data but fails on new data</div><div class="quiz-option" data-value="b"><span class="radio"></span> Model is too simple to learn patterns</div><div class="quiz-option" data-value="c"><span class="radio"></span> Model runs too slowly</div></div><div class="quiz-feedback"></div></div>
+    <div class="quiz-question" data-correct="b" data-explanation="Lasso (L1) can push weights to exactly zero, effectively removing features."><p>2. Which regularization method performs feature selection?</p><div class="quiz-options"><div class="quiz-option" data-value="a"><span class="radio"></span> Ridge (L2)</div><div class="quiz-option" data-value="b"><span class="radio"></span> Lasso (L1)</div><div class="quiz-option" data-value="c"><span class="radio"></span> Both equally</div></div><div class="quiz-feedback"></div></div>
+    <div class="quiz-question" data-correct="c" data-explanation="Higher alpha = more regularization = simpler model. Lower alpha = less regularization."><p>3. What does the alpha parameter control?</p><div class="quiz-options"><div class="quiz-option" data-value="a"><span class="radio"></span> The learning rate</div><div class="quiz-option" data-value="b"><span class="radio"></span> The number of features</div><div class="quiz-option" data-value="c"><span class="radio"></span> The strength of regularization</div></div><div class="quiz-feedback"></div></div>
+    <button class="quiz-submit">Check Answers</button><div class="quiz-result"></div>
+  </div>
+  <div class="takeaways"><h4>Key Takeaways</h4><ul><li>Regularization prevents overfitting by penalizing large weights</li><li>Ridge shrinks weights; Lasso can eliminate them entirely</li><li>Use Lasso when you suspect many features are irrelevant</li><li>Higher alpha = stronger regularization = simpler model</li></ul></div>
+</section>
+
+<!-- ============ TOPIC 6: Regression Metrics ============ -->
+<section class="topic-section" id="m2-topic6">
+  <div class="topic-header"><h2>Regression Metrics</h2><div class="topic-meta"><span>📖 10 min read</span><span>📏 Topic 6 of 16</span></div></div>
+  <div class="why-box"><div class="label">Why This Matters</div><p>How do you know if your model is good? Metrics quantify performance. But different metrics tell different stories — choosing the right one depends on what kind of errors you care about most.</p></div>
+  <div class="content-text">
+    <table><tr><th>Metric</th><th>Formula</th><th>Intuition</th><th>Use When</th></tr>
+    <tr><td>MAE</td><td>Mean |actual - predicted|</td><td>Average error in original units</td><td>All errors matter equally</td></tr>
+    <tr><td>MSE</td><td>Mean (actual - predicted)²</td><td>Penalizes large errors more</td><td>Large errors are costly</td></tr>
+    <tr><td>RMSE</td><td>√MSE</td><td>MSE in original units</td><td>Most common default</td></tr>
+    <tr><td>R²</td><td>1 - (SS_res / SS_total)</td><td>% of variance explained</td><td>Comparing models</td></tr></table>
+  </div>
+  <div class="code-editor-wrapper" data-packages="numpy,scikit-learn">
+    <div class="code-editor-header"><span class="filename">metrics.py</span><div class="actions"><button class="reset-btn">Reset</button><button class="run-btn">▶ Run</button></div></div>
+    <textarea class="code-textarea" rows="20">import numpy as np
+from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
+
+actual  = np.array([100, 150, 200, 250, 300])
+predicted = np.array([110, 140, 210, 230, 320])
+
+mae = mean_absolute_error(actual, predicted)
+mse = mean_squared_error(actual, predicted)
+rmse = np.sqrt(mse)
+r2 = r2_score(actual, predicted)
+
+print(f"Actual:    {actual}")
+print(f"Predicted: {predicted}")
+print(f"\nMAE:  {mae:.1f}  (avg error: ${mae:.0f})")
+print(f"MSE:  {mse:.1f}")
+print(f"RMSE: {rmse:.1f}  (in same units as target)")
+print(f"R²:   {r2:.3f}  ({r2*100:.1f}% of variance explained)")
+</textarea>
+    <div class="code-output"><div class="output-label">Output</div><div class="output-text" style="color:var(--text-muted);">Click "Run" to execute</div></div>
+  </div>
+  <div class="quiz-wrapper" data-topic-id="m2-topic6">
+    <h4>📝 Knowledge Check</h4>
+    <div class="quiz-question" data-correct="b" data-explanation="MSE squares errors, so a single large error increases the score dramatically."><p>1. Which metric penalizes large errors the most?</p><div class="quiz-options"><div class="quiz-option" data-value="a"><span class="radio"></span> MAE</div><div class="quiz-option" data-value="b"><span class="radio"></span> MSE</div><div class="quiz-option" data-value="c"><span class="radio"></span> R²</div></div><div class="quiz-feedback"></div></div>
+    <div class="quiz-question" data-correct="a" data-explanation="RMSE = √MSE, so it's in the same units as your target variable."><p>2. What advantage does RMSE have over MSE?</p><div class="quiz-options"><div class="quiz-option" data-value="a"><span class="radio"></span> It's in the same units as the target</div><div class="quiz-option" data-value="b"><span class="radio"></span> It's always smaller</div><div class="quiz-option" data-value="c"><span class="radio"></span> It ignores outliers</div></div><div class="quiz-feedback"></div></div>
+    <div class="quiz-question" data-correct="c" data-explanation="R²=1 means perfect predictions. R²=0 means same as predicting the mean. R²<0 means worse than the mean."><p>3. What does R²=0 mean?</p><div class="quiz-options"><div class="quiz-option" data-value="a"><span class="radio"></span> Perfect predictions</div><div class="quiz-option" data-value="b"><span class="radio"></span> All predictions are zero</div><div class="quiz-option" data-value="c"><span class="radio"></span> Model is no better than predicting the mean</div></div><div class="quiz-feedback"></div></div>
+    <button class="quiz-submit">Check Answers</button><div class="quiz-result"></div>
+  </div>
+  <div class="takeaways"><h4>Key Takeaways</h4><ul><li>MAE = average absolute error (easy to interpret)</li><li>RMSE = penalizes big errors, in original units</li><li>R² = proportion of variance explained (higher is better)</li><li>Choose the metric that aligns with your business problem</li></ul></div>
+</section>
+
+<!-- ============ TOPIC 7: Logistic Regression ============ -->
+<section class="topic-section" id="m2-topic7">
+  <div class="topic-header"><h2>Logistic Regression</h2><div class="topic-meta"><span>📖 12 min read</span><span>🎲 Topic 7 of 16</span></div></div>
+  <div class="why-box"><div class="label">Why This Matters</div><p>Logistic regression is the foundation of classification — predicting categories instead of numbers. Spam detection, medical diagnosis, sentiment analysis — all classification problems.</p></div>
+  <div class="content-text">
+    <h3>From Regression to Classification</h3>
+    <p>Linear regression predicts numbers. But what if you want to predict yes/no, spam/not-spam? You need a function that squashes any number into a probability between 0 and 1. That's the <strong>sigmoid function</strong>.</p>
+    <h3>The Sigmoid Function</h3>
+    <p><code>σ(z) = 1 / (1 + e^(-z))</code> — maps any input to [0, 1]. If output > 0.5, predict class 1. Otherwise, predict class 0.</p>
+  </div>
+  <div class="code-editor-wrapper" data-packages="numpy,scikit-learn">
+    <div class="code-editor-header"><span class="filename">logistic_regression.py</span><div class="actions"><button class="reset-btn">Reset</button><button class="run-btn">▶ Run</button></div></div>
+    <textarea class="code-textarea" rows="28">import numpy as np
+from sklearn.linear_model import LogisticRegression
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score, classification_report
+
+# Sigmoid function
+def sigmoid(z):
+    return 1 / (1 + np.exp(-z))
+
+# Show sigmoid
+z_values = np.array([-5, -2, 0, 2, 5])
+print("Sigmoid function:")
+for z in z_values:
+    print(f"  σ({z:+d}) = {sigmoid(z):.4f}")
+
+# Classification example: will a student pass?
+np.random.seed(42)
+hours_studied = np.random.randint(1, 12, 100).reshape(-1, 1)
+passed = (hours_studied.ravel() + np.random.randn(100) * 2 > 5).astype(int)
+
+X_train, X_test, y_train, y_test = train_test_split(hours_studied, passed, test_size=0.2, random_state=42)
+
+model = LogisticRegression()
+model.fit(X_train, y_train)
+y_pred = model.predict(X_test)
+
+print(f"\nAccuracy: {accuracy_score(y_test, y_pred):.2f}")
+print(f"\nPredictions for study hours:")
+for hours in [2, 5, 8, 11]:
+    prob = model.predict_proba([[hours]])[0][1]
+    pred = "Pass" if prob > 0.5 else "Fail"
+    print(f"  {hours} hours → {prob:.1%} chance → {pred}")
+</textarea>
+    <div class="code-output"><div class="output-label">Output</div><div class="output-text" style="color:var(--text-muted);">Click "Run" to execute</div></div>
+  </div>
+  <div class="quiz-wrapper" data-topic-id="m2-topic7">
+    <h4>📝 Knowledge Check</h4>
+    <div class="quiz-question" data-correct="c" data-explanation="Sigmoid maps any real number to a probability between 0 and 1."><p>1. What does the sigmoid function do?</p><div class="quiz-options"><div class="quiz-option" data-value="a"><span class="radio"></span> Makes all values positive</div><div class="quiz-option" data-value="b"><span class="radio"></span> Doubles the input</div><div class="quiz-option" data-value="c"><span class="radio"></span> Squashes any number to between 0 and 1</div></div><div class="quiz-feedback"></div></div>
+    <div class="quiz-question" data-correct="b" data-explanation="By default, threshold is 0.5. If P > 0.5 → class 1, else class 0."><p>2. In binary classification, what's the default decision threshold?</p><div class="quiz-options"><div class="quiz-option" data-value="a"><span class="radio"></span> 0.0</div><div class="quiz-option" data-value="b"><span class="radio"></span> 0.5</div><div class="quiz-option" data-value="c"><span class="radio"></span> 1.0</div></div><div class="quiz-feedback"></div></div>
+    <div class="quiz-question" data-correct="a" data-explanation="predict_proba returns probability per class; predict returns the class label."><p>3. What does predict_proba() return?</p><div class="quiz-options"><div class="quiz-option" data-value="a"><span class="radio"></span> Probability for each class</div><div class="quiz-option" data-value="b"><span class="radio"></span> The predicted class label</div><div class="quiz-option" data-value="c"><span class="radio"></span> The model's confidence score</div></div><div class="quiz-feedback"></div></div>
+    <button class="quiz-submit">Check Answers</button><div class="quiz-result"></div>
+  </div>
+  <div class="takeaways"><h4>Key Takeaways</h4><ul><li>Logistic regression = linear regression + sigmoid → classification</li><li>Sigmoid squashes output to probability [0, 1]</li><li>Default threshold: P > 0.5 → positive class</li><li>predict_proba() gives probabilities; predict() gives class labels</li></ul></div>
+</section>
+
+<!-- ============ TOPIC 8: Decision Trees ============ -->
+<section class="topic-section" id="m2-topic8">
+  <div class="topic-header"><h2>Decision Trees</h2><div class="topic-meta"><span>📖 12 min read</span><span>🌳 Topic 8 of 16</span></div></div>
+  <div class="why-box"><div class="label">Why This Matters</div><p>Decision trees are one of the most intuitive ML models — they make decisions the way humans do, through a series of yes/no questions. They're also the building block of powerful ensemble methods like Random Forests.</p></div>
+  <div class="content-text">
+    <h3>How It Works</h3>
+    <p>A decision tree asks a series of questions about features to split data into groups. It starts with all data at the root, then repeatedly asks "Is feature X > threshold?" to create branches. The goal: make each resulting group as "pure" as possible (all same class).</p>
+    <h3>Key Concepts</h3>
+    <ul><li><strong>Node:</strong> A decision point (asks a question)</li>
+    <li><strong>Leaf:</strong> A final prediction (no more questions)</li>
+    <li><strong>Entropy:</strong> Measures disorder — pure groups have low entropy</li>
+    <li><strong>Information Gain:</strong> How much a split reduces entropy</li></ul>
+  </div>
+  <div class="animation-wrapper" data-animation="decision-tree">
+    <div class="animation-header"><span class="title">Decision Tree Splitting</span><div class="animation-controls"><button class="play-btn">▶ Play</button><button class="pause-btn">⏸ Pause</button><button class="step-btn">⏭ Step</button><button class="anim-reset-btn">↺ Reset</button></div></div>
+    <div class="animation-canvas"></div>
+  </div>
+  <div class="code-editor-wrapper" data-packages="numpy,scikit-learn">
+    <div class="code-editor-header"><span class="filename">decision_tree.py</span><div class="actions"><button class="reset-btn">Reset</button><button class="run-btn">▶ Run</button></div></div>
+    <textarea class="code-textarea" rows="26">import numpy as np
+from sklearn.tree import DecisionTreeClassifier, export_text
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score
+
+# Will someone play tennis?
+# Features: outlook(0=sunny,1=overcast,2=rain), temp, humidity, windy
+np.random.seed(42)
+X = np.array([
+    [0, 85, 85, 0], [0, 80, 90, 1], [1, 83, 78, 0], [2, 70, 96, 0],
+    [2, 68, 80, 0], [2, 65, 70, 1], [1, 64, 65, 1], [0, 72, 95, 0],
+    [0, 69, 70, 0], [2, 75, 80, 0], [0, 75, 70, 1], [1, 72, 90, 1],
+    [1, 81, 75, 0], [2, 71, 80, 1]
+])
+y = np.array([0, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0])
+
+tree = DecisionTreeClassifier(max_depth=3, random_state=42)
+tree.fit(X, y)
+
+feature_names = ["outlook", "temperature", "humidity", "windy"]
+print("=== Decision Tree Rules ===")
+print(export_text(tree, feature_names=feature_names))
+
+print(f"Accuracy: {accuracy_score(y, tree.predict(X)):.2f}")
+print(f"\nFeature importance:")
+for name, imp in zip(feature_names, tree.feature_importances_):
+    bar = "█" * int(imp * 20)
+    print(f"  {name:12s} {bar} {imp:.2f}")
+</textarea>
+    <div class="code-output"><div class="output-label">Output</div><div class="output-text" style="color:var(--text-muted);">Click "Run" to execute</div></div>
+  </div>
+  <div class="quiz-wrapper" data-topic-id="m2-topic8">
+    <h4>📝 Knowledge Check</h4>
+    <div class="quiz-question" data-correct="b" data-explanation="Information gain measures how much a split reduces entropy (disorder) in the data."><p>1. What does information gain measure?</p><div class="quiz-options"><div class="quiz-option" data-value="a"><span class="radio"></span> The tree's accuracy</div><div class="quiz-option" data-value="b"><span class="radio"></span> How much a split reduces disorder</div><div class="quiz-option" data-value="c"><span class="radio"></span> The number of features</div></div><div class="quiz-feedback"></div></div>
+    <div class="quiz-question" data-correct="c" data-explanation="A leaf node is the final prediction — no more splits occur."><p>2. What is a leaf node?</p><div class="quiz-options"><div class="quiz-option" data-value="a"><span class="radio"></span> The first node in the tree</div><div class="quiz-option" data-value="b"><span class="radio"></span> A node that asks a question</div><div class="quiz-option" data-value="c"><span class="radio"></span> A terminal node that makes a prediction</div></div><div class="quiz-feedback"></div></div>
+    <div class="quiz-question" data-correct="a" data-explanation="Trees are interpretable: you can see exactly why each prediction was made, rule by rule."><p>3. Why are decision trees considered interpretable?</p><div class="quiz-options"><div class="quiz-option" data-value="a"><span class="radio"></span> You can trace the exact rules for each prediction</div><div class="quiz-option" data-value="b"><span class="radio"></span> They always give 100% accuracy</div><div class="quiz-option" data-value="c"><span class="radio"></span> They have fewer parameters</div></div><div class="quiz-feedback"></div></div>
+    <button class="quiz-submit">Check Answers</button><div class="quiz-result"></div>
+  </div>
+  <div class="takeaways"><h4>Key Takeaways</h4><ul><li>Decision trees split data using yes/no questions to create pure groups</li><li>Entropy measures disorder; information gain measures split quality</li><li>Trees are interpretable — you can export and read the rules</li><li>max_depth controls complexity and helps prevent overfitting</li></ul></div>
+</section>
+
+<!-- ============ TOPIC 9: Random Forests ============ -->
+<section class="topic-section" id="m2-topic9">
+  <div class="topic-header"><h2>Random Forests</h2><div class="topic-meta"><span>📖 10 min</span><span>🌲 Topic 9 of 16</span></div></div>
+  <div class="why-box"><div class="label">Why This Matters</div><p>Random Forests combine many decision trees into one powerful model. They're one of the most widely used ML algorithms — accurate, robust, and hard to overfit. Many Kaggle competitions have been won with Random Forests.</p></div>
+  <div class="content-text">
+    <h3>Bagging: Many Trees > One Tree</h3>
+    <p>Each tree sees a random subset of data and features. They all vote, and the majority wins. This "wisdom of the crowd" effect makes Random Forests much more robust than single trees.</p>
+    <h3>Key Parameters</h3>
+    <ul><li><code>n_estimators</code> — number of trees (100-500 typical)</li><li><code>max_depth</code> — max depth per tree</li><li><code>max_features</code> — how many features each tree considers</li></ul>
+  </div>
+  <div class="code-editor-wrapper" data-packages="numpy,scikit-learn">
+    <div class="code-editor-header"><span class="filename">random_forest.py</span><div class="actions"><button class="reset-btn">Reset</button><button class="run-btn">▶ Run</button></div></div>
+    <textarea class="code-textarea" rows="24">import numpy as np
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.datasets import make_classification
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score
+
+X, y = make_classification(n_samples=300, n_features=10, n_informative=4, random_state=42)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+rf = RandomForestClassifier(n_estimators=100, max_depth=5, random_state=42)
+rf.fit(X_train, y_train)
+
+print(f"Accuracy: {accuracy_score(y_test, rf.predict(X_test)):.2f}")
+print(f"\nFeature Importance (top 5):")
+importances = rf.feature_importances_
+indices = np.argsort(importances)[::-1][:5]
+for i in indices:
+    bar = "█" * int(importances[i] * 40)
+    print(f"  Feature {i}: {bar} {importances[i]:.3f}")
+</textarea>
+    <div class="code-output"><div class="output-label">Output</div><div class="output-text" style="color:var(--text-muted);">Click "Run" to execute</div></div>
+  </div>
+  <div class="quiz-wrapper" data-topic-id="m2-topic9">
+    <h4>📝 Knowledge Check</h4>
+    <div class="quiz-question" data-correct="b" data-explanation="Random Forests use bagging — each tree votes and majority wins."><p>1. How does a Random Forest make predictions?</p><div class="quiz-options"><div class="quiz-option" data-value="a"><span class="radio"></span> It picks the best single tree</div><div class="quiz-option" data-value="b"><span class="radio"></span> All trees vote and majority wins</div><div class="quiz-option" data-value="c"><span class="radio"></span> It averages the tree depths</div></div><div class="quiz-feedback"></div></div>
+    <div class="quiz-question" data-correct="a" data-explanation="n_estimators controls how many trees are in the forest."><p>2. What does n_estimators control?</p><div class="quiz-options"><div class="quiz-option" data-value="a"><span class="radio"></span> Number of trees</div><div class="quiz-option" data-value="b"><span class="radio"></span> Number of features</div><div class="quiz-option" data-value="c"><span class="radio"></span> Number of data points</div></div><div class="quiz-feedback"></div></div>
+    <div class="quiz-question" data-correct="c" data-explanation="Each tree sees a random subset of features, preventing trees from being too similar."><p>3. Why does each tree see random features?</p><div class="quiz-options"><div class="quiz-option" data-value="a"><span class="radio"></span> To speed up training</div><div class="quiz-option" data-value="b"><span class="radio"></span> To use less memory</div><div class="quiz-option" data-value="c"><span class="radio"></span> To make trees diverse and reduce overfitting</div></div><div class="quiz-feedback"></div></div>
+    <button class="quiz-submit">Check Answers</button><div class="quiz-result"></div>
+  </div>
+  <div class="takeaways"><h4>Key Takeaways</h4><ul><li>Random Forests = many diverse trees voting together</li><li>Each tree sees random data + random features → diversity</li><li>feature_importances_ tells you which features matter most</li><li>Usually work well with default hyperparameters</li></ul></div>
+</section>
+
+<!-- ============ TOPIC 10: Classification Metrics ============ -->
+<section class="topic-section" id="m2-topic10">
+  <div class="topic-header"><h2>Classification Metrics</h2><div class="topic-meta"><span>📖 12 min</span><span>📊 Topic 10 of 16</span></div></div>
+  <div class="why-box"><div class="label">Why This Matters</div><p>Accuracy alone can be misleading. A cancer detector with 99% accuracy sounds great — until you realize 99% of patients are healthy. Understanding precision, recall, and F1 is critical for real-world ML.</p></div>
+  <div class="content-text">
+    <h3>The Confusion Matrix</h3>
+    <table><tr><th></th><th>Predicted Positive</th><th>Predicted Negative</th></tr>
+    <tr><td><strong>Actually Positive</strong></td><td>True Positive (TP) ✓</td><td>False Negative (FN) — missed!</td></tr>
+    <tr><td><strong>Actually Negative</strong></td><td>False Positive (FP) — false alarm</td><td>True Negative (TN) ✓</td></tr></table>
+    <h3>Metrics</h3>
+    <ul><li><strong>Precision</strong> = TP / (TP + FP) — "of those predicted positive, how many truly are?"</li>
+    <li><strong>Recall</strong> = TP / (TP + FN) — "of those actually positive, how many did we catch?"</li>
+    <li><strong>F1-Score</strong> = 2 × (P × R) / (P + R) — harmonic mean, balances both</li></ul>
+    <h3>Confusion Matrix Visualized</h3>
+    <div class="animation-wrapper" data-animation="confusion-matrix">
+      <div class="animation-header"><span class="title">Confusion Matrix: Sample by Sample</span><div class="animation-controls"><button class="play-btn">▶ Play</button><button class="pause-btn">⏸ Pause</button><button class="step-btn">⏭ Step</button><button class="anim-reset-btn">↺ Reset</button></div></div>
+      <div class="animation-canvas"></div>
+    </div>
+  </div>
+  <div class="code-editor-wrapper" data-packages="numpy,scikit-learn">
+    <div class="code-editor-header"><span class="filename">classification_metrics.py</span><div class="actions"><button class="reset-btn">Reset</button><button class="run-btn">▶ Run</button></div></div>
+    <textarea class="code-textarea" rows="24">import numpy as np
+from sklearn.metrics import confusion_matrix, classification_report, accuracy_score
+
+# Simulated cancer detection results
+actual    = np.array([1,1,1,1,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,0,0])  # 4 cancer, 16 healthy
+predicted = np.array([1,1,0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,0,1])  # model predictions
+
+print(f"Accuracy: {accuracy_score(actual, predicted):.0%}")
+print("^ Looks great! But let's dig deeper...\n")
+
+cm = confusion_matrix(actual, predicted)
+print(f"Confusion Matrix:")
+print(f"  TP={cm[1][1]} (caught cancer)")
+print(f"  FN={cm[1][0]} (missed cancer!)")
+print(f"  FP={cm[0][1]} (false alarm)")
+print(f"  TN={cm[0][0]} (correctly healthy)")
+
+print(f"\n{classification_report(actual, predicted, target_names=['Healthy', 'Cancer'])}")
+print("Recall for Cancer = 50% — we missed HALF the cancer cases!")
+print("High accuracy is meaningless if recall for the important class is low.")
+</textarea>
+    <div class="code-output"><div class="output-label">Output</div><div class="output-text" style="color:var(--text-muted);">Click "Run" to execute</div></div>
+  </div>
+  <div class="quiz-wrapper" data-topic-id="m2-topic10">
+    <h4>📝 Knowledge Check</h4>
+    <div class="quiz-question" data-correct="b" data-explanation="Recall measures what fraction of actual positives were caught."><p>1. What does recall measure?</p><div class="quiz-options"><div class="quiz-option" data-value="a"><span class="radio"></span> Of predicted positive, how many are truly positive</div><div class="quiz-option" data-value="b"><span class="radio"></span> Of actually positive, how many did we catch</div><div class="quiz-option" data-value="c"><span class="radio"></span> Overall correct predictions</div></div><div class="quiz-feedback"></div></div>
+    <div class="quiz-question" data-correct="c" data-explanation="F1 is the harmonic mean of precision and recall — balances both."><p>2. What is the F1-Score?</p><div class="quiz-options"><div class="quiz-option" data-value="a"><span class="radio"></span> The average of accuracy and precision</div><div class="quiz-option" data-value="b"><span class="radio"></span> The total number of correct predictions</div><div class="quiz-option" data-value="c"><span class="radio"></span> The harmonic mean of precision and recall</div></div><div class="quiz-feedback"></div></div>
+    <div class="quiz-question" data-correct="a" data-explanation="When the classes are very imbalanced, accuracy is dominated by the majority class."><p>3. Why can accuracy be misleading?</p><div class="quiz-options"><div class="quiz-option" data-value="a"><span class="radio"></span> With imbalanced classes, always predicting majority gets high accuracy</div><div class="quiz-option" data-value="b"><span class="radio"></span> It's too hard to calculate</div><div class="quiz-option" data-value="c"><span class="radio"></span> It only works for regression</div></div><div class="quiz-feedback"></div></div>
+    <button class="quiz-submit">Check Answers</button><div class="quiz-result"></div>
+  </div>
+  <div class="takeaways"><h4>Key Takeaways</h4><ul><li>Accuracy alone is misleading for imbalanced classes</li><li>Precision: "how many predicted positives are correct?"</li><li>Recall: "how many actual positives did we find?"</li><li>F1-Score balances precision and recall</li></ul></div>
+</section>
+
+<!-- ============ TOPIC 11: ROC/AUC ============ -->
+<section class="topic-section" id="m2-topic11">
+  <div class="topic-header"><h2>ROC Curve & AUC</h2><div class="topic-meta"><span>📖 10 min</span><span>📈 Topic 11 of 16</span></div></div>
+  <div class="why-box"><div class="label">Why This Matters</div><p>The ROC curve gives you the complete picture of a classifier's performance across ALL thresholds. AUC boils it down to a single number for easy comparison between models.</p></div>
+  <div class="content-text">
+    <h3>ROC = Receiver Operating Characteristic</h3>
+    <p>The ROC curve plots True Positive Rate (Recall) vs False Positive Rate at every possible threshold. A perfect model hugs the top-left corner. A random model is a diagonal line.</p>
+    <h3>AUC = Area Under the Curve</h3>
+    <p>AUC summarizes the ROC curve as a single number. AUC=1.0 = perfect. AUC=0.5 = random guessing. AUC < 0.5 = worse than random (your labels may be flipped).</p>
+  </div>
+  <div class="code-editor-wrapper" data-packages="numpy,scikit-learn">
+    <div class="code-editor-header"><span class="filename">roc_auc.py</span><div class="actions"><button class="reset-btn">Reset</button><button class="run-btn">▶ Run</button></div></div>
+    <textarea class="code-textarea" rows="22">import numpy as np
+from sklearn.datasets import make_classification
+from sklearn.linear_model import LogisticRegression
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import roc_auc_score, roc_curve
+
+X, y = make_classification(n_samples=500, random_state=42)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+model = LogisticRegression()
+model.fit(X_train, y_train)
+
+y_proba = model.predict_proba(X_test)[:, 1]
+auc = roc_auc_score(y_test, y_proba)
+print(f"AUC Score: {auc:.3f}")
+
+fpr, tpr, thresholds = roc_curve(y_test, y_proba)
+print(f"\nThreshold tuning example:")
+for t in [0.3, 0.5, 0.7]:
+    idx = np.argmin(np.abs(thresholds - t))
+    print(f"  Threshold {t}: TPR={tpr[idx]:.2f}, FPR={fpr[idx]:.2f}")
+print(f"\nAUC=1.0 is perfect. AUC=0.5 is random. Ours: {auc:.3f}")
+</textarea>
+    <div class="code-output"><div class="output-label">Output</div><div class="output-text" style="color:var(--text-muted);">Click "Run" to execute</div></div>
+  </div>
+  <div class="quiz-wrapper" data-topic-id="m2-topic11">
+    <h4>📝 Knowledge Check</h4>
+    <div class="quiz-question" data-correct="b" data-explanation="AUC=0.5 means the model is no better than random guessing."><p>1. What does AUC=0.5 mean?</p><div class="quiz-options"><div class="quiz-option" data-value="a"><span class="radio"></span> Perfect model</div><div class="quiz-option" data-value="b"><span class="radio"></span> Random guessing</div><div class="quiz-option" data-value="c"><span class="radio"></span> The model is broken</div></div><div class="quiz-feedback"></div></div>
+    <div class="quiz-question" data-correct="a" data-explanation="The ROC curve plots True Positive Rate (y-axis) vs False Positive Rate (x-axis)."><p>2. What does the ROC curve plot?</p><div class="quiz-options"><div class="quiz-option" data-value="a"><span class="radio"></span> TPR vs FPR at different thresholds</div><div class="quiz-option" data-value="b"><span class="radio"></span> Accuracy vs number of features</div><div class="quiz-option" data-value="c"><span class="radio"></span> Training error vs test error</div></div><div class="quiz-feedback"></div></div>
+    <div class="quiz-question" data-correct="c" data-explanation="Lowering the threshold catches more positives (higher recall) but also more false positives."><p>3. What happens when you lower the classification threshold?</p><div class="quiz-options"><div class="quiz-option" data-value="a"><span class="radio"></span> Both precision and recall increase</div><div class="quiz-option" data-value="b"><span class="radio"></span> The model becomes more accurate</div><div class="quiz-option" data-value="c"><span class="radio"></span> Recall increases but precision may decrease</div></div><div class="quiz-feedback"></div></div>
+    <button class="quiz-submit">Check Answers</button><div class="quiz-result"></div>
+  </div>
+  <div class="takeaways"><h4>Key Takeaways</h4><ul><li>ROC curve shows performance across all thresholds</li><li>AUC: single number comparing classifiers (higher = better)</li><li>Threshold tuning: trade off between catching more positives vs fewer false alarms</li></ul></div>
+</section>
+
+<!-- ============ TOPIC 12: K-Means ============ -->
+<section class="topic-section" id="m2-topic12">
+  <div class="topic-header"><h2>K-Means Clustering</h2><div class="topic-meta"><span>📖 10 min</span><span>🎯 Topic 12 of 16</span></div></div>
+  <div class="why-box"><div class="label">Why This Matters</div><p>Sometimes you don't have labels — you just want to find natural groups in data. Customer segmentation, document grouping, anomaly detection all use clustering. K-Means is the most popular algorithm for this.</p></div>
+  <div class="content-text">
+    <h3>Unsupervised Learning</h3>
+    <p>Unlike supervised learning (which has labels), clustering finds patterns without being told what to look for. It discovers structure on its own.</p>
+    <h3>K-Means Algorithm</h3>
+    <ol><li>Choose K (number of clusters)</li><li>Randomly place K centroids</li><li>Assign each point to the nearest centroid</li><li>Move each centroid to the center of its assigned points</li><li>Repeat steps 3-4 until centroids stop moving</li></ol>
+    <h3>Elbow Method</h3>
+    <p>How do you choose K? Try different values, plot the "inertia" (sum of distances to centroids). The "elbow" — where improvement slows down dramatically — is your K.</p>
+    <h3>K-Means Visualized</h3>
+    <div class="animation-wrapper" data-animation="kmeans">
+      <div class="animation-header"><span class="title">K-Means Iterative Clustering</span><div class="animation-controls"><button class="play-btn">▶ Play</button><button class="pause-btn">⏸ Pause</button><button class="step-btn">⏭ Step</button><button class="anim-reset-btn">↺ Reset</button></div></div>
+      <div class="animation-canvas"></div>
+    </div>
+  </div>
+  <div class="code-editor-wrapper" data-packages="numpy,scikit-learn">
+    <div class="code-editor-header"><span class="filename">kmeans.py</span><div class="actions"><button class="reset-btn">Reset</button><button class="run-btn">▶ Run</button></div></div>
+    <textarea class="code-textarea" rows="24">import numpy as np
+from sklearn.cluster import KMeans
+from sklearn.datasets import make_blobs
+
+X, true_labels = make_blobs(n_samples=300, centers=3, cluster_std=1.0, random_state=42)
+
+# Elbow method
+print("=== Elbow Method ===")
+for k in range(1, 7):
+    km = KMeans(n_clusters=k, random_state=42, n_init=10)
+    km.fit(X)
+    bar = "█" * int(km.inertia_ / 50)
+    print(f"  K={k}: inertia={km.inertia_:6.0f} {bar}")
+
+# Use K=3
+km = KMeans(n_clusters=3, random_state=42, n_init=10)
+labels = km.fit_predict(X)
+
+print(f"\n=== K=3 Clustering ===")
+print(f"Cluster sizes: {np.bincount(labels)}")
+print(f"Centroids:\n{km.cluster_centers_.round(2)}")
+</textarea>
+    <div class="code-output"><div class="output-label">Output</div><div class="output-text" style="color:var(--text-muted);">Click "Run" to execute</div></div>
+  </div>
+  <div class="quiz-wrapper" data-topic-id="m2-topic12">
+    <h4>📝 Knowledge Check</h4>
+    <div class="quiz-question" data-correct="c" data-explanation="Unsupervised learning has no labels — it discovers patterns on its own."><p>1. What type of learning is K-Means?</p><div class="quiz-options"><div class="quiz-option" data-value="a"><span class="radio"></span> Supervised</div><div class="quiz-option" data-value="b"><span class="radio"></span> Reinforcement</div><div class="quiz-option" data-value="c"><span class="radio"></span> Unsupervised</div></div><div class="quiz-feedback"></div></div>
+    <div class="quiz-question" data-correct="b" data-explanation="The elbow method plots inertia vs K. The 'elbow' point is where adding more clusters gives diminishing returns."><p>2. What is the elbow method?</p><div class="quiz-options"><div class="quiz-option" data-value="a"><span class="radio"></span> A way to visualize clusters in 3D</div><div class="quiz-option" data-value="b"><span class="radio"></span> Finding K by looking where inertia improvement slows</div><div class="quiz-option" data-value="c"><span class="radio"></span> Measuring the distance between centroids</div></div><div class="quiz-feedback"></div></div>
+    <div class="quiz-question" data-correct="a" data-explanation="K-Means assigns each data point to its nearest centroid, then updates centroids."><p>3. What are centroids?</p><div class="quiz-options"><div class="quiz-option" data-value="a"><span class="radio"></span> The center points of each cluster</div><div class="quiz-option" data-value="b"><span class="radio"></span> The data points farthest from the center</div><div class="quiz-option" data-value="c"><span class="radio"></span> The features used for clustering</div></div><div class="quiz-feedback"></div></div>
+    <button class="quiz-submit">Check Answers</button><div class="quiz-result"></div>
+  </div>
+  <div class="takeaways"><h4>Key Takeaways</h4><ul><li>K-Means finds K clusters in unlabeled data</li><li>Algorithm: assign points → update centroids → repeat</li><li>Elbow method helps choose K</li><li>Common use: customer segmentation, document grouping</li></ul></div>
+</section>
+
+<!-- ============ TOPIC 13: PCA ============ -->
+<section class="topic-section" id="m2-topic13">
+  <div class="topic-header"><h2>PCA (Principal Component Analysis)</h2><div class="topic-meta"><span>📖 10 min</span><span>🔍 Topic 13 of 16</span></div></div>
+  <div class="why-box"><div class="label">Why This Matters</div><p>Real datasets often have hundreds of features. PCA reduces dimensions while preserving the important information — essential for visualization and speeding up ML algorithms.</p></div>
+  <div class="content-text">
+    <h3>The Curse of Dimensionality</h3>
+    <p>More features isn't always better. With too many dimensions, data becomes sparse, distances become meaningless, and models overfit. PCA finds the directions of maximum variance and projects data onto fewer dimensions.</p>
+    <h3>PCA Projection Visualized</h3>
+    <div class="animation-wrapper" data-animation="pca-projection">
+      <div class="animation-header"><span class="title">2D → 1D Projection onto PC1</span><div class="animation-controls"><button class="play-btn">▶ Play</button><button class="pause-btn">⏸ Pause</button><button class="step-btn">⏭ Step</button><button class="anim-reset-btn">↺ Reset</button></div></div>
+      <div class="animation-canvas"></div>
+    </div>
+  </div>
+  <div class="code-editor-wrapper" data-packages="numpy,scikit-learn">
+    <div class="code-editor-header"><span class="filename">pca.py</span><div class="actions"><button class="reset-btn">Reset</button><button class="run-btn">▶ Run</button></div></div>
+    <textarea class="code-textarea" rows="20">import numpy as np
+from sklearn.decomposition import PCA
+from sklearn.datasets import make_classification
+
+X, y = make_classification(n_samples=200, n_features=10, n_informative=3, random_state=42)
+
+pca = PCA()
+pca.fit(X)
+
+print("Explained variance ratio per component:")
+for i, var in enumerate(pca.explained_variance_ratio_[:5]):
+    bar = "█" * int(var * 50)
+    print(f"  PC{i+1}: {var:.3f} {bar}")
+
+cumulative = np.cumsum(pca.explained_variance_ratio_)
+print(f"\nCumulative variance: {[f'{c:.1%}' for c in cumulative[:5]]}")
+print(f"\n3 components capture {cumulative[2]:.1%} of total variance")
+print(f"Reduced from 10 → 3 dimensions!")
+</textarea>
+    <div class="code-output"><div class="output-label">Output</div><div class="output-text" style="color:var(--text-muted);">Click "Run" to execute</div></div>
+  </div>
+  <div class="quiz-wrapper" data-topic-id="m2-topic13">
+    <h4>📝 Knowledge Check</h4>
+    <div class="quiz-question" data-correct="b" data-explanation="PCA finds directions of maximum variance and projects data onto fewer dimensions."><p>1. What does PCA do?</p><div class="quiz-options"><div class="quiz-option" data-value="a"><span class="radio"></span> Removes outliers from data</div><div class="quiz-option" data-value="b"><span class="radio"></span> Reduces dimensions while preserving variance</div><div class="quiz-option" data-value="c"><span class="radio"></span> Classifies data into groups</div></div><div class="quiz-feedback"></div></div>
+    <div class="quiz-question" data-correct="a" data-explanation="Explained variance ratio tells you what fraction of information each component captures."><p>2. What does 'explained variance ratio' tell you?</p><div class="quiz-options"><div class="quiz-option" data-value="a"><span class="radio"></span> How much information each component captures</div><div class="quiz-option" data-value="b"><span class="radio"></span> The accuracy of PCA</div><div class="quiz-option" data-value="c"><span class="radio"></span> The number of components to use</div></div><div class="quiz-feedback"></div></div>
+    <div class="quiz-question" data-correct="c" data-explanation="With too many dimensions, distances become meaningless and models overfit easily."><p>3. What is the 'curse of dimensionality'?</p><div class="quiz-options"><div class="quiz-option" data-value="a"><span class="radio"></span> Having too few data points</div><div class="quiz-option" data-value="b"><span class="radio"></span> Features being highly correlated</div><div class="quiz-option" data-value="c"><span class="radio"></span> Performance degrades as the number of features grows very large</div></div><div class="quiz-feedback"></div></div>
+    <button class="quiz-submit">Check Answers</button><div class="quiz-result"></div>
+  </div>
+  <div class="takeaways"><h4>Key Takeaways</h4><ul><li>PCA reduces dimensions by finding directions of maximum variance</li><li>Explained variance ratio tells you how much info each component keeps</li><li>Great for visualization (reduce to 2D) and speeding up models</li></ul></div>
+</section>
+
+<!-- ============ TOPIC 14: Time Series ============ -->
+<section class="topic-section" id="m2-topic14">
+  <div class="topic-header"><h2>Time Series Basics</h2><div class="topic-meta"><span>📖 10 min</span><span>⏰ Topic 14 of 16</span></div></div>
+  <div class="why-box"><div class="label">Why This Matters</div><p>Stock prices, temperature readings, website traffic — data with a time dimension requires special handling. You can't shuffle it randomly. Order matters. AI agents monitoring systems deal with time series data constantly.</p></div>
+  <div class="content-text">
+    <h3>Components of Time Series</h3>
+    <ul><li><strong>Trend:</strong> Long-term direction (going up or down)</li>
+    <li><strong>Seasonality:</strong> Repeating patterns (sales spike every December)</li>
+    <li><strong>Noise:</strong> Random fluctuations</li></ul>
+    <h3>Time-Aware Splits</h3>
+    <p>Never use random splits for time series! Train on past data, test on future data. Otherwise you're using the future to predict the past (data leakage).</p>
+  </div>
+  <div class="code-editor-wrapper" data-packages="numpy">
+    <div class="code-editor-header"><span class="filename">time_series.py</span><div class="actions"><button class="reset-btn">Reset</button><button class="run-btn">▶ Run</button></div></div>
+    <textarea class="code-textarea" rows="22">import numpy as np
+
+# Create synthetic time series: trend + seasonality + noise
+np.random.seed(42)
+days = 365
+t = np.arange(days)
+trend = t * 0.5                        # upward trend
+seasonality = 20 * np.sin(2 * np.pi * t / 365)  # yearly pattern
+noise = np.random.randn(days) * 5
+data = 100 + trend + seasonality + noise
+
+# Time-aware split (NOT random!)
+train_size = int(days * 0.8)
+train, test = data[:train_size], data[train_size:]
+
+# Simple forecast: rolling window average
+window = 7
+rolling_pred = np.array([train[-window:].mean()] * len(test))
+mae = np.mean(np.abs(test - rolling_pred))
+
+print(f"Data: {days} days")
+print(f"Train: first {train_size} days | Test: last {days-train_size} days")
+print(f"Rolling {window}-day avg forecast MAE: {mae:.1f}")
+print(f"\nNOTE: We split chronologically, not randomly!")
+print(f"Train covers days 1-{train_size}, Test covers days {train_size+1}-{days}")
+</textarea>
+    <div class="code-output"><div class="output-label">Output</div><div class="output-text" style="color:var(--text-muted);">Click "Run" to execute</div></div>
+  </div>
+  <div class="quiz-wrapper" data-topic-id="m2-topic14">
+    <h4>📝 Knowledge Check</h4>
+    <div class="quiz-question" data-correct="c" data-explanation="Random splits leak future data into training. Always split chronologically."><p>1. Why can't you use random train/test splits for time series?</p><div class="quiz-options"><div class="quiz-option" data-value="a"><span class="radio"></span> There's not enough data</div><div class="quiz-option" data-value="b"><span class="radio"></span> Time series has too many features</div><div class="quiz-option" data-value="c"><span class="radio"></span> Random splitting would use future data to predict the past</div></div><div class="quiz-feedback"></div></div>
+    <div class="quiz-question" data-correct="b" data-explanation="Seasonality = repeating patterns at regular intervals (daily, weekly, yearly)."><p>2. What is seasonality?</p><div class="quiz-options"><div class="quiz-option" data-value="a"><span class="radio"></span> The overall direction of the data</div><div class="quiz-option" data-value="b"><span class="radio"></span> Repeating patterns at regular intervals</div><div class="quiz-option" data-value="c"><span class="radio"></span> Random noise in the data</div></div><div class="quiz-feedback"></div></div>
+    <div class="quiz-question" data-correct="a" data-explanation="A rolling window uses the last N values to create features for prediction."><p>3. What is a rolling window?</p><div class="quiz-options"><div class="quiz-option" data-value="a"><span class="radio"></span> Using the last N values to make a prediction</div><div class="quiz-option" data-value="b"><span class="radio"></span> Splitting data into equal-sized chunks</div><div class="quiz-option" data-value="c"><span class="radio"></span> Removing seasonal patterns</div></div><div class="quiz-feedback"></div></div>
+    <button class="quiz-submit">Check Answers</button><div class="quiz-result"></div>
+  </div>
+  <div class="takeaways"><h4>Key Takeaways</h4><ul><li>Time series = data ordered by time; order matters</li><li>Components: trend + seasonality + noise</li><li>Always split chronologically: train on past, test on future</li><li>Rolling windows are a simple but effective baseline</li></ul></div>
+</section>
+
+<!-- ============ TOPIC 15: Model Selection ============ -->
+<section class="topic-section" id="m2-topic15">
+  <div class="topic-header"><h2>Model Selection & Comparison</h2><div class="topic-meta"><span>📖 10 min</span><span>🏆 Topic 15 of 16</span></div></div>
+  <div class="why-box"><div class="label">Why This Matters</div><p>With so many ML algorithms, how do you choose? This topic gives you a systematic framework for selecting, comparing, and saving models.</p></div>
+  <div class="content-text">
+    <h3>Selection Checklist</h3>
+    <table><tr><th>Factor</th><th>Question</th></tr>
+    <tr><td>Problem type</td><td>Regression or Classification?</td></tr>
+    <tr><td>Data size</td><td>Small (< 1K) → simple models. Large → complex OK</td></tr>
+    <tr><td>Interpretability</td><td>Need to explain? → Trees, Linear. Black box OK? → Ensemble</td></tr>
+    <tr><td>Speed</td><td>Real-time? → Simple models. Batch? → Complex OK</td></tr>
+    <tr><td>Performance</td><td>Cross-validate and compare metrics</td></tr></table>
+    <h3>Bias-Variance Tradeoff</h3>
+    <div class="animation-wrapper" data-animation="bias-variance">
+      <div class="animation-header"><span class="title">Underfit → Good Fit → Overfit</span><div class="animation-controls"><button class="play-btn">▶ Play</button><button class="pause-btn">⏸ Pause</button><button class="step-btn">⏭ Step</button><button class="anim-reset-btn">↺ Reset</button></div></div>
+      <div class="animation-canvas"></div>
+    </div>
+  </div>
+  <div class="diagram-wrapper"><div class="mermaid">
+graph TD
+    A["What type of problem?"] --> B["Regression:<br/>Predicting numbers"]
+    A --> C["Classification:<br/>Predicting categories"]
+    B --> D["Start: Linear Regression"]
+    D --> E["Try: Ridge/Lasso"]
+    E --> F["Try: Random Forest Regressor"]
+    C --> G["Start: Logistic Regression"]
+    G --> H["Try: Decision Tree"]
+    H --> I["Try: Random Forest"]
+    style A fill:#1e3a5f,stroke:#38bdf8,color:#e2e8f0
+    style D fill:#1a3a2a,stroke:#4ade80,color:#e2e8f0
+    style G fill:#1a3a2a,stroke:#4ade80,color:#e2e8f0
+  </div></div>
+  <div class="code-editor-wrapper" data-packages="numpy,scikit-learn">
+    <div class="code-editor-header"><span class="filename">model_selection.py</span><div class="actions"><button class="reset-btn">Reset</button><button class="run-btn">▶ Run</button></div></div>
+    <textarea class="code-textarea" rows="28">import numpy as np
+from sklearn.datasets import make_classification
+from sklearn.model_selection import cross_val_score
+from sklearn.linear_model import LogisticRegression
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.ensemble import RandomForestClassifier
+
+X, y = make_classification(n_samples=500, n_features=10, n_informative=5, random_state=42)
+
+models = {
+    "Logistic Regression": LogisticRegression(max_iter=200),
+    "Decision Tree": DecisionTreeClassifier(max_depth=5),
+    "Random Forest": RandomForestClassifier(n_estimators=100, max_depth=5),
+}
+
+print("=== 5-Fold CV Comparison ===")
+print(f"{'Model':<25s} {'Mean Acc':>10s} {'Std':>8s}")
+print("-" * 45)
+
+best_name, best_score = None, 0
+for name, model in models.items():
+    scores = cross_val_score(model, X, y, cv=5, scoring='accuracy')
+    mean_score = scores.mean()
+    print(f"{name:<25s} {mean_score:>10.3f} {scores.std():>8.3f}")
+    if mean_score > best_score:
+        best_name, best_score = name, mean_score
+
+print(f"\nBest: {best_name} ({best_score:.3f})")
+</textarea>
+    <div class="code-output"><div class="output-label">Output</div><div class="output-text" style="color:var(--text-muted);">Click "Run" to execute</div></div>
+  </div>
+  <div class="quiz-wrapper" data-topic-id="m2-topic15">
+    <h4>📝 Knowledge Check</h4>
+    <div class="quiz-question" data-correct="b" data-explanation="Cross-validation gives a fair comparison across the same data folds for all models."><p>1. What's the best way to compare models?</p><div class="quiz-options"><div class="quiz-option" data-value="a"><span class="radio"></span> Pick the one with most parameters</div><div class="quiz-option" data-value="b"><span class="radio"></span> Cross-validate all on the same data</div><div class="quiz-option" data-value="c"><span class="radio"></span> Use the newest algorithm</div></div><div class="quiz-feedback"></div></div>
+    <div class="quiz-question" data-correct="a" data-explanation="Interpretable models like linear/tree models let you explain predictions to stakeholders."><p>2. When is interpretability important?</p><div class="quiz-options"><div class="quiz-option" data-value="a"><span class="radio"></span> When you need to explain predictions to stakeholders</div><div class="quiz-option" data-value="b"><span class="radio"></span> When you have a lot of data</div><div class="quiz-option" data-value="c"><span class="radio"></span> When speed doesn't matter</div></div><div class="quiz-feedback"></div></div>
+    <div class="quiz-question" data-correct="c" data-explanation="joblib and pickle serialize Python objects to disk so you can reload models later."><p>3. How do you save a trained model for later use?</p><div class="quiz-options"><div class="quiz-option" data-value="a"><span class="radio"></span> Copy the training data</div><div class="quiz-option" data-value="b"><span class="radio"></span> Save the Python script</div><div class="quiz-option" data-value="c"><span class="radio"></span> Use joblib or pickle to serialize it to a file</div></div><div class="quiz-feedback"></div></div>
+    <button class="quiz-submit">Check Answers</button><div class="quiz-result"></div>
+  </div>
+  <div class="takeaways"><h4>Key Takeaways</h4><ul><li>Start simple (linear/logistic), increase complexity only if needed</li><li>Cross-validate to compare fairly</li><li>Consider: problem type, data size, interpretability, speed</li><li>Save models with joblib/pickle for production use</li></ul></div>
+</section>
+
+<!-- ============ TOPIC 16: Transition to GenAI ============ -->
+<section class="topic-section" id="m2-topic16">
+  <div class="topic-header"><h2>Transition to GenAI</h2><div class="topic-meta"><span>📖 8 min</span><span>🚀 Topic 16 of 16</span></div></div>
+  <div class="why-box"><div class="label">Why This Matters</div><p>You now understand classical ML. The next revolution — Generative AI — builds on these foundations but adds the ability to create, reason, and act. Understanding where ML ends and GenAI begins is key to this course.</p></div>
+  <div class="content-text">
+    <h3>What Traditional ML Can and Can't Do</h3>
+    <table><tr><th>Can Do</th><th>Can't Do</th></tr>
+    <tr><td>Classify (spam/not spam)</td><td>Write a paragraph explaining why</td></tr>
+    <tr><td>Predict numbers (house prices)</td><td>Have a conversation about real estate</td></tr>
+    <tr><td>Cluster similar items</td><td>Describe the clusters in natural language</td></tr>
+    <tr><td>Detect anomalies</td><td>Explain what the anomaly means</td></tr></table>
+    <h3>The Neural Network Revolution</h3>
+    <p>Neural networks learn <strong>representations</strong> instead of requiring hand-crafted features. Give a neural network raw pixels, and it learns edges → shapes → objects. This ability to learn from raw data at scale is what enabled GenAI.</p>
+    <h3>Transfer Learning</h3>
+    <p>Instead of training from scratch, you can take a model trained on millions of examples and fine-tune it for your task. This is why GPT-4 can be adapted for legal, medical, or coding tasks — it transfers knowledge.</p>
+    <h3>Why Language Models Changed Everything</h3>
+    <p>LLMs showed that a model trained on text can: write, translate, code, reason, and even use tools. This was the catalyst for AI <strong>agents</strong> — systems that can plan, act, and learn. That's what Module 3 is about.</p>
+  </div>
+  <div class="diagram-wrapper"><div class="mermaid">
+graph LR
+    A["Classical ML<br/>Classify, predict, cluster"] --> B["Deep Learning<br/>Learn representations"]
+    B --> C["LLMs<br/>Understand & generate language"]
+    C --> D["AI Agents<br/>Plan, reason, act, use tools"]
+    style A fill:#1e3a5f,stroke:#38bdf8,color:#e2e8f0
+    style B fill:#2d1b69,stroke:#a78bfa,color:#e2e8f0
+    style C fill:#4a2532,stroke:#fb923c,color:#e2e8f0
+    style D fill:#1a3a2a,stroke:#4ade80,color:#e2e8f0
+  </div></div>
+  <div class="quiz-wrapper" data-topic-id="m2-topic16">
+    <h4>📝 Knowledge Check</h4>
+    <div class="quiz-question" data-correct="c" data-explanation="Transfer learning reuses knowledge from a pre-trained model for a new task."><p>1. What is transfer learning?</p><div class="quiz-options"><div class="quiz-option" data-value="a"><span class="radio"></span> Moving data from one database to another</div><div class="quiz-option" data-value="b"><span class="radio"></span> Training a model from scratch on new data</div><div class="quiz-option" data-value="c"><span class="radio"></span> Fine-tuning a pre-trained model for a new task</div></div><div class="quiz-feedback"></div></div>
+    <div class="quiz-question" data-correct="a" data-explanation="Classical ML typically classifies or predicts. GenAI generates new content."><p>2. What can GenAI do that classical ML cannot?</p><div class="quiz-options"><div class="quiz-option" data-value="a"><span class="radio"></span> Generate new text, images, and code</div><div class="quiz-option" data-value="b"><span class="radio"></span> Classify data faster</div><div class="quiz-option" data-value="c"><span class="radio"></span> Use less training data</div></div><div class="quiz-feedback"></div></div>
+    <div class="quiz-question" data-correct="b" data-explanation="Agents combine LLMs with tools and planning — they can reason and take actions in the world."><p>3. What makes an AI agent different from an LLM?</p><div class="quiz-options"><div class="quiz-option" data-value="a"><span class="radio"></span> Agents are faster</div><div class="quiz-option" data-value="b"><span class="radio"></span> Agents can plan, use tools, and take actions</div><div class="quiz-option" data-value="c"><span class="radio"></span> Agents don't use neural networks</div></div><div class="quiz-feedback"></div></div>
+    <button class="quiz-submit">Check Answers</button><div class="quiz-result"></div>
+  </div>
+  <div class="takeaways"><h4>Key Takeaways</h4><ul><li>Classical ML classifies and predicts; GenAI generates and creates</li><li>Neural networks learn representations from raw data</li><li>Transfer learning lets you reuse pre-trained models</li><li>LLMs + tools + planning = AI Agents (Module 3!)</li></ul></div>
+</section>
+
+    <div class="footer">
+      <p>Module 2: ML Fundamentals — Complete!</p>
+      <p style="margin-top:8px;"><a href="module3.html">Continue to Module 3: GenAI & Agents →</a></p>
+    </div>
+    </main>
+  </div>
+  <script src="https://cdn.jsdelivr.net/pyodide/v0.24.1/full/pyodide.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script>mermaid.initialize({startOnLoad:true, theme:'dark'});</script>
+  <script src="js/nav.js"></script>
+  <script src="js/pyodide-runner.js"></script>
+  <script src="js/quiz.js"></script>
+  <script src="js/animations.js"></script>
+  <script src="js/features.js"></script>
+</body>
+</html>

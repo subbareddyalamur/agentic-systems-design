@@ -1,0 +1,1790 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Module 1: Foundations — Agentic Systems & Design</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/print.css">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="logo"><a href="index.html">← Home</a> &nbsp;|&nbsp; Module 1: Foundations</div>
+    <div class="nav-controls">
+      <button class="theme-toggle">☀️</button>
+    </div>
+  </nav>
+  <button class="sidebar-toggle">☰</button>
+  <div class="page-wrapper">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <h3>Module 1: Foundations</h3>
+        <div class="sidebar-progress">0 / 13 topics completed</div>
+        <div class="progress-bar"><div class="fill"></div></div>
+      </div>
+      <ul class="topic-list">
+        <li><a href="#m1-topic1"><span class="check"></span> AI vs ML vs GenAI</a></li>
+        <li><a href="#m1-topic2"><span class="check"></span> Dev Environment Setup</a></li>
+        <li><a href="#m1-topic3"><span class="check"></span> CLI & Git Basics</a></li>
+        <li><a href="#m1-topic4"><span class="check"></span> Variables & Data Types</a></li>
+        <li><a href="#m1-topic5"><span class="check"></span> Conditionals & Logic</a></li>
+        <li><a href="#m1-topic6"><span class="check"></span> Loops</a></li>
+        <li><a href="#m1-topic7"><span class="check"></span> Functions</a></li>
+        <li><a href="#m1-topic8"><span class="check"></span> Data Structures</a></li>
+        <li><a href="#m1-topic9"><span class="check"></span> NumPy Essentials</a></li>
+        <li><a href="#m1-topic10"><span class="check"></span> JSON & Data Interchange</a></li>
+        <li><a href="#m1-topic11"><span class="check"></span> Pandas Fundamentals</a></li>
+        <li><a href="#m1-topic12"><span class="check"></span> SQL: Thinking in Tables</a></li>
+        <li><a href="#m1-topic13"><span class="check"></span> APIs: The Agent's Hands</a></li>
+      </ul>
+    </aside>
+    <main class="main-content">
+
+<!-- ============ TOPIC 1: AI vs ML vs GenAI ============ -->
+<section class="topic-section" id="m1-topic1">
+  <div class="topic-header">
+    <h2>AI vs ML vs GenAI Landscape</h2>
+    <div class="topic-meta">
+      <span>📖 12 min read</span>
+      <span>📚 Topic 1 of 13</span>
+    </div>
+  </div>
+
+  <div class="why-box">
+    <div class="label">Why This Matters</div>
+    <p>Before building AI agents, you need to understand what AI actually is — and isn't. These terms get thrown around interchangeably, but they mean very different things. Understanding the landscape helps you choose the right tool for the right job.</p>
+  </div>
+
+  <div class="content-text">
+    <h3>What is Artificial Intelligence?</h3>
+    <p>Artificial Intelligence (AI) is a broad field of computer science focused on creating machines that can perform tasks that typically require human intelligence. Think of it as an umbrella — everything we discuss in this course falls under it.</p>
+    <p>AI includes things like playing chess, recognizing faces in photos, translating languages, and driving cars. Some AI is simple (a thermostat adjusting temperature) and some is incredibly complex (ChatGPT writing essays).</p>
+
+    <h3>What is Machine Learning?</h3>
+    <p>Machine Learning (ML) is a <strong>subset</strong> of AI. Instead of programming explicit rules ("if temperature > 30, turn on AC"), you give the computer lots of examples and let it <strong>learn the rules on its own</strong>.</p>
+    <p>Think of it like teaching a child to recognize dogs. You don't explain "four legs, fur, tail" — you show them hundreds of pictures of dogs until they just <em>know</em>. That's ML in a nutshell.</p>
+
+    <h3>What is Deep Learning?</h3>
+    <p>Deep Learning is a subset of ML that uses <strong>neural networks</strong> — layered mathematical structures inspired (very loosely) by the brain. "Deep" means many layers. These networks excel at finding patterns in complex data like images, audio, and text.</p>
+
+    <h3>What is Generative AI?</h3>
+    <p>Generative AI (GenAI) is a subset of Deep Learning focused on <strong>creating new content</strong> — text, images, code, music. ChatGPT, DALL-E, and Midjourney are all GenAI. Unlike traditional ML that classifies or predicts, GenAI <em>generates</em>.</p>
+
+    <div class="info-box tip">
+      <div class="box-label">Key Insight</div>
+      <p>All GenAI is AI, but not all AI is GenAI. A spam filter uses ML (classification). ChatGPT uses GenAI (generation). Both are AI.</p>
+    </div>
+
+    <h3>The Hierarchy</h3>
+  </div>
+
+  <div class="diagram-wrapper">
+    <div class="mermaid">
+graph TD
+    A["🤖 Artificial Intelligence<br/>Machines that mimic human intelligence"] --> B["📊 Machine Learning<br/>Systems that learn from data"]
+    B --> C["🧠 Deep Learning<br/>Neural networks with many layers"]
+    C --> D["✨ Generative AI<br/>Creates new content: text, images, code"]
+    style A fill:#1e3a5f,stroke:#38bdf8,color:#e2e8f0
+    style B fill:#2d1b69,stroke:#a78bfa,color:#e2e8f0
+    style C fill:#4a2532,stroke:#fb923c,color:#e2e8f0
+    style D fill:#1a3a2a,stroke:#4ade80,color:#e2e8f0
+    </div>
+  </div>
+
+  <div class="content-text">
+    <h3>Brief History: From Turing to ChatGPT</h3>
+    <table>
+      <tr><th>Year</th><th>Milestone</th><th>Significance</th></tr>
+      <tr><td>1950</td><td>Turing Test proposed</td><td>First formal definition of machine intelligence</td></tr>
+      <tr><td>1957</td><td>Perceptron invented</td><td>First neural network</td></tr>
+      <tr><td>1997</td><td>Deep Blue beats Kasparov</td><td>AI beats world chess champion</td></tr>
+      <tr><td>2012</td><td>AlexNet wins ImageNet</td><td>Deep learning revolution begins</td></tr>
+      <tr><td>2017</td><td>Transformer paper published</td><td>"Attention Is All You Need" — foundation of modern AI</td></tr>
+      <tr><td>2022</td><td>ChatGPT launches</td><td>GenAI goes mainstream (100M users in 2 months)</td></tr>
+      <tr><td>2024</td><td>AI Agents emerge</td><td>LLMs that can use tools and take actions</td></tr>
+    </table>
+
+    <h3>Industry Use Cases Today</h3>
+    <table>
+      <tr><th>Industry</th><th>AI Application</th><th>Type</th></tr>
+      <tr><td>Healthcare</td><td>Medical image diagnosis, drug discovery</td><td>Deep Learning</td></tr>
+      <tr><td>Finance</td><td>Fraud detection, algorithmic trading</td><td>ML</td></tr>
+      <tr><td>Retail</td><td>Product recommendations, demand forecasting</td><td>ML</td></tr>
+      <tr><td>Customer Service</td><td>Chatbots, ticket routing</td><td>GenAI + ML</td></tr>
+      <tr><td>Software</td><td>Code generation, automated testing</td><td>GenAI</td></tr>
+      <tr><td>Legal</td><td>Document review, contract analysis</td><td>GenAI + ML</td></tr>
+    </table>
+
+    <h3>The Road Ahead</h3>
+    <p>In this course, you'll progress from Python basics (Module 1) through classical ML (Module 2), into GenAI and agent fundamentals (Module 3), and finally into designing production-ready agentic systems (Module 4). By the end, you'll understand how to build AI systems that can reason, use tools, and act autonomously.</p>
+  </div>
+
+  <!-- Quiz -->
+  <div class="quiz-wrapper" data-topic-id="m1-topic1">
+    <h4>📝 Knowledge Check</h4>
+    <div class="quiz-question" data-correct="b" data-explanation="ML is a subset of AI. AI is the broader field; ML is one approach within it.">
+      <p>1. What is the relationship between AI and Machine Learning?</p>
+      <div class="quiz-options">
+        <div class="quiz-option" data-value="a"><span class="radio"></span> They are the same thing</div>
+        <div class="quiz-option" data-value="b"><span class="radio"></span> ML is a subset of AI</div>
+        <div class="quiz-option" data-value="c"><span class="radio"></span> AI is a subset of ML</div>
+      </div>
+      <div class="quiz-feedback"></div>
+    </div>
+    <div class="quiz-question" data-correct="c" data-explanation="Generative AI creates new content (text, images, code). Classification and prediction are traditional ML tasks.">
+      <p>2. What makes Generative AI different from traditional ML?</p>
+      <div class="quiz-options">
+        <div class="quiz-option" data-value="a"><span class="radio"></span> It uses more data</div>
+        <div class="quiz-option" data-value="b"><span class="radio"></span> It runs faster</div>
+        <div class="quiz-option" data-value="c"><span class="radio"></span> It creates new content rather than just classifying</div>
+      </div>
+      <div class="quiz-feedback"></div>
+    </div>
+    <div class="quiz-question" data-correct="b" data-explanation="The Transformer architecture, introduced in the 2017 paper 'Attention Is All You Need', is the foundation of ChatGPT and modern LLMs.">
+      <p>3. Which architecture is the foundation of modern LLMs like ChatGPT?</p>
+      <div class="quiz-options">
+        <div class="quiz-option" data-value="a"><span class="radio"></span> Perceptron</div>
+        <div class="quiz-option" data-value="b"><span class="radio"></span> Transformer</div>
+        <div class="quiz-option" data-value="c"><span class="radio"></span> Decision Tree</div>
+      </div>
+      <div class="quiz-feedback"></div>
+    </div>
+    <button class="quiz-submit">Check Answers</button>
+    <div class="quiz-result"></div>
+  </div>
+
+  <div class="takeaways">
+    <h4>Key Takeaways</h4>
+    <ul>
+      <li>AI is the umbrella field; ML, Deep Learning, and GenAI are progressively specialized subsets</li>
+      <li>ML learns patterns from data instead of being explicitly programmed</li>
+      <li>GenAI creates new content — it's the technology powering ChatGPT, DALL-E, and the agents you'll build</li>
+      <li>The Transformer architecture (2017) is the breakthrough behind modern AI</li>
+    </ul>
+  </div>
+
+  <div class="references">
+    <h4>References & Further Reading</h4>
+    <ul>
+      <li><a href="https://ai.google/education/" target="_blank">Google AI Education →</a></li>
+      <li><a href="https://www.ibm.com/think/topics/artificial-intelligence" target="_blank">IBM: What is AI? →</a></li>
+      <li><a href="https://arxiv.org/abs/1706.03762" target="_blank">Attention Is All You Need (Original Transformer Paper) →</a></li>
+    </ul>
+  </div>
+</section>
+
+
+<!-- ============ TOPIC 2: Dev Environment Setup ============ -->
+<section class="topic-section" id="m1-topic2">
+  <div class="topic-header">
+    <h2>Development Environment Setup</h2>
+    <div class="topic-meta">
+      <span>📖 10 min read</span>
+      <span>🔧 Topic 2 of 13</span>
+    </div>
+  </div>
+
+  <div class="why-box">
+    <div class="label">Why This Matters</div>
+    <p>A carpenter needs a workbench before building furniture. Similarly, you need a proper development environment before writing code. Setting this up correctly now saves hours of frustration later.</p>
+  </div>
+
+  <div class="content-text">
+    <h3>VS Code: Your Code Editor</h3>
+    <p>Visual Studio Code (VS Code) is a free, powerful code editor made by Microsoft. Think of it as a smart notepad — it understands code, highlights syntax in colors, and catches errors as you type.</p>
+    <h4>Installation Steps</h4>
+    <ol>
+      <li>Go to <a href="https://code.visualstudio.com" target="_blank">code.visualstudio.com</a></li>
+      <li>Download for your operating system (Windows/Mac/Linux)</li>
+      <li>Run the installer — accept all defaults</li>
+      <li>Launch VS Code</li>
+    </ol>
+    <h4>Essential Extensions to Install</h4>
+    <table>
+      <tr><th>Extension</th><th>What It Does</th></tr>
+      <tr><td><strong>Python</strong> (by Microsoft)</td><td>Python language support, debugging, IntelliSense</td></tr>
+      <tr><td><strong>Jupyter</strong></td><td>Run Jupyter notebooks inside VS Code</td></tr>
+      <tr><td><strong>GitLens</strong></td><td>See who changed each line of code and when</td></tr>
+      <tr><td><strong>Prettier</strong></td><td>Auto-formats your code to look clean</td></tr>
+    </table>
+    <p>To install: click the Extensions icon (squares) in the left sidebar → search the name → click Install.</p>
+
+    <h3>Google Colab: Code in the Cloud</h3>
+    <p>Google Colab is like Google Docs, but for code. You write Python in your browser, and Google's servers run it. No installation needed — perfect for beginners.</p>
+    <ol>
+      <li>Go to <a href="https://colab.research.google.com" target="_blank">colab.research.google.com</a></li>
+      <li>Sign in with your Google account</li>
+      <li>Click "New Notebook"</li>
+      <li>Type <code>print("Hello World")</code> in a cell and press Shift+Enter</li>
+    </ol>
+    <div class="info-box tip">
+      <div class="box-label">Pro Tip</div>
+      <p>Colab gives you free GPU access! Go to Runtime → Change runtime type → GPU. Useful for ML later.</p>
+    </div>
+
+    <h3>Managing Secrets & API Keys</h3>
+    <p>API keys are like passwords for services (OpenAI, Google, etc.). <strong>Never put them directly in your code!</strong></p>
+    <ul>
+      <li><strong>.env files:</strong> Store keys in a file called <code>.env</code>, load them with <code>python-dotenv</code></li>
+      <li><strong>Environment variables:</strong> Set them in your terminal so your code can read them</li>
+      <li><strong>Colab Secrets:</strong> Use the 🔑 icon in Colab's sidebar</li>
+    </ul>
+    <div class="info-box warning">
+      <div class="box-label">Security Rule</div>
+      <p>NEVER commit API keys to GitHub. Add <code>.env</code> to your <code>.gitignore</code> file. If you accidentally push a key, revoke it immediately.</p>
+    </div>
+
+    <h3>Creating a GitHub Account</h3>
+    <p>GitHub is where developers store and share code. Think of it as Google Drive for code — with version history, collaboration, and backup built in.</p>
+    <ol>
+      <li>Go to <a href="https://github.com" target="_blank">github.com</a></li>
+      <li>Click "Sign Up" and follow the steps</li>
+      <li>Choose the free plan</li>
+      <li>Verify your email</li>
+    </ol>
+  </div>
+
+  <div class="code-editor-wrapper">
+    <div class="code-editor-header">
+      <span class="filename">hello_world.py</span>
+      <div class="actions">
+        <button class="reset-btn">Reset</button>
+        <button class="run-btn">▶ Run</button>
+      </div>
+    </div>
+    <textarea class="code-textarea" rows="6"># Your very first Python program!
+# Click "Run" to see the output below
+
+print("Hello, World!")
+print("I'm learning to build AI agents!")
+print("Today's date: 2026")
+</textarea>
+    <div class="code-output">
+      <div class="output-label">Output</div>
+      <div class="output-text" style="color: var(--text-muted);">Click "Run" to execute</div>
+    </div>
+  </div>
+
+  <div class="quiz-wrapper" data-topic-id="m1-topic2">
+    <h4>📝 Knowledge Check</h4>
+    <div class="quiz-question" data-correct="c" data-explanation="API keys should never be in code directly. Use .env files or environment variables.">
+      <p>1. Where should you store API keys?</p>
+      <div class="quiz-options">
+        <div class="quiz-option" data-value="a"><span class="radio"></span> Directly in your Python code</div>
+        <div class="quiz-option" data-value="b"><span class="radio"></span> In a comment at the top of your file</div>
+        <div class="quiz-option" data-value="c"><span class="radio"></span> In a .env file or environment variable</div>
+      </div>
+      <div class="quiz-feedback"></div>
+    </div>
+    <div class="quiz-question" data-correct="b" data-explanation="Google Colab runs code on Google's servers in the cloud. No installation needed.">
+      <p>2. Where does Google Colab run your code?</p>
+      <div class="quiz-options">
+        <div class="quiz-option" data-value="a"><span class="radio"></span> On your local computer</div>
+        <div class="quiz-option" data-value="b"><span class="radio"></span> On Google's cloud servers</div>
+        <div class="quiz-option" data-value="c"><span class="radio"></span> In VS Code</div>
+      </div>
+      <div class="quiz-feedback"></div>
+    </div>
+    <div class="quiz-question" data-correct="a" data-explanation="VS Code extensions add features like Python support, Git integration, and code formatting.">
+      <p>3. What do VS Code extensions do?</p>
+      <div class="quiz-options">
+        <div class="quiz-option" data-value="a"><span class="radio"></span> Add extra features and language support to the editor</div>
+        <div class="quiz-option" data-value="b"><span class="radio"></span> Make your computer faster</div>
+        <div class="quiz-option" data-value="c"><span class="radio"></span> Store your files in the cloud</div>
+      </div>
+      <div class="quiz-feedback"></div>
+    </div>
+    <button class="quiz-submit">Check Answers</button>
+    <div class="quiz-result"></div>
+  </div>
+
+  <div class="takeaways">
+    <h4>Key Takeaways</h4>
+    <ul>
+      <li>VS Code is a free code editor — install Python, Jupyter, and GitLens extensions</li>
+      <li>Google Colab lets you run Python in the browser with free GPU access</li>
+      <li>Never hardcode API keys — use .env files and add them to .gitignore</li>
+      <li>GitHub is essential for version control and collaboration</li>
+    </ul>
+  </div>
+
+  <div class="references">
+    <h4>References & Further Reading</h4>
+    <ul>
+      <li><a href="https://code.visualstudio.com/docs" target="_blank">VS Code Documentation →</a></li>
+      <li><a href="https://colab.research.google.com/notebooks/intro.ipynb" target="_blank">Google Colab Getting Started →</a></li>
+      <li><a href="https://docs.github.com/en/get-started" target="_blank">GitHub Getting Started Guide →</a></li>
+    </ul>
+  </div>
+</section>
+
+
+<!-- ============ TOPIC 3: CLI & Git Basics ============ -->
+<section class="topic-section" id="m1-topic3">
+  <div class="topic-header">
+    <h2>Command Line & Git Basics</h2>
+    <div class="topic-meta">
+      <span>📖 15 min read</span>
+      <span>💻 Topic 3 of 13</span>
+    </div>
+  </div>
+
+  <div class="why-box">
+    <div class="label">Why This Matters</div>
+    <p>The command line is how developers talk to their computer without clicking buttons. Git is how they save snapshots of their code over time. Every professional developer uses both daily — and AI agents often run commands through CLIs too.</p>
+  </div>
+
+  <div class="content-text">
+    <h3>Command Line Essentials</h3>
+    <p>The command line interface (CLI) is a text-based way to interact with your computer. Instead of clicking folders, you type commands. It's faster once you learn it, and many developer tools only work through the CLI.</p>
+
+    <h4>Essential Commands</h4>
+    <table>
+      <tr><th>Command</th><th>What It Does</th><th>Example</th></tr>
+      <tr><td><code>pwd</code></td><td>Print Working Directory — shows where you are</td><td><code>pwd</code> → <code>/Users/you/projects</code></td></tr>
+      <tr><td><code>ls</code></td><td>List files in current directory</td><td><code>ls</code> → <code>file1.py file2.py</code></td></tr>
+      <tr><td><code>cd</code></td><td>Change directory — move to a folder</td><td><code>cd projects</code></td></tr>
+      <tr><td><code>mkdir</code></td><td>Make a new directory</td><td><code>mkdir my-app</code></td></tr>
+      <tr><td><code>touch</code></td><td>Create an empty file</td><td><code>touch app.py</code></td></tr>
+      <tr><td><code>rm</code></td><td>Remove (delete) a file</td><td><code>rm old-file.py</code></td></tr>
+      <tr><td><code>cp</code></td><td>Copy a file</td><td><code>cp file.py backup.py</code></td></tr>
+      <tr><td><code>mv</code></td><td>Move or rename a file</td><td><code>mv old.py new.py</code></td></tr>
+      <tr><td><code>cat</code></td><td>Display file contents</td><td><code>cat app.py</code></td></tr>
+    </table>
+
+    <h3>Git: Your Time Machine</h3>
+    <p>Git is a <strong>version control system</strong>. It tracks every change you make to your code. If you break something, you can go back to any previous version — like an "undo" button with infinite memory.</p>
+    <p>Think of it like saving a video game: you can save at any point (commit), and reload any previous save if things go wrong.</p>
+
+    <h4>The Core Workflow: Init → Add → Commit</h4>
+  </div>
+
+  <div class="diagram-wrapper">
+    <div class="mermaid">
+graph LR
+    A["📁 Working Directory<br/>Your actual files"] -->|"git add"| B["📦 Staging Area<br/>Ready to be saved"]
+    B -->|"git commit"| C["📸 Repository<br/>Permanent snapshot"]
+    style A fill:#1e3a5f,stroke:#38bdf8,color:#e2e8f0
+    style B fill:#3a2e1e,stroke:#fbbf24,color:#e2e8f0
+    style C fill:#1a3a2a,stroke:#4ade80,color:#e2e8f0
+    </div>
+  </div>
+
+  <div class="content-text">
+    <ol>
+      <li><code>git init</code> — Initialize a new Git repository in your project folder</li>
+      <li><code>git add filename.py</code> — Stage a file (mark it to be saved in the next snapshot)</li>
+      <li><code>git commit -m "description"</code> — Save a snapshot with a message describing what changed</li>
+    </ol>
+
+    <h3>Git Branching Visualized</h3>
+    <div class="animation-wrapper" data-animation="git-branching">
+      <div class="animation-header"><span class="title">Git Branch, Commit & Merge</span><div class="animation-controls"><button class="play-btn">▶ Play</button><button class="pause-btn">⏸ Pause</button><button class="step-btn">⏭ Step</button><button class="anim-reset-btn">↺ Reset</button></div></div>
+      <div class="animation-canvas"></div>
+    </div>
+
+    <h3>Notebooks vs Scripts</h3>
+    <table>
+      <tr><th>Jupyter Notebooks (.ipynb)</th><th>Python Scripts (.py)</th></tr>
+      <tr><td>Great for exploration and learning</td><td>Great for production code and automation</td></tr>
+      <tr><td>Run cells one at a time</td><td>Run entire file at once</td></tr>
+      <tr><td>Can mix code, text, and visuals</td><td>Code only (comments for notes)</td></tr>
+      <tr><td>Hard to version control</td><td>Easy to version control with Git</td></tr>
+      <tr><td>Use for: data analysis, prototyping</td><td>Use for: apps, APIs, agent code</td></tr>
+    </table>
+
+    <div class="info-box tip">
+      <div class="box-label">Rule of Thumb</div>
+      <p>Use <strong>notebooks</strong> to explore and experiment. Use <strong>scripts</strong> for anything that runs in production or gets shared with a team.</p>
+    </div>
+  </div>
+
+  <div class="code-editor-wrapper">
+    <div class="code-editor-header">
+      <span class="filename">git_demo.py</span>
+      <div class="actions">
+        <button class="reset-btn">Reset</button>
+        <button class="run-btn">▶ Run</button>
+      </div>
+    </div>
+    <textarea class="code-textarea" rows="14"># Simulating Git concepts in Python
+# (Real git runs in the terminal, not Python)
+
+# Think of these as file states
+working_directory = ["app.py", "README.md", "data.csv"]
+staging_area = []
+commits = []
+
+# Stage a file (like: git add app.py)
+staging_area.append(working_directory[0])
+print(f"Staged: {staging_area}")
+
+# Commit (like: git commit -m "initial commit")
+commits.append({"message": "initial commit", "files": staging_area.copy()})
+staging_area.clear()
+print(f"Commits: {commits}")
+print(f"Staging area after commit: {staging_area}")
+</textarea>
+    <div class="code-output">
+      <div class="output-label">Output</div>
+      <div class="output-text" style="color: var(--text-muted);">Click "Run" to execute</div>
+    </div>
+  </div>
+
+  <div class="quiz-wrapper" data-topic-id="m1-topic3">
+    <h4>📝 Knowledge Check</h4>
+    <div class="quiz-question" data-correct="b" data-explanation="git add stages files. git commit saves the snapshot. git init sets up the repo.">
+      <p>1. What does <code>git add</code> do?</p>
+      <div class="quiz-options">
+        <div class="quiz-option" data-value="a"><span class="radio"></span> Saves a permanent snapshot of your code</div>
+        <div class="quiz-option" data-value="b"><span class="radio"></span> Stages files to be included in the next commit</div>
+        <div class="quiz-option" data-value="c"><span class="radio"></span> Creates a new Git repository</div>
+      </div>
+      <div class="quiz-feedback"></div>
+    </div>
+    <div class="quiz-question" data-correct="c" data-explanation="pwd stands for Print Working Directory — it shows your current location in the file system.">
+      <p>2. Which command shows your current directory location?</p>
+      <div class="quiz-options">
+        <div class="quiz-option" data-value="a"><span class="radio"></span> ls</div>
+        <div class="quiz-option" data-value="b"><span class="radio"></span> cd</div>
+        <div class="quiz-option" data-value="c"><span class="radio"></span> pwd</div>
+      </div>
+      <div class="quiz-feedback"></div>
+    </div>
+    <div class="quiz-question" data-correct="a" data-explanation="Notebooks (.ipynb) are best for exploration. Scripts (.py) are better for production code.">
+      <p>3. When should you use a Jupyter Notebook instead of a .py script?</p>
+      <div class="quiz-options">
+        <div class="quiz-option" data-value="a"><span class="radio"></span> When exploring data and prototyping</div>
+        <div class="quiz-option" data-value="b"><span class="radio"></span> When deploying to production</div>
+        <div class="quiz-option" data-value="c"><span class="radio"></span> When building an API</div>
+      </div>
+      <div class="quiz-feedback"></div>
+    </div>
+    <button class="quiz-submit">Check Answers</button>
+    <div class="quiz-result"></div>
+  </div>
+
+  <div class="takeaways">
+    <h4>Key Takeaways</h4>
+    <ul>
+      <li>The CLI lets you navigate files, create folders, and run programs with text commands</li>
+      <li>Git tracks every change — use <code>init → add → commit</code> workflow</li>
+      <li>Use notebooks for exploration, scripts for production</li>
+      <li>Commit often with clear messages — your future self will thank you</li>
+    </ul>
+  </div>
+
+  <div class="references">
+    <h4>References & Further Reading</h4>
+    <ul>
+      <li><a href="https://git-scm.com/book/en/v2/Getting-Started-About-Version-Control" target="_blank">Git Book: Getting Started →</a></li>
+      <li><a href="https://www.codecademy.com/learn/learn-the-command-line" target="_blank">Codecademy: Learn the Command Line →</a></li>
+    </ul>
+  </div>
+</section>
+
+
+<!-- ============ TOPIC 4: Variables & Data Types ============ -->
+<section class="topic-section" id="m1-topic4">
+  <div class="topic-header">
+    <h2>Variables & Data Types</h2>
+    <div class="topic-meta"><span>📖 12 min read</span><span>🐍 Topic 4 of 13</span></div>
+  </div>
+  <div class="why-box">
+    <div class="label">Why This Matters</div>
+    <p>Variables are the building blocks of every program. They store information — numbers, text, true/false values — that your code uses. Understanding data types prevents bugs and is essential for working with AI models later.</p>
+  </div>
+  <div class="content-text">
+    <h3>Variables: Labeled Containers</h3>
+    <p>Think of a variable as a <strong>labeled box</strong>. You give it a name (the label) and put a value inside. Later, you can look at the label to find what's inside, or swap the contents for something new.</p>
+    <h3>Core Data Types</h3>
+    <table>
+      <tr><th>Type</th><th>What It Stores</th><th>Example</th></tr>
+      <tr><td><code>int</code></td><td>Whole numbers (no decimals)</td><td><code>age = 25</code></td></tr>
+      <tr><td><code>float</code></td><td>Decimal numbers</td><td><code>price = 19.99</code></td></tr>
+      <tr><td><code>str</code></td><td>Text (strings of characters)</td><td><code>name = "Alice"</code></td></tr>
+      <tr><td><code>bool</code></td><td>True or False</td><td><code>is_student = True</code></td></tr>
+    </table>
+    <p>Use <code>type()</code> to check what type a variable is: <code>type(42)</code> returns <code>&lt;class 'int'&gt;</code></p>
+    <h3>Basic Math in Python</h3>
+    <table>
+      <tr><th>Operator</th><th>Meaning</th><th>Example</th><th>Result</th></tr>
+      <tr><td><code>+</code></td><td>Addition</td><td><code>5 + 3</code></td><td><code>8</code></td></tr>
+      <tr><td><code>-</code></td><td>Subtraction</td><td><code>10 - 4</code></td><td><code>6</code></td></tr>
+      <tr><td><code>*</code></td><td>Multiplication</td><td><code>3 * 7</code></td><td><code>21</code></td></tr>
+      <tr><td><code>/</code></td><td>Division (float)</td><td><code>10 / 3</code></td><td><code>3.333...</code></td></tr>
+      <tr><td><code>//</code></td><td>Floor division</td><td><code>10 // 3</code></td><td><code>3</code></td></tr>
+      <tr><td><code>%</code></td><td>Modulo (remainder)</td><td><code>10 % 3</code></td><td><code>1</code></td></tr>
+      <tr><td><code>**</code></td><td>Exponent (power)</td><td><code>2 ** 3</code></td><td><code>8</code></td></tr>
+    </table>
+    <h3>Print and Input</h3>
+    <p><code>print()</code> displays output. <code>input()</code> reads text from the user (returns a string — convert with <code>int()</code> or <code>float()</code> for numbers).</p>
+  </div>
+
+  <div class="code-editor-wrapper">
+    <div class="code-editor-header">
+      <span class="filename">variables.py</span>
+      <div class="actions"><button class="reset-btn">Reset</button><button class="run-btn">▶ Run</button></div>
+    </div>
+    <textarea class="code-textarea" rows="20"># Variables and Data Types
+name = "Alice"        # str
+age = 25              # int
+height = 5.6          # float
+is_student = True     # bool
+
+# Check types
+print(f"name: {name}, type: {type(name).__name__}")
+print(f"age: {age}, type: {type(age).__name__}")
+print(f"height: {height}, type: {type(height).__name__}")
+print(f"is_student: {is_student}, type: {type(is_student).__name__}")
+
+# Math operations
+print(f"\n--- Math ---")
+print(f"10 + 3 = {10 + 3}")
+print(f"10 / 3 = {10 / 3}")
+print(f"10 // 3 = {10 // 3}")
+print(f"10 % 3 = {10 % 3}")
+print(f"2 ** 10 = {2 ** 10}")
+
+# String concatenation
+greeting = "Hello, " + name + "!"
+print(f"\n{greeting}")
+</textarea>
+    <div class="code-output"><div class="output-label">Output</div><div class="output-text" style="color:var(--text-muted);">Click "Run" to execute</div></div>
+  </div>
+
+  <div class="challenge-box">
+    <div class="label">Try It Yourself</div>
+    <p>Modify the code above to calculate the area of a circle with radius 7. Formula: area = π × r². Use <code>3.14159</code> for π, and print the result.</p>
+  </div>
+
+  <details class="solution-toggle">
+    <summary>Show Solution</summary>
+    <pre>radius = 7
+pi = 3.14159
+area = pi * radius ** 2
+print(f"Area of circle with radius {radius}: {area}")</pre>
+  </details>
+
+  <div class="quiz-wrapper" data-topic-id="m1-topic4">
+    <h4>📝 Knowledge Check</h4>
+    <div class="quiz-question" data-correct="b" data-explanation="19.99 has a decimal point, making it a float.">
+      <p>1. What data type is <code>19.99</code>?</p>
+      <div class="quiz-options">
+        <div class="quiz-option" data-value="a"><span class="radio"></span> int</div>
+        <div class="quiz-option" data-value="b"><span class="radio"></span> float</div>
+        <div class="quiz-option" data-value="c"><span class="radio"></span> str</div>
+      </div><div class="quiz-feedback"></div>
+    </div>
+    <div class="quiz-question" data-correct="c" data-explanation="10 % 3 gives the remainder: 10 ÷ 3 = 3 remainder 1.">
+      <p>2. What does <code>10 % 3</code> return?</p>
+      <div class="quiz-options">
+        <div class="quiz-option" data-value="a"><span class="radio"></span> 3.33</div>
+        <div class="quiz-option" data-value="b"><span class="radio"></span> 3</div>
+        <div class="quiz-option" data-value="c"><span class="radio"></span> 1</div>
+      </div><div class="quiz-feedback"></div>
+    </div>
+    <div class="quiz-question" data-correct="a" data-explanation="The type() function returns the type/class of any value in Python.">
+      <p>3. How do you check the type of a variable in Python?</p>
+      <div class="quiz-options">
+        <div class="quiz-option" data-value="a"><span class="radio"></span> type(variable)</div>
+        <div class="quiz-option" data-value="b"><span class="radio"></span> typeof(variable)</div>
+        <div class="quiz-option" data-value="c"><span class="radio"></span> variable.type()</div>
+      </div><div class="quiz-feedback"></div>
+    </div>
+    <button class="quiz-submit">Check Answers</button>
+    <div class="quiz-result"></div>
+  </div>
+  <div class="takeaways"><h4>Key Takeaways</h4><ul>
+    <li>Variables are named containers: <code>name = "Alice"</code></li>
+    <li>Four core types: int, float, str, bool</li>
+    <li>Python math includes floor division (//) and modulo (%)</li>
+    <li>Use f-strings for formatted output: <code>f"Hello {name}"</code></li>
+  </ul></div>
+  <div class="references"><h4>References</h4><ul>
+    <li><a href="https://docs.python.org/3/tutorial/introduction.html" target="_blank">Python Tutorial: Numbers & Strings →</a></li>
+    <li><a href="https://realpython.com/python-variables/" target="_blank">Real Python: Variables →</a></li>
+  </ul></div>
+</section>
+
+<!-- ============ TOPIC 5: Conditionals ============ -->
+<section class="topic-section" id="m1-topic5">
+  <div class="topic-header">
+    <h2>Conditionals & Boolean Logic</h2>
+    <div class="topic-meta"><span>📖 12 min read</span><span>🔀 Topic 5 of 13</span></div>
+  </div>
+  <div class="why-box">
+    <div class="label">Why This Matters</div>
+    <p>Conditionals let your program make decisions — "if this, then do that." AI agents constantly make decisions: if the user asked about weather, call the weather tool; if they asked about code, generate code. Conditionals are the foundation of all decision-making in code.</p>
+  </div>
+  <div class="content-text">
+    <h3>The If-Elif-Else Pattern</h3>
+    <p>Conditionals in Python use <code>if</code>, <code>elif</code> (else if), and <code>else</code>. Think of them as road forks — your code checks a condition and goes down one path or another.</p>
+    <h4>Comparison Operators</h4>
+    <table>
+      <tr><th>Operator</th><th>Meaning</th><th>Example</th></tr>
+      <tr><td><code>==</code></td><td>Equal to</td><td><code>5 == 5</code> → True</td></tr>
+      <tr><td><code>!=</code></td><td>Not equal to</td><td><code>5 != 3</code> → True</td></tr>
+      <tr><td><code>></code></td><td>Greater than</td><td><code>10 > 5</code> → True</td></tr>
+      <tr><td><code><</code></td><td>Less than</td><td><code>3 < 7</code> → True</td></tr>
+      <tr><td><code>>=</code></td><td>Greater or equal</td><td><code>5 >= 5</code> → True</td></tr>
+      <tr><td><code><=</code></td><td>Less or equal</td><td><code>3 <= 7</code> → True</td></tr>
+    </table>
+    <h4>Logical Operators</h4>
+    <table>
+      <tr><th>Operator</th><th>Meaning</th><th>Example</th></tr>
+      <tr><td><code>and</code></td><td>Both must be True</td><td><code>True and False</code> → False</td></tr>
+      <tr><td><code>or</code></td><td>At least one must be True</td><td><code>True or False</code> → True</td></tr>
+      <tr><td><code>not</code></td><td>Flips True↔False</td><td><code>not True</code> → False</td></tr>
+    </table>
+    <h3>Indentation Rules</h3>
+    <p>Python uses <strong>indentation</strong> (spaces at the start of a line) to define code blocks. Most languages use curly braces <code>{}</code>, but Python uses whitespace. Standard: <strong>4 spaces</strong> per level. Mix tabs and spaces = error!</p>
+    <div class="info-box warning">
+      <div class="box-label">Common Mistake</div>
+      <p>Forgetting to indent after <code>if:</code> causes an <code>IndentationError</code>. Always indent the code block under a conditional by 4 spaces.</p>
+    </div>
+  </div>
+  <div class="code-editor-wrapper">
+    <div class="code-editor-header">
+      <span class="filename">grade_calculator.py</span>
+      <div class="actions"><button class="reset-btn">Reset</button><button class="run-btn">▶ Run</button></div>
+    </div>
+    <textarea class="code-textarea" rows="22"># Grade Calculator
+score = 85
+
+if score >= 90:
+    grade = "A"
+    message = "Excellent work!"
+elif score >= 80:
+    grade = "B"
+    message = "Good job!"
+elif score >= 70:
+    grade = "C"
+    message = "You passed."
+elif score >= 60:
+    grade = "D"
+    message = "Needs improvement."
+else:
+    grade = "F"
+    message = "Please see the instructor."
+
+print(f"Score: {score}")
+print(f"Grade: {grade}")
+print(f"Feedback: {message}")
+
+# Boolean logic
+has_homework = True
+attended_class = True
+eligible = has_homework and attended_class
+print(f"\nEligible for bonus? {eligible}")
+</textarea>
+    <div class="code-output"><div class="output-label">Output</div><div class="output-text" style="color:var(--text-muted);">Click "Run" to execute</div></div>
+  </div>
+  <div class="challenge-box">
+    <div class="label">Try It Yourself</div>
+    <p>Write a login checker: create variables <code>username</code> and <code>password</code>. If username is "admin" AND password is "secret123", print "Access granted." Otherwise, print "Access denied."</p>
+  </div>
+  <details class="solution-toggle">
+    <summary>Show Solution</summary>
+    <pre>username = "admin"
+password = "secret123"
+
+if username == "admin" and password == "secret123":
+    print("Access granted.")
+else:
+    print("Access denied.")</pre>
+  </details>
+  <div class="quiz-wrapper" data-topic-id="m1-topic5">
+    <h4>📝 Knowledge Check</h4>
+    <div class="quiz-question" data-correct="b" data-explanation="'and' requires both conditions to be True. True and False = False.">
+      <p>1. What does <code>True and False</code> evaluate to?</p>
+      <div class="quiz-options">
+        <div class="quiz-option" data-value="a"><span class="radio"></span> True</div>
+        <div class="quiz-option" data-value="b"><span class="radio"></span> False</div>
+        <div class="quiz-option" data-value="c"><span class="radio"></span> Error</div>
+      </div><div class="quiz-feedback"></div>
+    </div>
+    <div class="quiz-question" data-correct="c" data-explanation="Python uses indentation (4 spaces) to define code blocks, not curly braces.">
+      <p>2. How does Python define code blocks?</p>
+      <div class="quiz-options">
+        <div class="quiz-option" data-value="a"><span class="radio"></span> Curly braces { }</div>
+        <div class="quiz-option" data-value="b"><span class="radio"></span> Parentheses ( )</div>
+        <div class="quiz-option" data-value="c"><span class="radio"></span> Indentation (spaces)</div>
+      </div><div class="quiz-feedback"></div>
+    </div>
+    <div class="quiz-question" data-correct="a" data-explanation="== checks equality. = is assignment. === doesn't exist in Python.">
+      <p>3. Which operator checks if two values are equal?</p>
+      <div class="quiz-options">
+        <div class="quiz-option" data-value="a"><span class="radio"></span> ==</div>
+        <div class="quiz-option" data-value="b"><span class="radio"></span> =</div>
+        <div class="quiz-option" data-value="c"><span class="radio"></span> !=</div>
+      </div><div class="quiz-feedback"></div>
+    </div>
+    <button class="quiz-submit">Check Answers</button><div class="quiz-result"></div>
+  </div>
+  <div class="takeaways"><h4>Key Takeaways</h4><ul>
+    <li>if/elif/else lets your code make decisions based on conditions</li>
+    <li>Comparison operators (==, !=, >, <) return True or False</li>
+    <li>Logical operators (and, or, not) combine conditions</li>
+    <li>Python uses 4-space indentation for code blocks — this is mandatory, not optional</li>
+  </ul></div>
+  <div class="references"><h4>References</h4><ul>
+    <li><a href="https://docs.python.org/3/tutorial/controlflow.html#if-statements" target="_blank">Python Docs: if Statements →</a></li>
+    <li><a href="https://realpython.com/python-conditional-statements/" target="_blank">Real Python: Conditional Statements →</a></li>
+  </ul></div>
+</section>
+
+<!-- ============ TOPIC 6: Loops ============ -->
+<section class="topic-section" id="m1-topic6">
+  <div class="topic-header">
+    <h2>Loops</h2>
+    <div class="topic-meta"><span>📖 12 min read</span><span>🔄 Topic 6 of 13</span></div>
+  </div>
+  <div class="why-box">
+    <div class="label">Why This Matters</div>
+    <p>Loops let your code repeat actions automatically. Processing 1,000 data records? Loop. Checking each word in a document for sentiment? Loop. An AI agent retrying a failed API call? Loop. Repetition is everywhere in programming.</p>
+  </div>
+  <div class="content-text">
+    <h3>For Loops: "Do this for each item"</h3>
+    <p>A <code>for</code> loop iterates over a sequence (list, range, string) and executes a block of code for each item. Think of it like a conveyor belt — each item gets the same treatment.</p>
+    <h3>While Loops: "Keep going until..."</h3>
+    <p>A <code>while</code> loop keeps running as long as a condition is True. Think of it like "keep stirring until the sauce thickens." Be careful — if the condition never becomes False, you get an infinite loop!</p>
+    <h3>Loop Control</h3>
+    <ul>
+      <li><code>break</code> — Exit the loop immediately ("stop the conveyor belt")</li>
+      <li><code>continue</code> — Skip the rest of this iteration and go to the next one</li>
+    </ul>
+  </div>
+
+  <div class="animation-wrapper" data-animation="loop" data-items='["apple","banana","cherry","date","elderberry"]'>
+    <div class="animation-header">
+      <span class="title">For Loop Visualization</span>
+      <div class="animation-controls">
+        <button class="play-btn">▶ Play</button>
+        <button class="pause-btn">⏸ Pause</button>
+        <button class="step-btn">⏭ Step</button>
+        <button class="anim-reset-btn">↺ Reset</button>
+      </div>
+    </div>
+    <div class="animation-canvas"></div>
+  </div>
+
+  <div class="code-editor-wrapper">
+    <div class="code-editor-header">
+      <span class="filename">loops.py</span>
+      <div class="actions"><button class="reset-btn">Reset</button><button class="run-btn">▶ Run</button></div>
+    </div>
+    <textarea class="code-textarea" rows="28"># For loop with range
+print("=== Counting 1 to 5 ===")
+for i in range(1, 6):
+    print(f"  Count: {i}")
+
+# For loop over a list
+print("\n=== Shopping List ===")
+fruits = ["apple", "banana", "cherry", "date"]
+for fruit in fruits:
+    print(f"  Buy: {fruit}")
+
+# Sum numbers 1 to 100
+total = 0
+for num in range(1, 101):
+    total += num
+print(f"\nSum of 1-100: {total}")
+
+# While loop
+print("\n=== Countdown ===")
+countdown = 5
+while countdown > 0:
+    print(f"  {countdown}...")
+    countdown -= 1
+print("  Liftoff!")
+
+# Break and Continue
+print("\n=== Finding first even > 10 ===")
+numbers = [3, 7, 9, 12, 15, 18]
+for n in numbers:
+    if n % 2 != 0:
+        continue    # skip odd numbers
+    if n > 10:
+        print(f"  Found it: {n}")
+        break       # stop looking
+</textarea>
+    <div class="code-output"><div class="output-label">Output</div><div class="output-text" style="color:var(--text-muted);">Click "Run" to execute</div></div>
+  </div>
+  <div class="challenge-box">
+    <div class="label">Try It Yourself</div>
+    <p>Write FizzBuzz: loop from 1 to 20. For multiples of 3, print "Fizz". For multiples of 5, print "Buzz". For multiples of both, print "FizzBuzz". Otherwise, print the number.</p>
+  </div>
+  <details class="solution-toggle"><summary>Show Solution</summary>
+    <pre>for i in range(1, 21):
+    if i % 3 == 0 and i % 5 == 0:
+        print("FizzBuzz")
+    elif i % 3 == 0:
+        print("Fizz")
+    elif i % 5 == 0:
+        print("Buzz")
+    else:
+        print(i)</pre>
+  </details>
+  <div class="quiz-wrapper" data-topic-id="m1-topic6">
+    <h4>📝 Knowledge Check</h4>
+    <div class="quiz-question" data-correct="b" data-explanation="range(5) produces 0,1,2,3,4 — it starts at 0 and stops BEFORE 5.">
+      <p>1. What does <code>range(5)</code> generate?</p>
+      <div class="quiz-options">
+        <div class="quiz-option" data-value="a"><span class="radio"></span> 1, 2, 3, 4, 5</div>
+        <div class="quiz-option" data-value="b"><span class="radio"></span> 0, 1, 2, 3, 4</div>
+        <div class="quiz-option" data-value="c"><span class="radio"></span> 0, 1, 2, 3, 4, 5</div>
+      </div><div class="quiz-feedback"></div>
+    </div>
+    <div class="quiz-question" data-correct="a" data-explanation="'break' exits the loop entirely. 'continue' skips to the next iteration.">
+      <p>2. What does <code>break</code> do inside a loop?</p>
+      <div class="quiz-options">
+        <div class="quiz-option" data-value="a"><span class="radio"></span> Exits the loop immediately</div>
+        <div class="quiz-option" data-value="b"><span class="radio"></span> Skips to the next iteration</div>
+        <div class="quiz-option" data-value="c"><span class="radio"></span> Restarts the loop from the beginning</div>
+      </div><div class="quiz-feedback"></div>
+    </div>
+    <div class="quiz-question" data-correct="c" data-explanation="A while loop runs as long as its condition is True. If the condition never becomes False, it runs forever.">
+      <p>3. When does a <code>while</code> loop stop?</p>
+      <div class="quiz-options">
+        <div class="quiz-option" data-value="a"><span class="radio"></span> After running exactly once</div>
+        <div class="quiz-option" data-value="b"><span class="radio"></span> After a fixed number of iterations</div>
+        <div class="quiz-option" data-value="c"><span class="radio"></span> When its condition becomes False</div>
+      </div><div class="quiz-feedback"></div>
+    </div>
+    <button class="quiz-submit">Check Answers</button><div class="quiz-result"></div>
+  </div>
+  <div class="takeaways"><h4>Key Takeaways</h4><ul>
+    <li><code>for</code> loops iterate over sequences; <code>while</code> loops run until a condition is False</li>
+    <li><code>range(start, stop)</code> excludes the stop value</li>
+    <li><code>break</code> exits early; <code>continue</code> skips the current iteration</li>
+    <li>Be careful with while loops — ensure the condition eventually becomes False</li>
+  </ul></div>
+  <div class="references"><h4>References</h4><ul>
+    <li><a href="https://docs.python.org/3/tutorial/controlflow.html#for-statements" target="_blank">Python Docs: for Statements →</a></li>
+    <li><a href="https://realpython.com/python-for-loop/" target="_blank">Real Python: for Loops →</a></li>
+  </ul></div>
+</section>
+
+<!-- ============ TOPIC 7: Functions ============ -->
+<section class="topic-section" id="m1-topic7">
+  <div class="topic-header">
+    <h2>Functions</h2>
+    <div class="topic-meta"><span>📖 12 min read</span><span>⚡ Topic 7 of 13</span></div>
+  </div>
+  <div class="why-box">
+    <div class="label">Why This Matters</div>
+    <p>Functions are reusable blocks of code. Instead of writing the same logic 10 times, you write it once as a function and call it 10 times. Every AI framework is built with functions — understanding them is non-negotiable.</p>
+  </div>
+  <div class="content-text">
+    <h3>The DRY Principle</h3>
+    <p><strong>D</strong>on't <strong>R</strong>epeat <strong>Y</strong>ourself. If you find yourself copying and pasting code, that's a sign you need a function. Functions are like recipes — write the recipe once, cook it anytime.</p>
+    <h3>Anatomy of a Function</h3>
+    <ul>
+      <li><code>def</code> keyword — declares a function</li>
+      <li><strong>Name</strong> — what you call it (use snake_case: <code>calculate_area</code>)</li>
+      <li><strong>Parameters</strong> — inputs the function accepts</li>
+      <li><strong>Body</strong> — the indented code that runs</li>
+      <li><code>return</code> — the value the function sends back</li>
+    </ul>
+    <h3>Return vs Print</h3>
+    <p><code>print()</code> displays text on screen but the value is lost. <code>return</code> sends a value back to the caller so you can use it in further calculations. Think: <code>print</code> = showing, <code>return</code> = giving.</p>
+  </div>
+  <div class="code-editor-wrapper">
+    <div class="code-editor-header">
+      <span class="filename">functions.py</span>
+      <div class="actions"><button class="reset-btn">Reset</button><button class="run-btn">▶ Run</button></div>
+    </div>
+    <textarea class="code-textarea" rows="30"># Defining a simple function
+def greet(name):
+    return f"Hello, {name}!"
+
+print(greet("Alice"))
+print(greet("Bob"))
+
+# Function with default parameter
+def celsius_to_fahrenheit(celsius, round_to=1):
+    fahrenheit = (celsius * 9/5) + 32
+    return round(fahrenheit, round_to)
+
+print(f"\n0°C = {celsius_to_fahrenheit(0)}°F")
+print(f"100°C = {celsius_to_fahrenheit(100)}°F")
+print(f"37°C = {celsius_to_fahrenheit(37, 2)}°F")
+
+# Return vs Print
+def add_print(a, b):
+    print(a + b)    # shows the value, returns None
+
+def add_return(a, b):
+    return a + b    # sends the value back
+
+result1 = add_print(3, 4)
+result2 = add_return(3, 4)
+
+print(f"\nadd_print returned: {result1}")
+print(f"add_return returned: {result2}")
+print(f"Can use returned value: {result2 * 2}")
+
+# Functions calling functions (modularity)
+def calculate_bmi(weight_kg, height_m):
+    return weight_kg / (height_m ** 2)
+
+def classify_bmi(bmi):
+    if bmi < 18.5: return "Underweight"
+    elif bmi < 25: return "Normal"
+    elif bmi < 30: return "Overweight"
+    else: return "Obese"
+
+bmi = calculate_bmi(70, 1.75)
+print(f"\nBMI: {bmi:.1f} — {classify_bmi(bmi)}")
+</textarea>
+    <div class="code-output"><div class="output-label">Output</div><div class="output-text" style="color:var(--text-muted);">Click "Run" to execute</div></div>
+  </div>
+  <div class="challenge-box">
+    <div class="label">Try It Yourself</div>
+    <p>Write a function <code>is_palindrome(text)</code> that returns True if the text reads the same forwards and backwards (e.g., "racecar"). Hint: compare the string to its reverse with <code>text[::-1]</code>.</p>
+  </div>
+  <details class="solution-toggle"><summary>Show Solution</summary>
+    <pre>def is_palindrome(text):
+    text = text.lower()
+    return text == text[::-1]
+
+print(is_palindrome("racecar"))  # True
+print(is_palindrome("hello"))    # False
+print(is_palindrome("madam"))    # True</pre>
+  </details>
+  <div class="quiz-wrapper" data-topic-id="m1-topic7">
+    <h4>📝 Knowledge Check</h4>
+    <div class="quiz-question" data-correct="b" data-explanation="return sends a value back to the caller. print just displays it on screen.">
+      <p>1. What's the difference between <code>return</code> and <code>print</code>?</p>
+      <div class="quiz-options">
+        <div class="quiz-option" data-value="a"><span class="radio"></span> They do the same thing</div>
+        <div class="quiz-option" data-value="b"><span class="radio"></span> return sends a value back; print displays it</div>
+        <div class="quiz-option" data-value="c"><span class="radio"></span> print is faster than return</div>
+      </div><div class="quiz-feedback"></div>
+    </div>
+    <div class="quiz-question" data-correct="c" data-explanation="A default parameter has a pre-set value: def f(x=10). If not provided, it uses 10.">
+      <p>2. What is a default parameter?</p>
+      <div class="quiz-options">
+        <div class="quiz-option" data-value="a"><span class="radio"></span> A parameter that must always be provided</div>
+        <div class="quiz-option" data-value="b"><span class="radio"></span> The first parameter in a function</div>
+        <div class="quiz-option" data-value="c"><span class="radio"></span> A parameter with a pre-set value if not provided</div>
+      </div><div class="quiz-feedback"></div>
+    </div>
+    <div class="quiz-question" data-correct="a" data-explanation="DRY = Don't Repeat Yourself. Write reusable functions instead of duplicating code.">
+      <p>3. What does DRY stand for?</p>
+      <div class="quiz-options">
+        <div class="quiz-option" data-value="a"><span class="radio"></span> Don't Repeat Yourself</div>
+        <div class="quiz-option" data-value="b"><span class="radio"></span> Define, Run, Yield</div>
+        <div class="quiz-option" data-value="c"><span class="radio"></span> Data Returns Yielded</div>
+      </div><div class="quiz-feedback"></div>
+    </div>
+    <button class="quiz-submit">Check Answers</button><div class="quiz-result"></div>
+  </div>
+  <div class="takeaways"><h4>Key Takeaways</h4><ul>
+    <li>Functions bundle reusable logic: <code>def name(params): return value</code></li>
+    <li><code>return</code> gives values back; <code>print</code> just displays them</li>
+    <li>Default parameters make functions flexible</li>
+    <li>Small, focused functions make code easier to read and debug</li>
+  </ul></div>
+  <div class="references"><h4>References</h4><ul>
+    <li><a href="https://docs.python.org/3/tutorial/controlflow.html#defining-functions" target="_blank">Python Docs: Functions →</a></li>
+  </ul></div>
+</section>
+
+<!-- ============ TOPIC 8: Data Structures ============ -->
+<section class="topic-section" id="m1-topic8">
+  <div class="topic-header">
+    <h2>Data Structures</h2>
+    <div class="topic-meta"><span>📖 14 min read</span><span>📦 Topic 8 of 13</span></div>
+  </div>
+  <div class="why-box">
+    <div class="label">Why This Matters</div>
+    <p>Data structures are how you organize information in code. Choosing the right structure is like choosing the right container — you wouldn't store soup in a colander. In AI/ML, data structures determine how efficiently you can process information.</p>
+  </div>
+  <div class="content-text">
+    <h3>Lists — Ordered Collections</h3>
+    <p>A list is an ordered, changeable collection. Think of it as a numbered shelf where you can add, remove, and rearrange items.</p>
+    <h3>Dictionaries — Key-Value Pairs</h3>
+    <p>A dictionary maps keys to values, like a real dictionary maps words to definitions. Use when you want to look up values by a name instead of a position number.</p>
+    <h3>Tuples — Immutable Sequences</h3>
+    <p>A tuple is like a list you can't change after creation. Use for data that shouldn't be modified, like coordinates <code>(x, y)</code> or RGB colors <code>(255, 0, 0)</code>.</p>
+    <h3>Sets — Unique Elements</h3>
+    <p>A set is an unordered collection with no duplicates. Great for removing duplicates and checking membership quickly.</p>
+    <h3>Choosing the Right Structure</h3>
+    <table>
+      <tr><th>Structure</th><th>Ordered?</th><th>Mutable?</th><th>Duplicates?</th><th>Best For</th></tr>
+      <tr><td>List</td><td>Yes</td><td>Yes</td><td>Yes</td><td>Sequences, collections you modify</td></tr>
+      <tr><td>Dictionary</td><td>Yes*</td><td>Yes</td><td>Keys: No</td><td>Lookup by name/key, JSON data</td></tr>
+      <tr><td>Tuple</td><td>Yes</td><td>No</td><td>Yes</td><td>Fixed data, coordinates, returns</td></tr>
+      <tr><td>Set</td><td>No</td><td>Yes</td><td>No</td><td>Unique items, membership testing</td></tr>
+    </table>
+    <h3>Stack vs Queue Visualized</h3>
+    <div class="animation-wrapper" data-animation="stack-queue">
+      <div class="animation-header"><span class="title">Stack (LIFO) vs Queue (FIFO)</span><div class="animation-controls"><button class="play-btn">▶ Play</button><button class="pause-btn">⏸ Pause</button><button class="step-btn">⏭ Step</button><button class="anim-reset-btn">↺ Reset</button></div></div>
+      <div class="animation-canvas"></div>
+    </div>
+  </div>
+  <div class="code-editor-wrapper">
+    <div class="code-editor-header">
+      <span class="filename">data_structures.py</span>
+      <div class="actions"><button class="reset-btn">Reset</button><button class="run-btn">▶ Run</button></div>
+    </div>
+    <textarea class="code-textarea" rows="38"># === LISTS ===
+fruits = ["apple", "banana", "cherry"]
+fruits.append("date")          # Add to end
+fruits.insert(1, "blueberry")  # Insert at position
+print(f"Fruits: {fruits}")
+print(f"First: {fruits[0]}, Last: {fruits[-1]}")
+print(f"Slice [1:3]: {fruits[1:3]}")
+
+# === DICTIONARIES ===
+student = {
+    "name": "Alice",
+    "age": 20,
+    "grades": [90, 85, 92],
+    "active": True
+}
+print(f"\nStudent: {student['name']}, Age: {student['age']}")
+print(f"Average grade: {sum(student['grades'])/len(student['grades']):.1f}")
+
+# Add a new key
+student["email"] = "alice@example.com"
+
+# Loop through dict
+print("\nAll fields:")
+for key, value in student.items():
+    print(f"  {key}: {value}")
+
+# === TUPLES ===
+coordinates = (40.7128, -74.0060)  # NYC lat/long
+print(f"\nNYC coordinates: {coordinates}")
+# coordinates[0] = 41  # This would ERROR — tuples are immutable!
+
+# === SETS ===
+colors = {"red", "blue", "green", "red", "blue"}  # duplicates removed
+print(f"\nUnique colors: {colors}")
+
+# Set operations
+set_a = {1, 2, 3, 4}
+set_b = {3, 4, 5, 6}
+print(f"Union: {set_a | set_b}")
+print(f"Intersection: {set_a & set_b}")
+print(f"Difference: {set_a - set_b}")
+</textarea>
+    <div class="code-output"><div class="output-label">Output</div><div class="output-text" style="color:var(--text-muted);">Click "Run" to execute</div></div>
+  </div>
+  <div class="quiz-wrapper" data-topic-id="m1-topic8">
+    <h4>📝 Knowledge Check</h4>
+    <div class="quiz-question" data-correct="c" data-explanation="Dictionaries map keys to values. Access with dict['key']. Perfect for structured data like API responses.">
+      <p>1. Which structure should you use to store a person's name, age, and email?</p>
+      <div class="quiz-options">
+        <div class="quiz-option" data-value="a"><span class="radio"></span> List</div>
+        <div class="quiz-option" data-value="b"><span class="radio"></span> Tuple</div>
+        <div class="quiz-option" data-value="c"><span class="radio"></span> Dictionary</div>
+      </div><div class="quiz-feedback"></div>
+    </div>
+    <div class="quiz-question" data-correct="a" data-explanation="Tuples are immutable — once created, you cannot modify their contents.">
+      <p>2. What makes a tuple different from a list?</p>
+      <div class="quiz-options">
+        <div class="quiz-option" data-value="a"><span class="radio"></span> Tuples cannot be changed after creation</div>
+        <div class="quiz-option" data-value="b"><span class="radio"></span> Tuples can only hold numbers</div>
+        <div class="quiz-option" data-value="c"><span class="radio"></span> Tuples are faster than lists</div>
+      </div><div class="quiz-feedback"></div>
+    </div>
+    <div class="quiz-question" data-correct="b" data-explanation="Sets automatically remove duplicates. {1,1,2,2,3} becomes {1,2,3}.">
+      <p>3. What happens when you add duplicate values to a set?</p>
+      <div class="quiz-options">
+        <div class="quiz-option" data-value="a"><span class="radio"></span> It raises an error</div>
+        <div class="quiz-option" data-value="b"><span class="radio"></span> Duplicates are automatically removed</div>
+        <div class="quiz-option" data-value="c"><span class="radio"></span> Both copies are kept</div>
+      </div><div class="quiz-feedback"></div>
+    </div>
+    <button class="quiz-submit">Check Answers</button><div class="quiz-result"></div>
+  </div>
+  <div class="takeaways"><h4>Key Takeaways</h4><ul>
+    <li>Lists are ordered and changeable — use for collections you modify</li>
+    <li>Dictionaries map keys to values — perfect for structured data (and JSON!)</li>
+    <li>Tuples are immutable — use for fixed data like coordinates</li>
+    <li>Sets have no duplicates — great for unique items and set math</li>
+  </ul></div>
+  <div class="references"><h4>References</h4><ul>
+    <li><a href="https://docs.python.org/3/tutorial/datastructures.html" target="_blank">Python Docs: Data Structures →</a></li>
+  </ul></div>
+</section>
+
+<!-- ============ TOPIC 9: NumPy ============ -->
+<section class="topic-section" id="m1-topic9">
+  <div class="topic-header">
+    <h2>NumPy Essentials</h2>
+    <div class="topic-meta"><span>📖 12 min read</span><span>🔢 Topic 9 of 13</span></div>
+  </div>
+  <div class="why-box">
+    <div class="label">Why This Matters</div>
+    <p>NumPy is the backbone of scientific computing in Python. Every ML library (scikit-learn, TensorFlow, PyTorch) is built on NumPy. It makes math on large datasets 10-100x faster than plain Python lists. If you do ML, you use NumPy.</p>
+  </div>
+  <div class="content-text">
+    <h3>Why NumPy?</h3>
+    <p>Python lists are flexible but slow for math. Adding two lists of 1 million numbers with a for loop takes seconds. NumPy does it in milliseconds because it runs optimized C code under the hood.</p>
+    <h3>Key Concepts</h3>
+    <ul>
+      <li><strong>ndarray</strong> — NumPy's core data type: a grid of numbers, all the same type</li>
+      <li><strong>Vectorized operations</strong> — math on entire arrays at once, no loops needed</li>
+      <li><strong>Broadcasting</strong> — NumPy automatically aligns arrays of different shapes</li>
+      <li><strong>Shape</strong> — the dimensions of an array, e.g., (3, 4) = 3 rows, 4 columns</li>
+    </ul>
+  </div>
+  <div class="code-editor-wrapper" data-packages="numpy">
+    <div class="code-editor-header">
+      <span class="filename">numpy_basics.py</span>
+      <div class="actions"><button class="reset-btn">Reset</button><button class="run-btn">▶ Run</button></div>
+    </div>
+    <textarea class="code-textarea" rows="34">import numpy as np
+
+# Creating arrays
+a = np.array([1, 2, 3, 4, 5])
+print(f"Array: {a}")
+print(f"Type: {type(a)}, dtype: {a.dtype}")
+
+# Useful creation functions
+zeros = np.zeros(5)
+ones = np.ones((2, 3))
+rng = np.arange(0, 10, 2)       # like range() but returns array
+lin = np.linspace(0, 1, 5)      # 5 evenly spaced from 0 to 1
+
+print(f"\nZeros: {zeros}")
+print(f"Ones:\n{ones}")
+print(f"Arange: {rng}")
+print(f"Linspace: {lin}")
+
+# Vectorized math (no loops!)
+b = np.array([10, 20, 30, 40, 50])
+print(f"\na + b = {a + b}")
+print(f"a * 3 = {a * 3}")
+print(f"a ** 2 = {a ** 2}")
+print(f"Sum: {a.sum()}, Mean: {a.mean()}, Max: {a.max()}")
+
+# Shape and reshape
+matrix = np.arange(12)
+print(f"\n1D: {matrix}")
+reshaped = matrix.reshape(3, 4)
+print(f"Reshaped to (3,4):\n{reshaped}")
+print(f"Shape: {reshaped.shape}")
+
+# Performance: NumPy vs Python list
+import time
+size = 100000
+py_list = list(range(size))
+np_arr = np.arange(size)
+
+start = time.time()
+py_result = [x * 2 for x in py_list]
+py_time = time.time() - start
+
+start = time.time()
+np_result = np_arr * 2
+np_time = time.time() - start
+
+print(f"\nPython list: {py_time*1000:.1f}ms")
+print(f"NumPy array: {np_time*1000:.1f}ms")
+print(f"NumPy is {py_time/np_time:.0f}x faster!")
+</textarea>
+    <div class="code-output"><div class="output-label">Output</div><div class="output-text" style="color:var(--text-muted);">Click "Run" to execute</div></div>
+  </div>
+  <div class="quiz-wrapper" data-topic-id="m1-topic9">
+    <h4>📝 Knowledge Check</h4>
+    <div class="quiz-question" data-correct="c" data-explanation="NumPy runs optimized C code and operates on arrays without Python loops.">
+      <p>1. Why is NumPy faster than Python lists for math?</p>
+      <div class="quiz-options">
+        <div class="quiz-option" data-value="a"><span class="radio"></span> It uses more memory</div>
+        <div class="quiz-option" data-value="b"><span class="radio"></span> It skips calculations</div>
+        <div class="quiz-option" data-value="c"><span class="radio"></span> It runs optimized C code on entire arrays at once</div>
+      </div><div class="quiz-feedback"></div>
+    </div>
+    <div class="quiz-question" data-correct="b" data-explanation="reshape(3,4) creates a 3-row, 4-column matrix from 12 elements. 3×4=12.">
+      <p>2. What does <code>np.arange(12).reshape(3, 4)</code> create?</p>
+      <div class="quiz-options">
+        <div class="quiz-option" data-value="a"><span class="radio"></span> A 1D array of 12 elements</div>
+        <div class="quiz-option" data-value="b"><span class="radio"></span> A 3×4 matrix</div>
+        <div class="quiz-option" data-value="c"><span class="radio"></span> A 4×3 matrix</div>
+      </div><div class="quiz-feedback"></div>
+    </div>
+    <div class="quiz-question" data-correct="a" data-explanation="Vectorized operations apply math to all elements at once without writing loops.">
+      <p>3. What are vectorized operations?</p>
+      <div class="quiz-options">
+        <div class="quiz-option" data-value="a"><span class="radio"></span> Math applied to entire arrays at once, without loops</div>
+        <div class="quiz-option" data-value="b"><span class="radio"></span> Operations that create vectors from scalars</div>
+        <div class="quiz-option" data-value="c"><span class="radio"></span> Functions that only work on 1D arrays</div>
+      </div><div class="quiz-feedback"></div>
+    </div>
+    <button class="quiz-submit">Check Answers</button><div class="quiz-result"></div>
+  </div>
+  <div class="takeaways"><h4>Key Takeaways</h4><ul>
+    <li>NumPy arrays are 10-100x faster than Python lists for numerical operations</li>
+    <li>Use vectorized operations instead of loops: <code>arr * 2</code> not <code>[x*2 for x in arr]</code></li>
+    <li><code>shape</code> tells you dimensions; <code>reshape</code> reorganizes without changing data</li>
+    <li>NumPy is the foundation — every ML library depends on it</li>
+  </ul></div>
+  <div class="references"><h4>References</h4><ul>
+    <li><a href="https://numpy.org/doc/stable/user/quickstart.html" target="_blank">NumPy Quickstart Tutorial →</a></li>
+    <li><a href="https://numpy.org/doc/stable/reference/" target="_blank">NumPy API Reference →</a></li>
+  </ul></div>
+</section>
+
+<!-- ============ TOPIC 10: JSON ============ -->
+<section class="topic-section" id="m1-topic10">
+  <div class="topic-header">
+    <h2>JSON & Data Interchange</h2>
+    <div class="topic-meta"><span>📖 10 min read</span><span>📋 Topic 10 of 13</span></div>
+  </div>
+  <div class="why-box">
+    <div class="label">Why This Matters</div>
+    <p>JSON is the universal language of data exchange on the internet. Every API you'll call — OpenAI, weather services, databases — speaks JSON. AI agents parse JSON responses and create JSON requests constantly.</p>
+  </div>
+  <div class="content-text">
+    <h3>What is JSON?</h3>
+    <p>JSON (JavaScript Object Notation) is a text format for structured data. It looks almost exactly like Python dictionaries. It's human-readable and every programming language can parse it.</p>
+    <h3>JSON Types</h3>
+    <table>
+      <tr><th>JSON Type</th><th>Python Equivalent</th><th>Example</th></tr>
+      <tr><td>object</td><td>dict</td><td><code>{"name": "Alice"}</code></td></tr>
+      <tr><td>array</td><td>list</td><td><code>[1, 2, 3]</code></td></tr>
+      <tr><td>string</td><td>str</td><td><code>"hello"</code></td></tr>
+      <tr><td>number</td><td>int/float</td><td><code>42</code>, <code>3.14</code></td></tr>
+      <tr><td>boolean</td><td>bool</td><td><code>true</code>/<code>false</code> (lowercase in JSON!)</td></tr>
+      <tr><td>null</td><td>None</td><td><code>null</code></td></tr>
+    </table>
+    <h3>Key Functions</h3>
+    <ul>
+      <li><code>json.dumps(dict)</code> — Convert Python dict → JSON string</li>
+      <li><code>json.loads(string)</code> — Convert JSON string → Python dict</li>
+      <li><code>json.dump(dict, file)</code> — Write to a file</li>
+      <li><code>json.load(file)</code> — Read from a file</li>
+    </ul>
+  </div>
+  <div class="code-editor-wrapper">
+    <div class="code-editor-header">
+      <span class="filename">json_basics.py</span>
+      <div class="actions"><button class="reset-btn">Reset</button><button class="run-btn">▶ Run</button></div>
+    </div>
+    <textarea class="code-textarea" rows="34">import json
+
+# Python dict → JSON string
+user = {
+    "name": "Alice",
+    "age": 28,
+    "skills": ["Python", "ML", "SQL"],
+    "employed": True,
+    "address": {
+        "city": "San Francisco",
+        "state": "CA"
+    }
+}
+
+json_string = json.dumps(user, indent=2)
+print("Python dict → JSON string:")
+print(json_string)
+
+# JSON string → Python dict
+json_text = '{"model": "gpt-4", "temperature": 0.7, "max_tokens": 100}'
+parsed = json.loads(json_text)
+print(f"\nParsed model: {parsed['model']}")
+print(f"Temperature: {parsed['temperature']}")
+
+# Simulating an API response
+api_response = '''
+{
+  "status": "success",
+  "data": {
+    "results": [
+      {"id": 1, "title": "Introduction to AI", "score": 0.95},
+      {"id": 2, "title": "Machine Learning Basics", "score": 0.87},
+      {"id": 3, "title": "Deep Learning Guide", "score": 0.82}
+    ],
+    "total": 3
+  }
+}
+'''
+
+response = json.loads(api_response)
+print(f"\nAPI Status: {response['status']}")
+print(f"Total results: {response['data']['total']}")
+print("Results:")
+for item in response['data']['results']:
+    print(f"  {item['title']} (score: {item['score']})")
+</textarea>
+    <div class="code-output"><div class="output-label">Output</div><div class="output-text" style="color:var(--text-muted);">Click "Run" to execute</div></div>
+  </div>
+  <div class="quiz-wrapper" data-topic-id="m1-topic10">
+    <h4>📝 Knowledge Check</h4>
+    <div class="quiz-question" data-correct="b" data-explanation="json.loads() parses a JSON string into a Python dict/list. 'loads' = load string.">
+      <p>1. Which function converts a JSON string to a Python dictionary?</p>
+      <div class="quiz-options">
+        <div class="quiz-option" data-value="a"><span class="radio"></span> json.dumps()</div>
+        <div class="quiz-option" data-value="b"><span class="radio"></span> json.loads()</div>
+        <div class="quiz-option" data-value="c"><span class="radio"></span> json.parse()</div>
+      </div><div class="quiz-feedback"></div>
+    </div>
+    <div class="quiz-question" data-correct="c" data-explanation="In JSON, booleans are lowercase: true/false. Python uses True/False (capitalized).">
+      <p>2. How are booleans written in JSON?</p>
+      <div class="quiz-options">
+        <div class="quiz-option" data-value="a"><span class="radio"></span> True / False</div>
+        <div class="quiz-option" data-value="b"><span class="radio"></span> TRUE / FALSE</div>
+        <div class="quiz-option" data-value="c"><span class="radio"></span> true / false</div>
+      </div><div class="quiz-feedback"></div>
+    </div>
+    <div class="quiz-question" data-correct="a" data-explanation="Nested JSON is accessed by chaining keys: response['data']['results'][0]['title']">
+      <p>3. How do you access nested data in parsed JSON?</p>
+      <div class="quiz-options">
+        <div class="quiz-option" data-value="a"><span class="radio"></span> Chain keys: data['outer']['inner']</div>
+        <div class="quiz-option" data-value="b"><span class="radio"></span> Use dot notation: data.outer.inner</div>
+        <div class="quiz-option" data-value="c"><span class="radio"></span> Use json.get('outer.inner')</div>
+      </div><div class="quiz-feedback"></div>
+    </div>
+    <button class="quiz-submit">Check Answers</button><div class="quiz-result"></div>
+  </div>
+  <div class="takeaways"><h4>Key Takeaways</h4><ul>
+    <li>JSON is the universal data format for APIs and web services</li>
+    <li><code>json.dumps()</code> = Python → JSON; <code>json.loads()</code> = JSON → Python</li>
+    <li>JSON looks like Python dicts but with lowercase true/false/null</li>
+    <li>Navigate nested JSON by chaining dictionary keys</li>
+  </ul></div>
+  <div class="references"><h4>References</h4><ul>
+    <li><a href="https://docs.python.org/3/library/json.html" target="_blank">Python json Module →</a></li>
+    <li><a href="https://www.json.org/" target="_blank">JSON.org: Official Spec →</a></li>
+  </ul></div>
+</section>
+
+<!-- ============ TOPIC 11: Pandas ============ -->
+<section class="topic-section" id="m1-topic11">
+  <div class="topic-header">
+    <h2>Pandas Fundamentals</h2>
+    <div class="topic-meta"><span>📖 14 min read</span><span>🐼 Topic 11 of 13</span></div>
+  </div>
+  <div class="why-box">
+    <div class="label">Why This Matters</div>
+    <p>Pandas is the Swiss Army knife for data analysis. Before you can train an ML model, you need to load, clean, explore, and transform data — Pandas does all of that. It's used in virtually every data science project.</p>
+  </div>
+  <div class="content-text">
+    <h3>Series vs DataFrame</h3>
+    <p>A <strong>Series</strong> is a single column of data (like a list with labels). A <strong>DataFrame</strong> is a table — rows and columns, like a spreadsheet. DataFrames are what you'll work with 95% of the time.</p>
+    <h3>Key Operations</h3>
+    <ul>
+      <li><code>df.head()</code> — first 5 rows</li>
+      <li><code>df.tail()</code> — last 5 rows</li>
+      <li><code>df.info()</code> — column types and non-null counts</li>
+      <li><code>df.describe()</code> — statistics (mean, std, min, max, etc.)</li>
+      <li><code>df['column']</code> — select a single column</li>
+      <li><code>df[df['col'] > value]</code> — filter rows by condition</li>
+    </ul>
+  </div>
+  <div class="code-editor-wrapper" data-packages="pandas">
+    <div class="code-editor-header">
+      <span class="filename">pandas_basics.py</span>
+      <div class="actions"><button class="reset-btn">Reset</button><button class="run-btn">▶ Run</button></div>
+    </div>
+    <textarea class="code-textarea" rows="38">import pandas as pd
+
+# Create a DataFrame from a dictionary
+data = {
+    "name": ["Alice", "Bob", "Charlie", "Diana", "Eve"],
+    "age": [28, 34, 22, 45, 31],
+    "department": ["Engineering", "Marketing", "Engineering", "HR", "Marketing"],
+    "salary": [95000, 72000, 85000, 98000, 76000],
+    "years_exp": [5, 8, 1, 20, 6]
+}
+df = pd.DataFrame(data)
+
+# Basic inspection
+print("=== DataFrame ===")
+print(df)
+print(f"\nShape: {df.shape} (rows, columns)")
+print(f"\nColumn types:\n{df.dtypes}")
+
+# Statistics
+print(f"\n=== Statistics ===")
+print(df.describe())
+
+# Select column
+print(f"\n=== Names ===")
+print(df["name"])
+
+# Filter: who earns more than 80000?
+high_earners = df[df["salary"] > 80000]
+print(f"\n=== High Earners (>80K) ===")
+print(high_earners[["name", "salary"]])
+
+# Group by department
+print(f"\n=== Avg Salary by Department ===")
+dept_avg = df.groupby("department")["salary"].mean()
+print(dept_avg)
+
+# Add a new column
+df["salary_monthly"] = (df["salary"] / 12).round(0)
+print(f"\n=== With Monthly Salary ===")
+print(df[["name", "salary", "salary_monthly"]])
+</textarea>
+    <div class="code-output"><div class="output-label">Output</div><div class="output-text" style="color:var(--text-muted);">Click "Run" to execute</div></div>
+  </div>
+  <div class="quiz-wrapper" data-topic-id="m1-topic11">
+    <h4>📝 Knowledge Check</h4>
+    <div class="quiz-question" data-correct="b" data-explanation="A DataFrame is a 2D table (rows + columns). A Series is a single column.">
+      <p>1. What is a Pandas DataFrame?</p>
+      <div class="quiz-options">
+        <div class="quiz-option" data-value="a"><span class="radio"></span> A single column of data</div>
+        <div class="quiz-option" data-value="b"><span class="radio"></span> A 2D table with rows and columns</div>
+        <div class="quiz-option" data-value="c"><span class="radio"></span> A Python dictionary</div>
+      </div><div class="quiz-feedback"></div>
+    </div>
+    <div class="quiz-question" data-correct="c" data-explanation="describe() gives statistical summary: mean, std, min, max, quartiles.">
+      <p>2. What does <code>df.describe()</code> show?</p>
+      <div class="quiz-options">
+        <div class="quiz-option" data-value="a"><span class="radio"></span> The first 5 rows</div>
+        <div class="quiz-option" data-value="b"><span class="radio"></span> Column data types</div>
+        <div class="quiz-option" data-value="c"><span class="radio"></span> Statistical summary (mean, min, max, etc.)</div>
+      </div><div class="quiz-feedback"></div>
+    </div>
+    <div class="quiz-question" data-correct="a" data-explanation="Boolean indexing: df[df['col'] > value] filters rows where the condition is True.">
+      <p>3. How do you filter rows where salary > 80000?</p>
+      <div class="quiz-options">
+        <div class="quiz-option" data-value="a"><span class="radio"></span> df[df["salary"] > 80000]</div>
+        <div class="quiz-option" data-value="b"><span class="radio"></span> df.filter(salary > 80000)</div>
+        <div class="quiz-option" data-value="c"><span class="radio"></span> df.where("salary", 80000)</div>
+      </div><div class="quiz-feedback"></div>
+    </div>
+    <button class="quiz-submit">Check Answers</button><div class="quiz-result"></div>
+  </div>
+  <div class="takeaways"><h4>Key Takeaways</h4><ul>
+    <li>DataFrames are 2D tables — the primary structure in Pandas</li>
+    <li>Use head(), info(), describe() to explore data quickly</li>
+    <li>Filter with boolean indexing: <code>df[df["col"] > value]</code></li>
+    <li>groupby() aggregates data — essential for analysis</li>
+  </ul></div>
+  <div class="references"><h4>References</h4><ul>
+    <li><a href="https://pandas.pydata.org/docs/getting_started/intro_tutorials/" target="_blank">Pandas Getting Started Tutorials →</a></li>
+    <li><a href="https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.html" target="_blank">Pandas DataFrame API →</a></li>
+  </ul></div>
+</section>
+
+<!-- ============ TOPIC 12: SQL ============ -->
+<section class="topic-section" id="m1-topic12">
+  <div class="topic-header">
+    <h2>SQL: Thinking in Tables</h2>
+    <div class="topic-meta"><span>📖 14 min read</span><span>🗄️ Topic 12 of 13</span></div>
+  </div>
+  <div class="why-box">
+    <div class="label">Why This Matters</div>
+    <p>SQL (Structured Query Language) is how you talk to databases. Most real-world data lives in databases, not CSV files. AI agents often need to query databases to answer questions — SQL is their query language.</p>
+  </div>
+  <div class="content-text">
+    <h3>Relational Database Concepts</h3>
+    <p>A relational database stores data in <strong>tables</strong>. Each table has <strong>columns</strong> (fields) and <strong>rows</strong> (records). Tables can be connected through shared columns (keys).</p>
+    <h3>Core SQL Commands</h3>
+    <table>
+      <tr><th>Command</th><th>Purpose</th><th>Example</th></tr>
+      <tr><td>SELECT</td><td>Choose which columns</td><td><code>SELECT name, age</code></td></tr>
+      <tr><td>FROM</td><td>Which table</td><td><code>FROM employees</code></td></tr>
+      <tr><td>WHERE</td><td>Filter rows</td><td><code>WHERE age > 30</code></td></tr>
+      <tr><td>ORDER BY</td><td>Sort results</td><td><code>ORDER BY salary DESC</code></td></tr>
+      <tr><td>GROUP BY</td><td>Group for aggregation</td><td><code>GROUP BY department</code></td></tr>
+      <tr><td>JOIN</td><td>Combine tables</td><td><code>JOIN orders ON ...</code></td></tr>
+    </table>
+    <h3>Aggregate Functions</h3>
+    <p><code>COUNT()</code>, <code>SUM()</code>, <code>AVG()</code>, <code>MIN()</code>, <code>MAX()</code> — compute values across groups of rows.</p>
+  </div>
+  <div class="diagram-wrapper">
+    <div class="mermaid">
+graph LR
+    A["📋 employees<br/>id, name, dept_id, salary"] -->|"dept_id = id"| B["🏢 departments<br/>id, dept_name, location"]
+    A -->|"INNER JOIN"| C["🔗 Combined Result<br/>name, salary, dept_name"]
+    style A fill:#1e3a5f,stroke:#38bdf8,color:#e2e8f0
+    style B fill:#2d1b69,stroke:#a78bfa,color:#e2e8f0
+    style C fill:#1a3a2a,stroke:#4ade80,color:#e2e8f0
+    </div>
+  </div>
+  <div class="code-editor-wrapper">
+    <div class="code-editor-header">
+      <span class="filename">sql_basics.py</span>
+      <div class="actions"><button class="reset-btn">Reset</button><button class="run-btn">▶ Run</button></div>
+    </div>
+    <textarea class="code-textarea" rows="42">import sqlite3
+
+# Create an in-memory database
+conn = sqlite3.connect(":memory:")
+cursor = conn.cursor()
+
+# Create a table
+cursor.execute("""
+    CREATE TABLE employees (
+        id INTEGER PRIMARY KEY,
+        name TEXT,
+        department TEXT,
+        salary REAL,
+        hire_year INTEGER
+    )
+""")
+
+# Insert data
+employees = [
+    (1, "Alice", "Engineering", 95000, 2019),
+    (2, "Bob", "Marketing", 72000, 2016),
+    (3, "Charlie", "Engineering", 85000, 2023),
+    (4, "Diana", "HR", 98000, 2004),
+    (5, "Eve", "Marketing", 76000, 2018),
+    (6, "Frank", "Engineering", 110000, 2015),
+]
+cursor.executemany("INSERT INTO employees VALUES (?,?,?,?,?)", employees)
+
+# SELECT with WHERE
+print("=== Engineers ===")
+cursor.execute("SELECT name, salary FROM employees WHERE department = 'Engineering'")
+for row in cursor.fetchall():
+    print(f"  {row[0]}: ${row[1]:,.0f}")
+
+# Aggregate: AVG salary by department
+print("\n=== Avg Salary by Department ===")
+cursor.execute("""
+    SELECT department, COUNT(*) as count, ROUND(AVG(salary)) as avg_salary
+    FROM employees
+    GROUP BY department
+    ORDER BY avg_salary DESC
+""")
+for row in cursor.fetchall():
+    print(f"  {row[0]}: {row[1]} people, avg ${row[2]:,.0f}")
+
+# Top earner
+print("\n=== Highest Paid ===")
+cursor.execute("SELECT name, salary FROM employees ORDER BY salary DESC LIMIT 1")
+top = cursor.fetchone()
+print(f"  {top[0]}: ${top[1]:,.0f}")
+
+conn.close()
+</textarea>
+    <div class="code-output"><div class="output-label">Output</div><div class="output-text" style="color:var(--text-muted);">Click "Run" to execute</div></div>
+  </div>
+  <div class="quiz-wrapper" data-topic-id="m1-topic12">
+    <h4>📝 Knowledge Check</h4>
+    <div class="quiz-question" data-correct="b" data-explanation="WHERE filters individual rows. GROUP BY groups them for aggregation.">
+      <p>1. What does the WHERE clause do in SQL?</p>
+      <div class="quiz-options">
+        <div class="quiz-option" data-value="a"><span class="radio"></span> Sorts the results</div>
+        <div class="quiz-option" data-value="b"><span class="radio"></span> Filters which rows are returned</div>
+        <div class="quiz-option" data-value="c"><span class="radio"></span> Groups rows together</div>
+      </div><div class="quiz-feedback"></div>
+    </div>
+    <div class="quiz-question" data-correct="c" data-explanation="AVG() calculates the average of a numeric column.">
+      <p>2. Which function calculates the average of a column?</p>
+      <div class="quiz-options">
+        <div class="quiz-option" data-value="a"><span class="radio"></span> MEAN()</div>
+        <div class="quiz-option" data-value="b"><span class="radio"></span> SUM()</div>
+        <div class="quiz-option" data-value="c"><span class="radio"></span> AVG()</div>
+      </div><div class="quiz-feedback"></div>
+    </div>
+    <div class="quiz-question" data-correct="a" data-explanation="JOIN combines rows from two or more tables based on a related column.">
+      <p>3. What does JOIN do?</p>
+      <div class="quiz-options">
+        <div class="quiz-option" data-value="a"><span class="radio"></span> Combines rows from multiple tables</div>
+        <div class="quiz-option" data-value="b"><span class="radio"></span> Adds a new column</div>
+        <div class="quiz-option" data-value="c"><span class="radio"></span> Deletes duplicate rows</div>
+      </div><div class="quiz-feedback"></div>
+    </div>
+    <button class="quiz-submit">Check Answers</button><div class="quiz-result"></div>
+  </div>
+  <div class="takeaways"><h4>Key Takeaways</h4><ul>
+    <li>SQL queries databases using SELECT...FROM...WHERE pattern</li>
+    <li>Aggregate functions (COUNT, SUM, AVG) summarize data</li>
+    <li>GROUP BY groups rows; ORDER BY sorts results</li>
+    <li>JOINs combine related tables — essential for real databases</li>
+  </ul></div>
+  <div class="references"><h4>References</h4><ul>
+    <li><a href="https://www.w3schools.com/sql/" target="_blank">W3Schools SQL Tutorial →</a></li>
+    <li><a href="https://docs.python.org/3/library/sqlite3.html" target="_blank">Python sqlite3 Module →</a></li>
+  </ul></div>
+</section>
+
+<!-- ============ TOPIC 13: APIs ============ -->
+<section class="topic-section" id="m1-topic13">
+  <div class="topic-header">
+    <h2>APIs: The Agent's Hands</h2>
+    <div class="topic-meta"><span>📖 14 min read</span><span>🌐 Topic 13 of 13</span></div>
+  </div>
+  <div class="why-box">
+    <div class="label">Why This Matters</div>
+    <p>APIs are how software talks to software. When an AI agent searches the web, checks the weather, or sends an email — it's calling an API. APIs are literally the "hands" that let agents interact with the real world.</p>
+  </div>
+  <div class="content-text">
+    <h3>What is an API?</h3>
+    <p>API stands for Application Programming Interface. Think of it like a restaurant: you (the client) don't go into the kitchen (the server). You order through a waiter (the API) who brings back your food (the response).</p>
+    <h3>HTTP Methods</h3>
+    <table>
+      <tr><th>Method</th><th>Purpose</th><th>Example</th></tr>
+      <tr><td><code>GET</code></td><td>Read/retrieve data</td><td>Get weather for a city</td></tr>
+      <tr><td><code>POST</code></td><td>Create/send data</td><td>Send a message to ChatGPT</td></tr>
+      <tr><td><code>PUT</code></td><td>Update existing data</td><td>Update user profile</td></tr>
+      <tr><td><code>DELETE</code></td><td>Remove data</td><td>Delete a record</td></tr>
+    </table>
+    <h3>Anatomy of an API Request</h3>
+    <ul>
+      <li><strong>URL (endpoint)</strong> — where to send the request: <code>https://api.example.com/data</code></li>
+      <li><strong>Headers</strong> — metadata like authentication tokens, content type</li>
+      <li><strong>Body</strong> — data you're sending (for POST/PUT)</li>
+      <li><strong>Status Code</strong> — the response's success/failure indicator</li>
+    </ul>
+    <h3>Common Status Codes</h3>
+    <table>
+      <tr><th>Code</th><th>Meaning</th><th>You Should...</th></tr>
+      <tr><td>200</td><td>OK — Success</td><td>Parse the response</td></tr>
+      <tr><td>201</td><td>Created</td><td>Resource was created</td></tr>
+      <tr><td>400</td><td>Bad Request</td><td>Check your request format</td></tr>
+      <tr><td>401</td><td>Unauthorized</td><td>Check your API key</td></tr>
+      <tr><td>404</td><td>Not Found</td><td>Check the URL</td></tr>
+      <tr><td>429</td><td>Rate Limited</td><td>Slow down, wait and retry</td></tr>
+      <tr><td>500</td><td>Server Error</td><td>Not your fault — retry later</td></tr>
+    </table>
+    <h3>API Security & Ethics</h3>
+    <ul>
+      <li><strong>Authentication:</strong> Most APIs require a key. Keep it secret (use .env files).</li>
+      <li><strong>Rate limiting:</strong> APIs limit how many requests you can make. Respect the limits.</li>
+      <li><strong>Data privacy:</strong> Don't send personal data unless necessary.</li>
+      <li><strong>Terms of service:</strong> Read them — some APIs prohibit certain uses.</li>
+    </ul>
+  </div>
+  <div class="diagram-wrapper">
+    <div class="mermaid">
+sequenceDiagram
+    participant C as Client (Your Code)
+    participant A as API Server
+    participant D as Database
+    C->>A: GET /api/weather?city=london
+    A->>D: Query weather data
+    D-->>A: Weather record
+    A-->>C: 200 OK + JSON response
+    Note over C: Parse JSON and use data
+    </div>
+  <h3>API Request Lifecycle</h3>
+  <div class="animation-wrapper" data-animation="api-cycle">
+    <div class="animation-header"><span class="title">HTTP Request/Response Cycle</span><div class="animation-controls"><button class="play-btn">▶ Play</button><button class="pause-btn">⏸ Pause</button><button class="step-btn">⏭ Step</button><button class="anim-reset-btn">↺ Reset</button></div></div>
+    <div class="animation-canvas"></div>
+  </div>
+  </div>
+  <div class="code-editor-wrapper">
+    <div class="code-editor-header">
+      <span class="filename">api_demo.py</span>
+      <div class="actions"><button class="reset-btn">Reset</button><button class="run-btn">▶ Run</button></div>
+    </div>
+    <textarea class="code-textarea" rows="36">import json
+
+# Simulating an API call and response
+# (Real APIs use the 'requests' library, but we'll simulate here
+#  since we can't make network calls in the browser)
+
+# 1. Build the request
+api_request = {
+    "method": "POST",
+    "url": "https://api.openai.com/v1/chat/completions",
+    "headers": {
+        "Authorization": "Bearer sk-...(your key)...",
+        "Content-Type": "application/json"
+    },
+    "body": {
+        "model": "gpt-4",
+        "messages": [
+            {"role": "system", "content": "You are a helpful assistant."},
+            {"role": "user", "content": "What is machine learning?"}
+        ],
+        "temperature": 0.7
+    }
+}
+
+print("=== API Request ===")
+print(f"Method: {api_request['method']}")
+print(f"URL: {api_request['url']}")
+print(f"Body: {json.dumps(api_request['body'], indent=2)}")
+
+# 2. Simulate the response
+api_response = {
+    "status_code": 200,
+    "body": {
+        "id": "chatcmpl-abc123",
+        "model": "gpt-4",
+        "choices": [{
+            "message": {
+                "role": "assistant",
+                "content": "Machine learning is a subset of AI where computers learn patterns from data instead of being explicitly programmed."
+            }
+        }],
+        "usage": {"prompt_tokens": 25, "completion_tokens": 22, "total_tokens": 47}
+    }
+}
+
+print(f"\n=== API Response ===")
+print(f"Status: {api_response['status_code']}")
+answer = api_response["body"]["choices"][0]["message"]["content"]
+print(f"Answer: {answer}")
+tokens = api_response["body"]["usage"]
+print(f"Tokens used: {tokens['total_tokens']}")
+</textarea>
+    <div class="code-output"><div class="output-label">Output</div><div class="output-text" style="color:var(--text-muted);">Click "Run" to execute</div></div>
+  </div>
+  <div class="quiz-wrapper" data-topic-id="m1-topic13">
+    <h4>📝 Knowledge Check</h4>
+    <div class="quiz-question" data-correct="a" data-explanation="GET retrieves data. POST sends data. PUT updates. DELETE removes.">
+      <p>1. Which HTTP method is used to retrieve data?</p>
+      <div class="quiz-options">
+        <div class="quiz-option" data-value="a"><span class="radio"></span> GET</div>
+        <div class="quiz-option" data-value="b"><span class="radio"></span> POST</div>
+        <div class="quiz-option" data-value="c"><span class="radio"></span> DELETE</div>
+      </div><div class="quiz-feedback"></div>
+    </div>
+    <div class="quiz-question" data-correct="b" data-explanation="429 means you've made too many requests. Wait and retry with exponential backoff.">
+      <p>2. What does status code 429 mean?</p>
+      <div class="quiz-options">
+        <div class="quiz-option" data-value="a"><span class="radio"></span> Not Found</div>
+        <div class="quiz-option" data-value="b"><span class="radio"></span> Too Many Requests (Rate Limited)</div>
+        <div class="quiz-option" data-value="c"><span class="radio"></span> Server Error</div>
+      </div><div class="quiz-feedback"></div>
+    </div>
+    <div class="quiz-question" data-correct="c" data-explanation="API keys should be in .env files or environment variables, never in code.">
+      <p>3. How should you handle API keys?</p>
+      <div class="quiz-options">
+        <div class="quiz-option" data-value="a"><span class="radio"></span> Put them directly in your code</div>
+        <div class="quiz-option" data-value="b"><span class="radio"></span> Share them on GitHub for your team</div>
+        <div class="quiz-option" data-value="c"><span class="radio"></span> Store in .env files, never commit to git</div>
+      </div><div class="quiz-feedback"></div>
+    </div>
+    <button class="quiz-submit">Check Answers</button><div class="quiz-result"></div>
+  </div>
+  <div class="takeaways"><h4>Key Takeaways</h4><ul>
+    <li>APIs let software communicate: your code → API server → database → response</li>
+    <li>HTTP methods: GET (read), POST (create), PUT (update), DELETE (remove)</li>
+    <li>Status codes tell you what happened: 2xx = success, 4xx = your error, 5xx = server error</li>
+    <li>Always protect API keys and respect rate limits</li>
+  </ul></div>
+  <div class="references"><h4>References</h4><ul>
+    <li><a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Overview" target="_blank">MDN: HTTP Overview →</a></li>
+    <li><a href="https://requests.readthedocs.io/en/latest/" target="_blank">Python Requests Library →</a></li>
+    <li><a href="https://platform.openai.com/docs/api-reference" target="_blank">OpenAI API Reference →</a></li>
+  </ul></div>
+</section>
+
+    <!-- End of topics -->
+    <div class="footer">
+      <p>Module 1: Foundations — Complete!</p>
+      <p style="margin-top:8px;"><a href="module2.html">Continue to Module 2: ML Fundamentals →</a></p>
+    </div>
+    </main>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/pyodide/v0.24.1/full/pyodide.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script>mermaid.initialize({startOnLoad:true, theme:'dark'});</script>
+  <script src="js/nav.js"></script>
+  <script src="js/pyodide-runner.js"></script>
+  <script src="js/quiz.js"></script>
+  <script src="js/animations.js"></script>
+  <script src="js/features.js"></script>
+</body>
+</html>

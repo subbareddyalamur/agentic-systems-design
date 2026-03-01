@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Flashcards — Agentic Systems & Design</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .flashcard-body {
+      padding-top: 56px;
+      min-height: 100vh;
+      max-width: 1000px;
+      margin: 0 auto;
+      padding-left: 20px;
+      padding-right: 20px;
+      padding-bottom: 40px;
+    }
+
+    .flashcard-header {
+      text-align: center;
+      padding: 40px 20px 30px;
+    }
+
+    .flashcard-header h1 {
+      font-size: 2rem;
+      font-weight: 800;
+      margin-bottom: 12px;
+    }
+
+    .flashcard-header p {
+      color: var(--text-secondary);
+      font-size: 1rem;
+    }
+
+    .stats-bar {
+      display: flex;
+      justify-content: center;
+      gap: 32px;
+      margin-bottom: 30px;
+      flex-wrap: wrap;
+    }
+
+    .stat-box {
+      text-align: center;
+      padding: 16px 24px;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+    }
+
+    .stat-box .num {
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: var(--accent);
+    }
+
+    .stat-box .label {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-top: 4px;
+    }
+
+    .filter-tabs {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 30px;
+      flex-wrap: wrap;
+    }
+
+    .filter-tab {
+      padding: 8px 16px;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text-secondary);
+      cursor: pointer;
+      font-size: 0.85rem;
+      font-weight: 600;
+      transition: all var(--transition);
+    }
+
+    .filter-tab:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .filter-tab.active {
+      background: var(--accent);
+      color: #0f172a;
+      border-color: var(--accent);
+    }
+
+    .card-container {
+      max-width: 600px;
+      margin: 0 auto;
+      perspective: 1000px;
+    }
+
+    .flashcard {
+      position: relative;
+      width: 100%;
+      min-height: 300px;
+      cursor: pointer;
+      transition: transform 0.6s;
+      transform-style: preserve-3d;
+    }
+
+    .flashcard.flipped {
+      transform: rotateY(180deg);
+    }
+
+    .card-face {
+      position: absolute;
+      width: 100%;
+      min-height: 300px;
+      backface-visibility: hidden;
+      background: var(--bg-secondary);
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      padding: 40px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+    }
+
+    .card-front {
+      z-index: 2;
+    }
+
+    .card-back {
+      transform: rotateY(180deg);
+      border-color: var(--accent);
+    }
+
+    .card-label {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: var(--text-muted);
+      font-weight: 700;
+      margin-bottom: 20px;
+    }
+
+    .card-text {
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      line-height: 1.6;
+    }
+
+    .card-actions {
+      margin-top: 40px;
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .flashcard.flipped .card-actions {
+      opacity: 1;
+    }
+
+    .sm2-btn {
+      padding: 10px 20px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all var(--transition);
+      background: var(--bg-tertiary);
+      color: var(--text-primary);
+    }
+
+    .sm2-btn:hover {
+      transform: translateY(-2px);
+    }
+
+    .sm2-btn.again {
+      border-color: var(--error);
+      color: var(--error);
+    }
+
+    .sm2-btn.again:hover {
+      background: rgba(248, 113, 113, 0.1);
+    }
+
+    .sm2-btn.hard {
+      border-color: var(--warning);
+      color: var(--warning);
+    }
+
+    .sm2-btn.hard:hover {
+      background: rgba(251, 191, 36, 0.1);
+    }
+
+    .sm2-btn.good {
+      border-color: var(--success);
+      color: var(--success);
+    }
+
+    .sm2-btn.good:hover {
+      background: rgba(74, 222, 128, 0.1);
+    }
+
+    .sm2-btn.easy {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .sm2-btn.easy:hover {
+      background: rgba(56, 189, 248, 0.1);
+    }
+
+    .card-counter {
+      text-align: center;
+      margin-top: 24px;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+
+    .flip-hint {
+      text-align: center;
+      margin-top: 16px;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      opacity: 0.7;
+    }
+
+    .no-cards {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--text-secondary);
+    }
+
+    .no-cards h3 {
+      font-size: 1.2rem;
+      margin-bottom: 12px;
+    }
+
+    @media (max-width: 768px) {
+      .flashcard-header h1 {
+        font-size: 1.5rem;
+      }
+
+      .card-face {
+        padding: 30px 20px;
+        min-height: 250px;
+      }
+
+      .card-text {
+        font-size: 1.1rem;
+      }
+
+      .sm2-btn {
+        padding: 8px 14px;
+        font-size: 0.75rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="logo">
+      <a href="index.html">
+        <span>🤖</span>
+        <span>Agentic Systems & Design</span>
+      </a>
+    </div>
+    <div class="nav-controls">
+      <div class="feature-nav">
+        <a href="index.html">Dashboard</a>
+        <a href="glossary.html">Glossary</a>
+        <a href="flashcards.html" style="color: var(--accent); font-weight: 700;">Flashcards</a>
+        <a href="challenges.html">Challenges</a>
+        <a href="certificate.html">Certificate</a>
+      </div>
+      <button class="theme-toggle" title="Toggle theme">☀️</button>
+    </div>
+  </nav>
+
+  <div class="flashcard-body">
+    <!-- Header -->
+    <div class="flashcard-header">
+      <h1>Spaced Repetition Flashcards</h1>
+      <p>Master key concepts with SM-2 algorithm powered learning</p>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-bar">
+      <div class="stat-box">
+        <div class="num" id="due-count">0</div>
+        <div class="label">Due Today</div>
+      </div>
+      <div class="stat-box">
+        <div class="num" id="total-count">72</div>
+        <div class="label">Total Cards</div>
+      </div>
+      <div class="stat-box">
+        <div class="num" id="mastered-count">0</div>
+        <div class="label">Mastered</div>
+      </div>
+    </div>
+
+    <!-- Filter Tabs -->
+    <div class="filter-tabs">
+      <button class="filter-tab active" data-module="all">All Modules</button>
+      <button class="filter-tab" data-module="1">Module 1</button>
+      <button class="filter-tab" data-module="2">Module 2</button>
+      <button class="filter-tab" data-module="3">Module 3</button>
+      <button class="filter-tab" data-module="4">Module 4</button>
+      <button class="filter-tab" data-module="5">Module 5</button>
+    </div>
+
+    <!-- Card Container -->
+    <div class="card-container">
+      <div class="flashcard" id="flashcard">
+        <div class="card-face card-front">
+          <div class="card-label">Question</div>
+          <div class="card-text" id="question-text"></div>
+        </div>
+        <div class="card-face card-back">
+          <div class="card-label">Answer</div>
+          <div class="card-text" id="answer-text"></div>
+          <div class="card-actions">
+            <button class="sm2-btn again" onclick="rateCard(1)">Again<br><small>< 1d</small></button>
+            <button class="sm2-btn hard" onclick="rateCard(2)">Hard<br><small>< 2d</small></button>
+            <button class="sm2-btn good" onclick="rateCard(3)">Good<br><small>< 4d</small></button>
+            <button class="sm2-btn easy" onclick="rateCard(4)">Easy<br><small>< 8d</small></button>
+          </div>
+        </div>
+      </div>
+      <div class="flip-hint">Click card to reveal answer</div>
+      <div class="card-counter">
+        <span id="current-card">0</span> / <span id="session-total">0</span>
+      </div>
+    </div>
+
+    <!-- No Cards Message -->
+    <div class="no-cards" id="no-cards" style="display: none;">
+      <h3>No cards due for review</h3>
+      <p>Come back tomorrow or select a different module.</p>
+    </div>
+  </div>
+
+  <script>
+    // Flashcard data
+    const flashcardData = [
+      // Module 1 (12 cards)
+      { module: 1, q: "What does git add do?", a: "Stages files for the next commit" },
+      { module: 1, q: "What is a Python dictionary?", a: "A key-value data structure accessed by keys, not positions" },
+      { module: 1, q: "What HTTP method retrieves data?", a: "GET" },
+      { module: 1, q: "What does pip install do?", a: "Installs Python packages from PyPI" },
+      { module: 1, q: "What is a list comprehension?", a: "A concise way to create lists: [expr for item in iterable]" },
+      { module: 1, q: "What does SQL SELECT do?", a: "Retrieves data from a database table" },
+      { module: 1, q: "What is JSON?", a: "JavaScript Object Notation - a text format for structured data" },
+      { module: 1, q: "What is a virtual environment?", a: "An isolated Python installation to avoid package conflicts" },
+      { module: 1, q: "What is NumPy?", a: "A Python library for fast numerical computing with arrays" },
+      { module: 1, q: "What does pandas DataFrame represent?", a: "A 2D labeled data structure like a spreadsheet" },
+      { module: 1, q: "What is an API?", a: "Application Programming Interface - how software communicates" },
+      { module: 1, q: "What is a for loop?", a: "A control structure that repeats code for each item in a sequence" },
+
+      // Module 2 (12 cards)
+      { module: 2, q: "What is overfitting?", a: "Model memorizes training data but fails on new data" },
+      { module: 2, q: "What is cross-validation?", a: "Splitting data into K folds, rotating test set for robust evaluation" },
+      { module: 2, q: "What does PCA do?", a: "Reduces dimensions while preserving maximum variance" },
+      { module: 2, q: "What is the confusion matrix?", a: "A table showing TP, FP, TN, FN for classification evaluation" },
+      { module: 2, q: "What is gradient descent?", a: "An optimization algorithm that iteratively moves toward the minimum loss" },
+      { module: 2, q: "What is K-Means?", a: "An unsupervised algorithm that groups data into K clusters" },
+      { module: 2, q: "What is precision?", a: "TP / (TP + FP) — accuracy of positive predictions" },
+      { module: 2, q: "What is recall?", a: "TP / (TP + FN) — completeness of finding positives" },
+      { module: 2, q: "What is a decision tree?", a: "A model that splits data using if-then rules based on feature thresholds" },
+      { module: 2, q: "What is regularization?", a: "Adding a penalty to prevent overfitting (L1=Lasso, L2=Ridge)" },
+      { module: 2, q: "What is feature engineering?", a: "Creating new features from existing data to improve model performance" },
+      { module: 2, q: "What is a random forest?", a: "An ensemble of many decision trees that vote on the final prediction" },
+
+      // Module 3 (12 cards)
+      { module: 3, q: "What is a token in LLMs?", a: "A subword unit (typically 3-4 characters) that LLMs process" },
+      { module: 3, q: "What is RAG?", a: "Retrieval-Augmented Generation — grounding LLM responses with retrieved documents" },
+      { module: 3, q: "What is an embedding?", a: "A vector of numbers representing semantic meaning of text" },
+      { module: 3, q: "What is prompt engineering?", a: "Crafting effective instructions for LLMs to get desired outputs" },
+      { module: 3, q: "What is the ReAct pattern?", a: "Reason + Act — agents alternate between thinking and taking actions" },
+      { module: 3, q: "What is a vector store?", a: "A database optimized for storing and searching embeddings (e.g., Pinecone, FAISS)" },
+      { module: 3, q: "What is temperature in LLMs?", a: "Controls randomness: 0=deterministic, 1=creative, >1=very random" },
+      { module: 3, q: "What is chunking in RAG?", a: "Splitting documents into smaller pieces for embedding and retrieval" },
+      { module: 3, q: "What is LangChain?", a: "A framework for building LLM-powered applications with chains and agents" },
+      { module: 3, q: "What is few-shot prompting?", a: "Including examples in the prompt to guide the LLM's response format" },
+      { module: 3, q: "What is structured output?", a: "Constraining LLM output to follow a schema (JSON, Pydantic, etc.)" },
+      { module: 3, q: "What is prompt injection?", a: "An attack where malicious input tricks the LLM into ignoring instructions" },
+
+      // Module 4 (12 cards)
+      { module: 4, q: "What is a circuit breaker?", a: "A pattern that stops calling a failing service after N failures" },
+      { module: 4, q: "What is MCP?", a: "Model Context Protocol — a universal standard for LLM-tool communication" },
+      { module: 4, q: "What is self-attention?", a: "A mechanism where each token computes relevance to all other tokens (O(n²))" },
+      { module: 4, q: "What is token budgeting?", a: "Tracking and limiting token usage per request/user for cost control" },
+      { module: 4, q: "What is a fallback chain?", a: "Trying alternative models/caches when the primary fails" },
+      { module: 4, q: "What is LangGraph?", a: "A framework for building stateful, graph-based agent workflows" },
+      { module: 4, q: "What is graceful degradation?", a: "Returning partial/cached results rather than failing completely" },
+      { module: 4, q: "What are SLIs and SLOs?", a: "Service Level Indicators (metrics) and Objectives (targets) for reliability" },
+      { module: 4, q: "What is exponential backoff?", a: "Retrying with increasing delays: 1s → 2s → 4s → 8s" },
+      { module: 4, q: "What is agent memory?", a: "Short-term (conversation) and long-term (vector DB) storage for agents" },
+      { module: 4, q: "What is model routing?", a: "Using cheap models for simple tasks, expensive models for complex ones" },
+      { module: 4, q: "What is tracing for agents?", a: "Logging each step (thought, action, observation) for debugging" },
+
+      // Additional 12 cards to reach 60
+      { module: 1, q: "What is git commit?", a: "Saves staged changes to the repository with a message" },
+      { module: 1, q: "What is a Python function?", a: "A reusable block of code defined with def keyword" },
+      { module: 2, q: "What is train-test split?", a: "Dividing data into training and testing sets to evaluate model performance" },
+      { module: 2, q: "What is a neural network?", a: "A model inspired by biological neurons with layers of interconnected nodes" },
+      { module: 3, q: "What is zero-shot learning?", a: "A model performing a task without specific training examples" },
+      { module: 3, q: "What is semantic search?", a: "Searching by meaning rather than exact keyword matches" },
+      { module: 4, q: "What is a multi-agent system?", a: "Multiple AI agents working together to solve complex problems" },
+      { module: 4, q: "What is observability?", a: "Understanding system behavior through logs, metrics, and traces" },
+      { module: 2, q: "What is bias in ML?", a: "Systematic errors due to incorrect assumptions in the learning algorithm" },
+      { module: 3, q: "What is fine-tuning?", a: "Further training a pre-trained model on specific data" },
+      { module: 4, q: "What is A/B testing?", a: "Comparing two versions to determine which performs better" },
+      { module: 1, q: "What is REST API?", a: "An architectural style for APIs using HTTP methods and stateless communication" },
+
+      // Module 5 (12 cards)
+      { module: 5, q: "What is the OpenAI Assistants API?", a: "A managed runtime for AI agents with threads, runs, and built-in tool execution" },
+      { module: 5, q: "What is Claude's computer use?", a: "Anthropic's capability allowing Claude to interact with desktop GUIs via screenshots and mouse/keyboard actions" },
+      { module: 5, q: "What is AWS Bedrock?", a: "A managed service for accessing foundation models from multiple providers via a unified API" },
+      { module: 5, q: "What is Model Context Protocol (MCP)?", a: "A universal standard for connecting LLMs to external tools and data sources" },
+      { module: 5, q: "What is demographic parity?", a: "A fairness metric requiring equal positive prediction rates across demographic groups" },
+      { module: 5, q: "What is red teaming in AI?", a: "Systematically trying to make an AI system fail or produce harmful outputs before deployment" },
+      { module: 5, q: "What is RAGAS?", a: "A framework for evaluating RAG systems using faithfulness, relevancy, precision, and recall metrics" },
+      { module: 5, q: "What is intent classification?", a: "Routing user queries to the correct handler/tool based on the detected purpose of the message" },
+      { module: 5, q: "What is prompt versioning?", a: "Tracking changes to prompts over time with version control for reproducibility and rollback" },
+      { module: 5, q: "What is an agent marketplace?", a: "An ecosystem where agents discover, hire, and coordinate with other agents via standardized protocols" },
+      { module: 5, q: "What is Google Vertex AI?", a: "Google's managed ML platform for building and deploying AI models and agents" },
+      { module: 5, q: "What is E2E testing for AI?", a: "Testing the full pipeline from user input through agent reasoning to final output for correctness and safety" }
+    ];
+
+    // Initialize card state
+    let cardState = JSON.parse(localStorage.getItem('masai_flashcards') || '{}');
+
+    // Initialize state for new cards
+    flashcardData.forEach((card, idx) => {
+      if (!cardState[idx]) {
+        cardState[idx] = {
+          interval: 0,
+          repetitions: 0,
+          easeFactor: 2.5,
+          nextReview: Date.now()
+        };
+      }
+    });
+
+    let currentModule = 'all';
+    let currentDeck = [];
+    let currentCardIndex = 0;
+
+    // SM-2 algorithm
+    function sm2(quality, state) {
+      let { interval, repetitions, easeFactor } = state;
+
+      if (quality >= 3) {
+        if (repetitions === 0) {
+          interval = 1;
+        } else if (repetitions === 1) {
+          interval = 6;
+        } else {
+          interval = Math.round(interval * easeFactor);
+        }
+        repetitions++;
+      } else {
+        repetitions = 0;
+        interval = 1;
+      }
+
+      easeFactor = easeFactor + (0.1 - (5 - quality) * (0.08 + (5 - quality) * 0.02));
+      if (easeFactor < 1.3) easeFactor = 1.3;
+
+      const nextReview = Date.now() + interval * 24 * 60 * 60 * 1000;
+
+      return { interval, repetitions, easeFactor, nextReview };
+    }
+
+    function updateStats() {
+      const now = Date.now();
+      let dueCount = 0;
+      let masteredCount = 0;
+
+      flashcardData.forEach((card, idx) => {
+        const state = cardState[idx];
+        if (state.nextReview <= now) dueCount++;
+        if (state.repetitions >= 5) masteredCount++;
+      });
+
+      document.getElementById('due-count').textContent = dueCount;
+      document.getElementById('mastered-count').textContent = masteredCount;
+    }
+
+    function filterDeck() {
+      const now = Date.now();
+      currentDeck = [];
+
+      flashcardData.forEach((card, idx) => {
+        const state = cardState[idx];
+        const isDue = state.nextReview <= now;
+        const matchesModule = currentModule === 'all' || card.module === parseInt(currentModule);
+
+        if (isDue && matchesModule) {
+          currentDeck.push({ ...card, originalIndex: idx });
+        }
+      });
+
+      // Shuffle deck
+      currentDeck.sort(() => Math.random() - 0.5);
+
+      currentCardIndex = 0;
+      showCard();
+    }
+
+    function showCard() {
+      const flashcard = document.getElementById('flashcard');
+      flashcard.classList.remove('flipped');
+
+      if (currentDeck.length === 0) {
+        document.getElementById('no-cards').style.display = 'block';
+        document.querySelector('.card-container').style.display = 'none';
+        return;
+      }
+
+      document.getElementById('no-cards').style.display = 'none';
+      document.querySelector('.card-container').style.display = 'block';
+
+      const card = currentDeck[currentCardIndex];
+      document.getElementById('question-text').textContent = card.q;
+      document.getElementById('answer-text').textContent = card.a;
+      document.getElementById('current-card').textContent = currentCardIndex + 1;
+      document.getElementById('session-total').textContent = currentDeck.length;
+    }
+
+    function rateCard(quality) {
+      if (currentDeck.length === 0) return;
+
+      const card = currentDeck[currentCardIndex];
+      const idx = card.originalIndex;
+
+      cardState[idx] = sm2(quality, cardState[idx]);
+      localStorage.setItem('masai_flashcards', JSON.stringify(cardState));
+
+      // Dispatch XP event
+      if (quality >= 3) {
+        window.dispatchEvent(new CustomEvent('quiz-passed', { detail: { xp: 5 } }));
+      }
+
+      updateStats();
+
+      // Remove card from current session
+      currentDeck.splice(currentCardIndex, 1);
+
+      if (currentDeck.length === 0) {
+        document.getElementById('no-cards').style.display = 'block';
+        document.querySelector('.card-container').style.display = 'none';
+      } else {
+        if (currentCardIndex >= currentDeck.length) {
+          currentCardIndex = 0;
+        }
+        showCard();
+      }
+    }
+
+    // Flip card on click
+    document.getElementById('flashcard').addEventListener('click', (e) => {
+      if (!e.target.classList.contains('sm2-btn')) {
+        document.getElementById('flashcard').classList.toggle('flipped');
+      }
+    });
+
+    // Filter tabs
+    document.querySelectorAll('.filter-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        currentModule = tab.dataset.module;
+        filterDeck();
+      });
+    });
+
+    // Initialize
+    updateStats();
+    filterDeck();
+  </script>
+
+  <script src="js/nav.js"></script>
+  <script src="js/features.js"></script>
+</body>
+</html>

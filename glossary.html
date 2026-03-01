@@ -1,0 +1,1092 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Glossary — Agentic Systems & Design</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .glossary-body {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 80px 40px 40px;
+    }
+
+    .glossary-header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .glossary-header h1 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      margin-bottom: 12px;
+      background: linear-gradient(135deg, var(--accent), #a78bfa);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .glossary-header p {
+      font-size: 1.1rem;
+      color: var(--text-secondary);
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .search-wrapper {
+      max-width: 600px;
+      margin: 0 auto 50px;
+    }
+
+    .search-box {
+      position: relative;
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      font-size: 1.2rem;
+      pointer-events: none;
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 14px 20px 14px 48px;
+      background: var(--bg-secondary);
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      color: var(--text-primary);
+      font-size: 1rem;
+      font-family: var(--font-sans);
+      transition: all var(--transition);
+    }
+
+    .search-input:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.1);
+    }
+
+    .search-input::placeholder {
+      color: var(--text-muted);
+    }
+
+    .search-stats {
+      text-align: center;
+      margin-top: 12px;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+
+    .glossary-section {
+      margin-bottom: 50px;
+    }
+
+    .section-letter {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: var(--accent);
+      margin-bottom: 20px;
+      padding-bottom: 8px;
+      border-bottom: 3px solid var(--border);
+    }
+
+    .term-list {
+      display: grid;
+      gap: 16px;
+    }
+
+    .term-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 20px 24px;
+      transition: all var(--transition);
+    }
+
+    .term-card:hover {
+      border-color: var(--accent);
+      transform: translateX(4px);
+    }
+
+    .term-name {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 8px;
+    }
+
+    .term-definition {
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      margin-bottom: 10px;
+    }
+
+    .term-module {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      font-weight: 600;
+      padding: 4px 10px;
+      background: var(--bg-tertiary);
+      border-radius: 4px;
+      text-decoration: none;
+      transition: all var(--transition);
+    }
+
+    .term-module:hover {
+      background: var(--border);
+      color: var(--accent);
+    }
+
+    .term-module.m1 { border-left: 3px solid #38bdf8; }
+    .term-module.m2 { border-left: 3px solid #a78bfa; }
+    .term-module.m3 { border-left: 3px solid #fb923c; }
+    .term-module.m4 { border-left: 3px solid #4ade80; }
+
+    .no-results {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--text-muted);
+      display: none;
+    }
+
+    .no-results.show {
+      display: block;
+    }
+
+    .no-results-icon {
+      font-size: 3rem;
+      margin-bottom: 16px;
+    }
+
+    .no-results h3 {
+      font-size: 1.4rem;
+      color: var(--text-primary);
+      margin-bottom: 8px;
+    }
+
+    .no-results p {
+      font-size: 1rem;
+    }
+
+    @media (max-width: 768px) {
+      .glossary-body {
+        padding: 80px 20px 40px;
+      }
+
+      .glossary-header h1 {
+        font-size: 2rem;
+      }
+
+      .section-letter {
+        font-size: 2rem;
+      }
+
+      .term-card {
+        padding: 16px 18px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="logo">
+      <a href="index.html" style="display: flex; align-items: center; gap: 10px; text-decoration: none; color: inherit;">
+        <span>🤖</span>
+        <span>Agentic Systems & Design</span>
+      </a>
+    </div>
+    <div class="nav-controls">
+      <button class="theme-toggle" title="Toggle theme">☀️</button>
+    </div>
+  </nav>
+
+  <div class="glossary-body">
+    <!-- Header -->
+    <div class="glossary-header">
+      <h1>Glossary</h1>
+      <p>Key terms and concepts from all modules. Search or browse alphabetically.</p>
+    </div>
+
+    <!-- Search -->
+    <div class="search-wrapper">
+      <div class="search-box">
+        <span class="search-icon">🔍</span>
+        <input
+          type="text"
+          class="search-input"
+          id="glossary-search"
+          placeholder="Search terms..."
+          autocomplete="off"
+        >
+      </div>
+      <div class="search-stats" id="search-stats">Showing 88 terms</div>
+    </div>
+
+    <!-- Glossary Content -->
+    <div id="glossary-content">
+      <!-- A -->
+      <div class="glossary-section" data-letter="A">
+        <div class="section-letter">A</div>
+        <div class="term-list">
+          <div class="term-card" data-term="accuracy">
+            <div class="term-name">Accuracy</div>
+            <div class="term-definition">The proportion of correct predictions (both true positives and true negatives) among all predictions made by a model.</div>
+            <a href="module2.html" class="term-module m2">Module 2: ML Fundamentals</a>
+          </div>
+
+          <div class="term-card" data-term="action group">
+            <div class="term-name">Action Group (Bedrock)</div>
+            <div class="term-definition">A collection of API operations that an agent can invoke to perform specific tasks, configured in AWS Bedrock for agent-based workflows.</div>
+            <a href="module4.html" class="term-module m4">Module 4: Agentic Systems</a>
+          </div>
+
+          <div class="term-card" data-term="activation function">
+            <div class="term-name">Activation Function</div>
+            <div class="term-definition">A mathematical function applied to a neuron's output to introduce non-linearity into neural networks (e.g., ReLU, sigmoid, tanh).</div>
+            <a href="module2.html" class="term-module m2">Module 2: ML Fundamentals</a>
+          </div>
+
+          <div class="term-card" data-term="agent">
+            <div class="term-name">Agent</div>
+            <div class="term-definition">An autonomous system powered by an LLM that can perceive its environment, make decisions, use tools, and take actions to achieve goals.</div>
+            <a href="module3.html" class="term-module m3">Module 3: GenAI & Agents</a>
+          </div>
+
+          <div class="term-card" data-term="agent loop">
+            <div class="term-name">Agent Loop</div>
+            <div class="term-definition">The cycle of observation, reasoning, action, and feedback that an agent repeats to accomplish tasks iteratively.</div>
+            <a href="module3.html" class="term-module m3">Module 3: GenAI & Agents</a>
+          </div>
+
+          <div class="term-card" data-term="agentic systems">
+            <div class="term-name">Agentic Systems</div>
+            <div class="term-definition">Production-ready architectures that enable LLM-powered agents to interact with tools, memory, and other agents to solve complex problems autonomously.</div>
+            <a href="module4.html" class="term-module m4">Module 4: Agentic Systems</a>
+          </div>
+
+          <div class="term-card" data-term="api">
+            <div class="term-name">API</div>
+            <div class="term-definition">Application Programming Interface—a set of protocols that allows different software systems to communicate and exchange data.</div>
+            <a href="module1.html" class="term-module m1">Module 1: Foundations</a>
+          </div>
+
+          <div class="term-card" data-term="attention mechanism">
+            <div class="term-name">Attention Mechanism</div>
+            <div class="term-definition">A technique that allows neural networks to focus on relevant parts of input when processing sequences, fundamental to transformer architectures.</div>
+            <a href="module4.html" class="term-module m4">Module 4: Agentic Systems</a>
+          </div>
+
+          <div class="term-card" data-term="autogen">
+            <div class="term-name">AutoGen</div>
+            <div class="term-definition">A Microsoft framework for building multi-agent conversational systems where agents can collaborate and communicate to solve tasks.</div>
+            <a href="module4.html" class="term-module m4">Module 4: Agentic Systems</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- B -->
+      <div class="glossary-section" data-letter="B">
+        <div class="section-letter">B</div>
+        <div class="term-list">
+          <div class="term-card" data-term="backpropagation">
+            <div class="term-name">Backpropagation</div>
+            <div class="term-definition">An algorithm for training neural networks that calculates gradients by propagating errors backward through the network layers.</div>
+            <a href="module2.html" class="term-module m2">Module 2: ML Fundamentals</a>
+          </div>
+
+          <div class="term-card" data-term="batch size">
+            <div class="term-name">Batch Size</div>
+            <div class="term-definition">The number of training examples used in one iteration of model training before updating weights.</div>
+            <a href="module2.html" class="term-module m2">Module 2: ML Fundamentals</a>
+          </div>
+
+          <div class="term-card" data-term="bedrock">
+            <div class="term-name">Bedrock</div>
+            <div class="term-definition">AWS service providing access to foundation models from various providers via a unified API, with agent orchestration capabilities.</div>
+            <a href="module3.html" class="term-module m3">Module 3: GenAI & Agents</a>
+          </div>
+
+          <div class="term-card" data-term="bias ml">
+            <div class="term-name">Bias (ML)</div>
+            <div class="term-definition">A parameter in machine learning models that allows the model to fit data better by shifting the activation function; also refers to systematic errors in predictions.</div>
+            <a href="module2.html" class="term-module m2">Module 2: ML Fundamentals</a>
+          </div>
+
+          <div class="term-card" data-term="bias variance tradeoff">
+            <div class="term-name">Bias-Variance Tradeoff</div>
+            <div class="term-definition">The balance between a model's ability to minimize training error (bias) and its sensitivity to training data fluctuations (variance).</div>
+            <a href="module2.html" class="term-module m2">Module 2: ML Fundamentals</a>
+          </div>
+
+          <div class="term-card" data-term="bpe">
+            <div class="term-name">BPE (Byte Pair Encoding)</div>
+            <div class="term-definition">A tokenization method that iteratively merges the most frequent pairs of characters or tokens to build a vocabulary efficiently.</div>
+            <a href="module4.html" class="term-module m4">Module 4: Agentic Systems</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- C -->
+      <div class="glossary-section" data-letter="C">
+        <div class="section-letter">C</div>
+        <div class="term-list">
+          <div class="term-card" data-term="chain of thought">
+            <div class="term-name">Chain-of-Thought</div>
+            <div class="term-definition">A prompting technique that encourages LLMs to break down reasoning into step-by-step intermediate steps, improving complex problem solving.</div>
+            <a href="module3.html" class="term-module m3">Module 3: GenAI & Agents</a>
+          </div>
+
+          <div class="term-card" data-term="chunking">
+            <div class="term-name">Chunking</div>
+            <div class="term-definition">The process of splitting large documents into smaller, semantically meaningful segments for embedding and retrieval in RAG systems.</div>
+            <a href="module3.html" class="term-module m3">Module 3: GenAI & Agents</a>
+          </div>
+
+          <div class="term-card" data-term="circuit breaker">
+            <div class="term-name">Circuit Breaker</div>
+            <div class="term-definition">A design pattern that prevents cascading failures by temporarily blocking requests to a failing service until it recovers.</div>
+            <a href="module4.html" class="term-module m4">Module 4: Agentic Systems</a>
+          </div>
+
+          <div class="term-card" data-term="classification">
+            <div class="term-name">Classification</div>
+            <div class="term-definition">A supervised learning task where the model predicts discrete categorical labels (e.g., spam vs. not spam, dog vs. cat).</div>
+            <a href="module2.html" class="term-module m2">Module 2: ML Fundamentals</a>
+          </div>
+
+          <div class="term-card" data-term="claude">
+            <div class="term-name">Claude</div>
+            <div class="term-definition">Anthropic's family of large language models designed for helpful, harmless, and honest AI assistance with strong constitutional AI principles.</div>
+            <a href="module3.html" class="term-module m3">Module 3: GenAI & Agents</a>
+          </div>
+
+          <div class="term-card" data-term="clustering">
+            <div class="term-name">Clustering</div>
+            <div class="term-definition">An unsupervised learning technique that groups similar data points together based on feature similarity without predefined labels.</div>
+            <a href="module2.html" class="term-module m2">Module 2: ML Fundamentals</a>
+          </div>
+
+          <div class="term-card" data-term="computer use">
+            <div class="term-name">Computer Use</div>
+            <div class="term-definition">Claude's capability to interact with computer interfaces through screenshots and actions, enabling autonomous GUI navigation and control.</div>
+            <a href="module3.html" class="term-module m3">Module 3: GenAI & Agents</a>
+          </div>
+
+          <div class="term-card" data-term="confusion matrix">
+            <div class="term-name">Confusion Matrix</div>
+            <div class="term-definition">A table showing true positives, true negatives, false positives, and false negatives to evaluate classification model performance.</div>
+            <a href="module2.html" class="term-module m2">Module 2: ML Fundamentals</a>
+          </div>
+
+          <div class="term-card" data-term="context window">
+            <div class="term-name">Context Window</div>
+            <div class="term-definition">The maximum number of tokens an LLM can process in a single prompt and response, determining its memory capacity for a conversation.</div>
+            <a href="module3.html" class="term-module m3">Module 3: GenAI & Agents</a>
+          </div>
+
+          <div class="term-card" data-term="cosine similarity">
+            <div class="term-name">Cosine Similarity</div>
+            <div class="term-definition">A metric measuring the cosine of the angle between two vectors, commonly used to compare document or embedding similarity in RAG systems.</div>
+            <a href="module3.html" class="term-module m3">Module 3: GenAI & Agents</a>
+          </div>
+
+          <div class="term-card" data-term="crewai">
+            <div class="term-name">CrewAI</div>
+            <div class="term-definition">A Python framework for orchestrating role-based autonomous AI agents that collaborate as a crew to accomplish complex tasks.</div>
+            <a href="module4.html" class="term-module m4">Module 4: Agentic Systems</a>
+          </div>
+
+          <div class="term-card" data-term="cross validation">
+            <div class="term-name">Cross-Validation</div>
+            <div class="term-definition">A technique for assessing model performance by splitting data into multiple folds and training/testing on different combinations.</div>
+            <a href="module2.html" class="term-module m2">Module 2: ML Fundamentals</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- D -->
+      <div class="glossary-section" data-letter="D">
+        <div class="section-letter">D</div>
+        <div class="term-list">
+          <div class="term-card" data-term="data leakage">
+            <div class="term-name">Data Leakage</div>
+            <div class="term-definition">When information from the test set inadvertently influences the training process, leading to overly optimistic performance estimates.</div>
+            <a href="module2.html" class="term-module m2">Module 2: ML Fundamentals</a>
+          </div>
+
+          <div class="term-card" data-term="decision tree">
+            <div class="term-name">Decision Tree</div>
+            <div class="term-definition">A tree-structured model that makes decisions by splitting data based on feature values, creating interpretable if-then-else rules.</div>
+            <a href="module2.html" class="term-module m2">Module 2: ML Fundamentals</a>
+          </div>
+
+          <div class="term-card" data-term="dimensionality reduction">
+            <div class="term-name">Dimensionality Reduction</div>
+            <div class="term-definition">Techniques for reducing the number of features in data while preserving important information (e.g., PCA, t-SNE).</div>
+            <a href="module2.html" class="term-module m2">Module 2: ML Fundamentals</a>
+          </div>
+
+          <div class="term-card" data-term="docker">
+            <div class="term-name">Docker</div>
+            <div class="term-definition">A containerization platform that packages applications and dependencies into portable, isolated containers for consistent deployment.</div>
+            <a href="module4.html" class="term-module m4">Module 4: Agentic Systems</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- E -->
+      <div class="glossary-section" data-letter="E">
+        <div class="section-letter">E</div>
+        <div class="term-list">
+          <div class="term-card" data-term="embedding">
+            <div class="term-name">Embedding</div>
+            <div class="term-definition">A dense vector representation of text, images, or other data that captures semantic meaning in a continuous numerical space.</div>
+            <a href="module3.html" class="term-module m3">Module 3: GenAI & Agents</a>
+          </div>
+
+          <div class="term-card" data-term="epoch">
+            <div class="term-name">Epoch</div>
+            <div class="term-definition">One complete pass through the entire training dataset during model training.</div>
+            <a href="module2.html" class="term-module m2">Module 2: ML Fundamentals</a>
+          </div>
+
+          <div class="term-card" data-term="evaluation metrics">
+            <div class="term-name">Evaluation Metrics</div>
+            <div class="term-definition">Quantitative measures used to assess model performance, such as accuracy, precision, recall, F1-score, and RMSE.</div>
+            <a href="module2.html" class="term-module m2">Module 2: ML Fundamentals</a>
+          </div>
+
+          <div class="term-card" data-term="exponential backoff">
+            <div class="term-name">Exponential Backoff</div>
+            <div class="term-definition">A retry strategy that increases wait time exponentially between failed requests to avoid overwhelming services with repeated calls.</div>
+            <a href="module4.html" class="term-module m4">Module 4: Agentic Systems</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- F -->
+      <div class="glossary-section" data-letter="F">
+        <div class="section-letter">F</div>
+        <div class="term-list">
+          <div class="term-card" data-term="f1 score">
+            <div class="term-name">F1-Score</div>
+            <div class="term-definition">The harmonic mean of precision and recall, providing a single metric that balances both concerns in classification tasks.</div>
+            <a href="module2.html" class="term-module m2">Module 2: ML Fundamentals</a>
+          </div>
+
+          <div class="term-card" data-term="fallback chain">
+            <div class="term-name">Fallback Chain</div>
+            <div class="term-definition">A sequence of alternative actions or models an agent attempts when the primary approach fails, ensuring robustness.</div>
+            <a href="module4.html" class="term-module m4">Module 4: Agentic Systems</a>
+          </div>
+
+          <div class="term-card" data-term="fastapi">
+            <div class="term-name">FastAPI</div>
+            <div class="term-definition">A modern, high-performance Python web framework for building APIs with automatic documentation, type checking, and async support.</div>
+            <a href="module1.html" class="term-module m1">Module 1: Foundations</a>
+          </div>
+
+          <div class="term-card" data-term="feature engineering">
+            <div class="term-name">Feature Engineering</div>
+            <div class="term-definition">The process of selecting, transforming, and creating features from raw data to improve model performance.</div>
+            <a href="module2.html" class="term-module m2">Module 2: ML Fundamentals</a>
+          </div>
+
+          <div class="term-card" data-term="few shot learning">
+            <div class="term-name">Few-Shot Learning</div>
+            <div class="term-definition">A technique where models learn to perform tasks from only a few examples provided in the prompt, without additional training.</div>
+            <a href="module3.html" class="term-module m3">Module 3: GenAI & Agents</a>
+          </div>
+
+          <div class="term-card" data-term="fine tuning">
+            <div class="term-name">Fine-Tuning</div>
+            <div class="term-definition">The process of adapting a pre-trained model to a specific task or domain by continuing training on specialized data.</div>
+            <a href="module3.html" class="term-module m3">Module 3: GenAI & Agents</a>
+          </div>
+
+          <div class="term-card" data-term="function calling">
+            <div class="term-name">Function Calling</div>
+            <div class="term-definition">The ability of an LLM to recognize when to invoke external functions or tools and generate properly formatted arguments for them.</div>
+            <a href="module3.html" class="term-module m3">Module 3: GenAI & Agents</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- G -->
+      <div class="glossary-section" data-letter="G">
+        <div class="section-letter">G</div>
+        <div class="term-list">
+          <div class="term-card" data-term="gradient descent">
+            <div class="term-name">Gradient Descent</div>
+            <div class="term-definition">An optimization algorithm that iteratively adjusts model parameters by moving in the direction of steepest descent to minimize loss.</div>
+            <a href="module2.html" class="term-module m2">Module 2: ML Fundamentals</a>
+          </div>
+
+          <div class="term-card" data-term="guardrails">
+            <div class="term-name">Guardrails</div>
+            <div class="term-definition">Safety mechanisms and constraints that prevent LLM agents from taking harmful, inappropriate, or out-of-scope actions.</div>
+            <a href="module4.html" class="term-module m4">Module 4: Agentic Systems</a>
+          </div>
+
+          <div class="term-card" data-term="git">
+            <div class="term-name">Git</div>
+            <div class="term-definition">A distributed version control system for tracking code changes, collaborating with teams, and managing project history.</div>
+            <a href="module1.html" class="term-module m1">Module 1: Foundations</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- H -->
+      <div class="glossary-section" data-letter="H">
+        <div class="section-letter">H</div>
+        <div class="term-list">
+          <div class="term-card" data-term="hallucination">
+            <div class="term-name">Hallucination</div>
+            <div class="term-definition">When an LLM generates plausible-sounding but factually incorrect or nonsensical information not grounded in its training data.</div>
+            <a href="module3.html" class="term-module m3">Module 3: GenAI & Agents</a>
+          </div>
+
+          <div class="term-card" data-term="hnsw">
+            <div class="term-name">HNSW</div>
+            <div class="term-definition">Hierarchical Navigable Small World—a graph-based algorithm for fast approximate nearest neighbor search in high-dimensional vector spaces.</div>
+            <a href="module3.html" class="term-module m3">Module 3: GenAI & Agents</a>
+          </div>
+
+          <div class="term-card" data-term="hyperparameter">
+            <div class="term-name">Hyperparameter</div>
+            <div class="term-definition">Configuration settings for machine learning algorithms that are set before training and control the learning process (e.g., learning rate, batch size).</div>
+            <a href="module2.html" class="term-module m2">Module 2: ML Fundamentals</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- I -->
+      <div class="glossary-section" data-letter="I">
+        <div class="section-letter">I</div>
+        <div class="term-list">
+          <div class="term-card" data-term="inference">
+            <div class="term-name">Inference</div>
+            <div class="term-definition">The process of using a trained model to make predictions on new, unseen data.</div>
+            <a href="module2.html" class="term-module m2">Module 2: ML Fundamentals</a>
+          </div>
+
+          <div class="term-card" data-term="information gain">
+            <div class="term-name">Information Gain</div>
+            <div class="term-definition">A metric used in decision trees to measure how much a feature reduces uncertainty about the target variable.</div>
+            <a href="module2.html" class="term-module m2">Module 2: ML Fundamentals</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- K -->
+      <div class="glossary-section" data-letter="K">
+        <div class="section-letter">K</div>
+        <div class="term-list">
+          <div class="term-card" data-term="k fold cross validation">
+            <div class="term-name">K-Fold Cross-Validation</div>
+            <div class="term-definition">A validation technique that splits data into K equal parts, training on K-1 folds and testing on the remaining fold, rotating K times.</div>
+            <a href="module2.html" class="term-module m2">Module 2: ML Fundamentals</a>
+          </div>
+
+          <div class="term-card" data-term="k means">
+            <div class="term-name">K-Means</div>
+            <div class="term-definition">A clustering algorithm that partitions data into K clusters by iteratively assigning points to the nearest centroid.</div>
+            <a href="module2.html" class="term-module m2">Module 2: ML Fundamentals</a>
+          </div>
+
+          <div class="term-card" data-term="knowledge base">
+            <div class="term-name">Knowledge Base</div>
+            <div class="term-definition">A structured repository of information that agents can query to retrieve facts, documents, or domain-specific knowledge for answering questions.</div>
+            <a href="module3.html" class="term-module m3">Module 3: GenAI & Agents</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- L -->
+      <div class="glossary-section" data-letter="L">
+        <div class="section-letter">L</div>
+        <div class="term-list">
+          <div class="term-card" data-term="langchain">
+            <div class="term-name">LangChain</div>
+            <div class="term-definition">A popular Python framework for building LLM applications with chains, agents, memory, and tool integration capabilities.</div>
+            <a href="module3.html" class="term-module m3">Module 3: GenAI & Agents</a>
+          </div>
+
+          <div class="term-card" data-term="langgraph">
+            <div class="term-name">LangGraph</div>
+            <div class="term-definition">A library built on LangChain for creating stateful, multi-actor agent workflows using graph-based orchestration patterns.</div>
+            <a href="module4.html" class="term-module m4">Module 4: Agentic Systems</a>
+          </div>
+
+          <div class="term-card" data-term="large language model">
+            <div class="term-name">Large Language Model (LLM)</div>
+            <div class="term-definition">A neural network trained on massive text corpora to understand and generate human-like text, forming the foundation of modern AI agents.</div>
+            <a href="module3.html" class="term-module m3">Module 3: GenAI & Agents</a>
+          </div>
+
+          <div class="term-card" data-term="logistic regression">
+            <div class="term-name">Logistic Regression</div>
+            <div class="term-definition">A statistical model for binary classification that predicts probabilities using a logistic sigmoid function.</div>
+            <a href="module2.html" class="term-module m2">Module 2: ML Fundamentals</a>
+          </div>
+
+          <div class="term-card" data-term="loss function">
+            <div class="term-name">Loss Function</div>
+            <div class="term-definition">A mathematical function that quantifies the difference between predicted and actual values, guiding model optimization.</div>
+            <a href="module2.html" class="term-module m2">Module 2: ML Fundamentals</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- M -->
+      <div class="glossary-section" data-letter="M">
+        <div class="section-letter">M</div>
+        <div class="term-list">
+          <div class="term-card" data-term="mcp">
+            <div class="term-name">MCP (Model Context Protocol)</div>
+            <div class="term-definition">A protocol for standardizing how AI agents connect to data sources, tools, and services in a secure and consistent way.</div>
+            <a href="module4.html" class="term-module m4">Module 4: Agentic Systems</a>
+          </div>
+
+          <div class="term-card" data-term="memory agent">
+            <div class="term-name">Memory (Agent)</div>
+            <div class="term-definition">Systems that allow agents to store, retrieve, and utilize information from past interactions to maintain context and improve decisions.</div>
+            <a href="module3.html" class="term-module m3">Module 3: GenAI & Agents</a>
+          </div>
+
+          <div class="term-card" data-term="mermaid">
+            <div class="term-name">Mermaid</div>
+            <div class="term-definition">A JavaScript-based diagramming tool that renders flowcharts, sequence diagrams, and graphs from text-based definitions.</div>
+            <a href="module4.html" class="term-module m4">Module 4: Agentic Systems</a>
+          </div>
+
+          <div class="term-card" data-term="microservice">
+            <div class="term-name">Microservice</div>
+            <div class="term-definition">An architectural pattern where applications are composed of small, independent services that communicate via APIs.</div>
+            <a href="module4.html" class="term-module m4">Module 4: Agentic Systems</a>
+          </div>
+
+          <div class="term-card" data-term="multi agent">
+            <div class="term-name">Multi-Agent</div>
+            <div class="term-definition">Systems where multiple AI agents collaborate, coordinate, or compete to solve problems more effectively than single agents.</div>
+            <a href="module4.html" class="term-module m4">Module 4: Agentic Systems</a>
+          </div>
+
+          <div class="term-card" data-term="multi head attention">
+            <div class="term-name">Multi-Head Attention</div>
+            <div class="term-definition">A transformer mechanism that runs multiple attention operations in parallel, each learning different aspects of relationships in data.</div>
+            <a href="module4.html" class="term-module m4">Module 4: Agentic Systems</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- N -->
+      <div class="glossary-section" data-letter="N">
+        <div class="section-letter">N</div>
+        <div class="term-list">
+          <div class="term-card" data-term="numpy">
+            <div class="term-name">NumPy</div>
+            <div class="term-definition">A fundamental Python library for numerical computing, providing support for arrays, matrices, and mathematical operations.</div>
+            <a href="module1.html" class="term-module m1">Module 1: Foundations</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- O -->
+      <div class="glossary-section" data-letter="O">
+        <div class="section-letter">O</div>
+        <div class="term-list">
+          <div class="term-card" data-term="openai">
+            <div class="term-name">OpenAI</div>
+            <div class="term-definition">The AI research company behind GPT models, providing APIs for language generation, embeddings, and multimodal capabilities.</div>
+            <a href="module3.html" class="term-module m3">Module 3: GenAI & Agents</a>
+          </div>
+
+          <div class="term-card" data-term="orchestration">
+            <div class="term-name">Orchestration</div>
+            <div class="term-definition">The coordination and management of multiple agents, tools, and workflows to accomplish complex tasks systematically.</div>
+            <a href="module4.html" class="term-module m4">Module 4: Agentic Systems</a>
+          </div>
+
+          <div class="term-card" data-term="overfitting">
+            <div class="term-name">Overfitting</div>
+            <div class="term-definition">When a model learns training data too well, including noise, resulting in poor generalization to new data.</div>
+            <a href="module2.html" class="term-module m2">Module 2: ML Fundamentals</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- P -->
+      <div class="glossary-section" data-letter="P">
+        <div class="section-letter">P</div>
+        <div class="term-list">
+          <div class="term-card" data-term="pandas">
+            <div class="term-name">Pandas</div>
+            <div class="term-definition">A Python library for data manipulation and analysis, providing DataFrame structures for working with structured data.</div>
+            <a href="module1.html" class="term-module m1">Module 1: Foundations</a>
+          </div>
+
+          <div class="term-card" data-term="pca">
+            <div class="term-name">PCA</div>
+            <div class="term-definition">Principal Component Analysis—a dimensionality reduction technique that transforms data into orthogonal components capturing maximum variance.</div>
+            <a href="module2.html" class="term-module m2">Module 2: ML Fundamentals</a>
+          </div>
+
+          <div class="term-card" data-term="pinecone">
+            <div class="term-name">Pinecone</div>
+            <div class="term-definition">A managed vector database service optimized for storing embeddings and performing fast similarity search in production applications.</div>
+            <a href="module3.html" class="term-module m3">Module 3: GenAI & Agents</a>
+          </div>
+
+          <div class="term-card" data-term="precision">
+            <div class="term-name">Precision</div>
+            <div class="term-definition">The proportion of positive predictions that are actually correct (true positives / (true positives + false positives)).</div>
+            <a href="module2.html" class="term-module m2">Module 2: ML Fundamentals</a>
+          </div>
+
+          <div class="term-card" data-term="prompt engineering">
+            <div class="term-name">Prompt Engineering</div>
+            <div class="term-definition">The practice of designing and optimizing text prompts to elicit desired behaviors and outputs from language models.</div>
+            <a href="module3.html" class="term-module m3">Module 3: GenAI & Agents</a>
+          </div>
+
+          <div class="term-card" data-term="prompt injection">
+            <div class="term-name">Prompt Injection</div>
+            <div class="term-definition">A security vulnerability where malicious users manipulate prompts to make LLMs ignore instructions or perform unintended actions.</div>
+            <a href="module4.html" class="term-module m4">Module 4: Agentic Systems</a>
+          </div>
+
+          <div class="term-card" data-term="pyodide">
+            <div class="term-name">Pyodide</div>
+            <div class="term-definition">A Python runtime for the browser that compiles CPython to WebAssembly, enabling Python execution in web applications.</div>
+            <a href="module1.html" class="term-module m1">Module 1: Foundations</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- R -->
+      <div class="glossary-section" data-letter="R">
+        <div class="section-letter">R</div>
+        <div class="term-list">
+          <div class="term-card" data-term="rag">
+            <div class="term-name">RAG (Retrieval-Augmented Generation)</div>
+            <div class="term-definition">A technique that enhances LLM responses by retrieving relevant information from external knowledge bases before generating answers.</div>
+            <a href="module3.html" class="term-module m3">Module 3: GenAI & Agents</a>
+          </div>
+
+          <div class="term-card" data-term="random forest">
+            <div class="term-name">Random Forest</div>
+            <div class="term-definition">An ensemble learning method that combines multiple decision trees, each trained on random subsets of data and features.</div>
+            <a href="module2.html" class="term-module m2">Module 2: ML Fundamentals</a>
+          </div>
+
+          <div class="term-card" data-term="rate limiting">
+            <div class="term-name">Rate Limiting</div>
+            <div class="term-definition">A technique to control the frequency of requests to APIs or services, preventing overuse and ensuring fair resource allocation.</div>
+            <a href="module4.html" class="term-module m4">Module 4: Agentic Systems</a>
+          </div>
+
+          <div class="term-card" data-term="react pattern">
+            <div class="term-name">ReAct Pattern</div>
+            <div class="term-definition">A framework where agents alternate between Reasoning about tasks and Acting on decisions, combining thought processes with tool use.</div>
+            <a href="module3.html" class="term-module m3">Module 3: GenAI & Agents</a>
+          </div>
+
+          <div class="term-card" data-term="recall">
+            <div class="term-name">Recall</div>
+            <div class="term-definition">The proportion of actual positive cases that are correctly identified (true positives / (true positives + false negatives)).</div>
+            <a href="module2.html" class="term-module m2">Module 2: ML Fundamentals</a>
+          </div>
+
+          <div class="term-card" data-term="regression">
+            <div class="term-name">Regression</div>
+            <div class="term-definition">A supervised learning task where the model predicts continuous numerical values (e.g., house prices, temperature).</div>
+            <a href="module2.html" class="term-module m2">Module 2: ML Fundamentals</a>
+          </div>
+
+          <div class="term-card" data-term="rlhf">
+            <div class="term-name">RLHF</div>
+            <div class="term-definition">Reinforcement Learning from Human Feedback—a training method that fine-tunes LLMs using human preferences to align model behavior.</div>
+            <a href="module4.html" class="term-module m4">Module 4: Agentic Systems</a>
+          </div>
+
+          <div class="term-card" data-term="routing">
+            <div class="term-name">Routing</div>
+            <div class="term-definition">The process of directing user queries or tasks to the appropriate specialized agent, model, or tool based on content and context.</div>
+            <a href="module4.html" class="term-module m4">Module 4: Agentic Systems</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- S -->
+      <div class="glossary-section" data-letter="S">
+        <div class="section-letter">S</div>
+        <div class="term-list">
+          <div class="term-card" data-term="sampling temperature">
+            <div class="term-name">Sampling (Temperature)</div>
+            <div class="term-definition">A parameter controlling randomness in LLM outputs—higher values increase creativity, lower values make responses more deterministic.</div>
+            <a href="module3.html" class="term-module m3">Module 3: GenAI & Agents</a>
+          </div>
+
+          <div class="term-card" data-term="self attention">
+            <div class="term-name">Self-Attention</div>
+            <div class="term-definition">A mechanism where each token in a sequence attends to all other tokens to learn contextual relationships within the input.</div>
+            <a href="module4.html" class="term-module m4">Module 4: Agentic Systems</a>
+          </div>
+
+          <div class="term-card" data-term="semantic search">
+            <div class="term-name">Semantic Search</div>
+            <div class="term-definition">Search based on meaning rather than exact keyword matching, using embeddings to find conceptually similar content.</div>
+            <a href="module3.html" class="term-module m3">Module 3: GenAI & Agents</a>
+          </div>
+
+          <div class="term-card" data-term="spaced repetition">
+            <div class="term-name">Spaced Repetition</div>
+            <div class="term-definition">A learning technique that schedules review of material at increasing intervals to optimize long-term retention and memory.</div>
+            <a href="module1.html" class="term-module m1">Module 1: Foundations</a>
+          </div>
+
+          <div class="term-card" data-term="sql">
+            <div class="term-name">SQL</div>
+            <div class="term-definition">Structured Query Language—a domain-specific language for managing and querying relational databases.</div>
+            <a href="module1.html" class="term-module m1">Module 1: Foundations</a>
+          </div>
+
+          <div class="term-card" data-term="streamlit">
+            <div class="term-name">Streamlit</div>
+            <div class="term-definition">A Python framework for rapidly building interactive web applications and dashboards for data science and machine learning projects.</div>
+            <a href="module4.html" class="term-module m4">Module 4: Agentic Systems</a>
+          </div>
+
+          <div class="term-card" data-term="structured output">
+            <div class="term-name">Structured Output</div>
+            <div class="term-definition">LLM responses formatted in specific schemas (JSON, XML) to ensure programmatic parsing and integration with downstream systems.</div>
+            <a href="module3.html" class="term-module m3">Module 3: GenAI & Agents</a>
+          </div>
+
+          <div class="term-card" data-term="supervised learning">
+            <div class="term-name">Supervised Learning</div>
+            <div class="term-definition">A machine learning paradigm where models learn from labeled training data to predict outcomes on new data.</div>
+            <a href="module2.html" class="term-module m2">Module 2: ML Fundamentals</a>
+          </div>
+
+          <div class="term-card" data-term="swarm">
+            <div class="term-name">Swarm</div>
+            <div class="term-definition">An OpenAI framework for building multi-agent systems with handoffs and routines, focusing on lightweight agent orchestration.</div>
+            <a href="module4.html" class="term-module m4">Module 4: Agentic Systems</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- T -->
+      <div class="glossary-section" data-letter="T">
+        <div class="section-letter">T</div>
+        <div class="term-list">
+          <div class="term-card" data-term="tokenizer">
+            <div class="term-name">Tokenizer</div>
+            <div class="term-definition">A tool that breaks text into smaller units (tokens) that language models can process, such as words, subwords, or characters.</div>
+            <a href="module3.html" class="term-module m3">Module 3: GenAI & Agents</a>
+          </div>
+
+          <div class="term-card" data-term="tool use">
+            <div class="term-name">Tool Use</div>
+            <div class="term-definition">The ability of an agent to invoke external functions, APIs, or services to extend its capabilities beyond text generation.</div>
+            <a href="module3.html" class="term-module m3">Module 3: GenAI & Agents</a>
+          </div>
+
+          <div class="term-card" data-term="top k">
+            <div class="term-name">Top-K</div>
+            <div class="term-definition">A sampling method that limits token selection to the K most probable options, balancing creativity and coherence in generation.</div>
+            <a href="module3.html" class="term-module m3">Module 3: GenAI & Agents</a>
+          </div>
+
+          <div class="term-card" data-term="top p">
+            <div class="term-name">Top-P</div>
+            <div class="term-definition">Nucleus sampling that selects tokens from the smallest set whose cumulative probability exceeds threshold P, adapting vocabulary size dynamically.</div>
+            <a href="module3.html" class="term-module m3">Module 3: GenAI & Agents</a>
+          </div>
+
+          <div class="term-card" data-term="transformer">
+            <div class="term-name">Transformer</div>
+            <div class="term-definition">A neural network architecture based on self-attention mechanisms, foundational to modern LLMs like GPT and Claude.</div>
+            <a href="module4.html" class="term-module m4">Module 4: Agentic Systems</a>
+          </div>
+
+          <div class="term-card" data-term="transfer learning">
+            <div class="term-name">Transfer Learning</div>
+            <div class="term-definition">A technique where models pre-trained on large datasets are adapted to new tasks, reducing training time and data requirements.</div>
+            <a href="module2.html" class="term-module m2">Module 2: ML Fundamentals</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- U -->
+      <div class="glossary-section" data-letter="U">
+        <div class="section-letter">U</div>
+        <div class="term-list">
+          <div class="term-card" data-term="underfitting">
+            <div class="term-name">Underfitting</div>
+            <div class="term-definition">When a model is too simple to capture the underlying patterns in data, resulting in poor performance on both training and test sets.</div>
+            <a href="module2.html" class="term-module m2">Module 2: ML Fundamentals</a>
+          </div>
+
+          <div class="term-card" data-term="unsupervised learning">
+            <div class="term-name">Unsupervised Learning</div>
+            <div class="term-definition">A machine learning paradigm where models find patterns in unlabeled data without predefined outcomes (e.g., clustering, dimensionality reduction).</div>
+            <a href="module2.html" class="term-module m2">Module 2: ML Fundamentals</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- V -->
+      <div class="glossary-section" data-letter="V">
+        <div class="section-letter">V</div>
+        <div class="term-list">
+          <div class="term-card" data-term="validation set">
+            <div class="term-name">Validation Set</div>
+            <div class="term-definition">A subset of data used during training to tune hyperparameters and evaluate model performance without touching the test set.</div>
+            <a href="module2.html" class="term-module m2">Module 2: ML Fundamentals</a>
+          </div>
+
+          <div class="term-card" data-term="vector store">
+            <div class="term-name">Vector Store</div>
+            <div class="term-definition">A specialized database for storing and efficiently querying high-dimensional embeddings, essential for RAG and semantic search.</div>
+            <a href="module3.html" class="term-module m3">Module 3: GenAI & Agents</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- W -->
+      <div class="glossary-section" data-letter="W">
+        <div class="section-letter">W</div>
+        <div class="term-list">
+          <div class="term-card" data-term="weaviate">
+            <div class="term-name">Weaviate</div>
+            <div class="term-definition">An open-source vector database with built-in vectorization and semantic search capabilities for AI applications.</div>
+            <a href="module3.html" class="term-module m3">Module 3: GenAI & Agents</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Z -->
+      <div class="glossary-section" data-letter="Z">
+        <div class="section-letter">Z</div>
+        <div class="term-list">
+          <div class="term-card" data-term="zero shot learning">
+            <div class="term-name">Zero-Shot Learning</div>
+            <div class="term-definition">The ability of a model to perform tasks without specific training examples, relying only on instructions and general knowledge.</div>
+            <a href="module3.html" class="term-module m3">Module 3: GenAI & Agents</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- No Results Message -->
+    <div class="no-results" id="no-results">
+      <div class="no-results-icon">🔍</div>
+      <h3>No terms found</h3>
+      <p>Try a different search term or browse all terms below.</p>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <p>Agentic Systems & Design — Study Guide</p>
+      <p style="margin-top:6px;">Master the terminology to ace your program.</p>
+    </footer>
+  </div>
+
+  <script src="js/nav.js"></script>
+  <script src="js/features.js"></script>
+  <script>
+    // Real-time search functionality
+    const searchInput = document.getElementById('glossary-search');
+    const searchStats = document.getElementById('search-stats');
+    const glossaryContent = document.getElementById('glossary-content');
+    const noResults = document.getElementById('no-results');
+    const allSections = document.querySelectorAll('.glossary-section');
+    const allTerms = document.querySelectorAll('.term-card');
+    const totalTerms = allTerms.length;
+
+    searchInput.addEventListener('input', function() {
+      const query = this.value.toLowerCase().trim();
+
+      if (query === '') {
+        // Reset: show all
+        allSections.forEach(section => section.style.display = 'block');
+        allTerms.forEach(term => term.style.display = 'block');
+        noResults.classList.remove('show');
+        searchStats.textContent = `Showing ${totalTerms} terms`;
+        return;
+      }
+
+      let visibleCount = 0;
+      let visibleSections = new Set();
+
+      // Filter terms
+      allTerms.forEach(term => {
+        const termName = term.querySelector('.term-name').textContent.toLowerCase();
+        const termDef = term.querySelector('.term-definition').textContent.toLowerCase();
+        const termAttr = term.getAttribute('data-term').toLowerCase();
+
+        if (termName.includes(query) || termDef.includes(query) || termAttr.includes(query)) {
+          term.style.display = 'block';
+          visibleCount++;
+          // Track which section this term belongs to
+          const section = term.closest('.glossary-section');
+          if (section) {
+            visibleSections.add(section);
+          }
+        } else {
+          term.style.display = 'none';
+        }
+      });
+
+      // Show/hide sections based on whether they have visible terms
+      allSections.forEach(section => {
+        if (visibleSections.has(section)) {
+          section.style.display = 'block';
+        } else {
+          section.style.display = 'none';
+        }
+      });
+
+      // Update stats and no results message
+      if (visibleCount === 0) {
+        noResults.classList.add('show');
+        glossaryContent.style.display = 'none';
+        searchStats.textContent = 'No terms found';
+      } else {
+        noResults.classList.remove('show');
+        glossaryContent.style.display = 'block';
+        searchStats.textContent = `Showing ${visibleCount} of ${totalTerms} terms`;
+      }
+    });
+
+    // Optional: Focus search on '/' key
+    document.addEventListener('keydown', function(e) {
+      if (e.key === '/' && document.activeElement !== searchInput) {
+        e.preventDefault();
+        searchInput.focus();
+      }
+      // Escape to clear search
+      if (e.key === 'Escape' && document.activeElement === searchInput) {
+        searchInput.value = '';
+        searchInput.dispatchEvent(new Event('input'));
+      }
+    });
+  </script>
+</body>
+</html>
